@@ -6,8 +6,14 @@ import {
   Keyboard,
   TouchableOpacity,
   FlatList,
+  Pressable,
+  Animated,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import AnimatedCheckbox from "react-native-checkbox-reanimated";
+import DraggableFlatList, {
+  ScaleDecorator,
+} from "react-native-draggable-flatlist";
+import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
 const TaskList = ({ navigation }) => {
@@ -17,16 +23,16 @@ const TaskList = ({ navigation }) => {
 
   async function fetchData() {
     tasksRef.onSnapshot((querySnapshot) => {
-      const users = [];
+      const tasks = [];
       querySnapshot.forEach((doc) => {
         const { heading, text } = doc.data();
-        users.push({
+        tasks.push({
           id: doc.id,
           heading,
           text,
         });
       });
-      setAllTasks(users);
+      setAllTasks(tasks);
     });
   }
 
@@ -34,47 +40,116 @@ const TaskList = ({ navigation }) => {
     fetchData();
   }, []);
 
-  const renderTask = ({ item }) => (
-    <TouchableOpacity
-      style={styles.itemStyle}
-      onPress={() => {
-        showTaskDetail(item);
-      }}
-    >
-      <Text>{item.heading}</Text>
-      {/* <Text>{item.text}</Text> */}
-    </TouchableOpacity>
-  );
+  // useEffect(() => {
+  //   let temp = allTasks.filter((el) => !el.checked);
+
+  //   const timeout = setTimeout(() => {
+  //     setAllTasks(temp);
+  //   }, 1000);
+  // }, [allTasks]);
+
+  // const onChecked = (id) => {
+  //   console.log("onchecked called with id ", id);
+  //   const data = allTasks;
+  //   const index = data.findIndex((x) => x.id === id);
+  //   console.log("index", index);
+  //   data[index].checked = !data[index].checked;
+  //   console.log("DATA", data);
+  //   setAllTasks(data);
+  // };
+
+  const handleChange = (id) => {
+    let temp = allTasks.map((product) => {
+      if (id === product.id) {
+        return { ...product, checked: !product.checked };
+      }
+      return product;
+    });
+    // temp = temp.filter((el) => !el.checked);
+    // console.log("TEMP", temp);
+    setAllTasks(temp);
+
+    const timeout = setTimeout(() => {
+      temp = temp.filter((el) => !el.checked);
+      setAllTasks(temp);
+    }, 2000);
+  };
+
+  const removeTask = () => {
+    let temp = allTasks.filter((el) => !el.checked);
+    console.log("TEMP", temp);
+    setAllTasks(temp);
+  };
+
+  // const handleCheckboxPress = () => {
+  //   setChecked((prev) => {
+  //     return !prev;
+  //   });
+  // };
+
+  const Task = ({ item }) => {
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+
+    const fadeOut = () => {
+      console.log("FADE OUT called with fadeAnim value", fadeAnim);
+      // Will change fadeAnim value to 0 in 3 seconds
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1500,
+        useNativeDriver: true,
+      }).start(() => {
+        console.log("FADE ANIM", fadeAnim);
+      });
+    };
+    const opacityStyle = { opacity: fadeAnim };
+
+    return (
+      <View style={styles.itemRow}>
+        <Pressable
+          onPress={() => {
+            fadeOut();
+
+            handleChange(item.id);
+          }}
+          style={styles.checkbox}
+        >
+          <AnimatedCheckbox
+            checked={item.checked}
+            highlightColor="#4444ff"
+            checkmarkColor="#ffffff"
+            boxOutlineColor="#4444ff"
+          />
+        </Pressable>
+        <TouchableOpacity
+          style={styles.itemStyle}
+          onPress={() => {
+            showTaskDetail(item);
+          }}
+        >
+          <Animated.Text
+            style={[item.checked ? styles.checkedItem : "", opacityStyle]}
+            // style={opacityStyle}
+          >
+            {item.heading}
+          </Animated.Text>
+          {/* <Text>{item.text}</Text> */}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderTask = ({ item }) => <Task item={item} />;
 
   const showTaskDetail = (item) => {
     console.log("item", item);
     navigation.navigate("Task Detail", item);
   };
 
-  const createTask = (item) => {
+  const createTask = () => {
     navigation.navigate("Create Task", { taskDetails: "Add Header" });
   };
 
   return (
-    // <View style={{ flex: 1, justifyContent: "center" }}>
-    //   <View style={styles.formContainer}>
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Add some text"
-    //       placeholderTextColor="#aaaaaa"
-    //       onChangeText={(heading) => {
-    //         setAddData(heading);
-    //       }}
-    //       value={addData}
-    //       multiline={true}
-    //       underlineColorAndroid="transparent"
-    //       autoCapitalize="none"
-    //     ></TextInput>
-    //     <TouchableOpacity style={styles.button} onPress={addField}>
-    //       <Text style={styles.buttonText}>Add</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>
     <View style={styles.container}>
       <View style={styles.mainSection}>
         <FlatList
@@ -128,12 +203,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  itemRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 5,
+  },
+
   headerSection: {
     flex: 1,
     alignItems: "center",
   },
   mainSection: {
     flex: 3,
+    backgroundColor: "yellow",
+    padding: 5,
   },
   bottomSection: {
     flex: 1,
@@ -167,6 +250,13 @@ const styles = StyleSheet.create({
   },
   itemStyle: {
     padding: 5,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+  },
+  checkedItem: {
+    textDecorationLine: "line-through",
   },
 });
 

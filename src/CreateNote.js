@@ -34,7 +34,7 @@ const CreateNote = ({ navigation }) => {
           Keyboard.dismiss();
         })
         .then(() => {
-          navigation.navigate("BrainMap");
+          navigation.navigate("Brain Map");
         })
         .catch((error) => {
           alert(error);
@@ -49,7 +49,7 @@ const CreateNote = ({ navigation }) => {
         style={{ color: "ccc", fontSize: 22 }}
         multiline={true}
         autoFocus
-        selectionColor="#fff"
+        selectionColor="#aaa"
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 30,
-    paddingTop: 80,
+    paddingTop: 20,
     width: Dimensions.get("window").width,
   },
   bottom: {

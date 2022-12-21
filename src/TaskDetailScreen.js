@@ -16,28 +16,57 @@ import { firebase } from "../firebaseConfig";
 
 const TaskDetail = ({ route, navigation }) => {
   const [task, setTask] = useState("");
+  const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
-  const [taskDetail, setTaskDetail] = useState(route.params.text);
+  const [taskText, setTaskText] = useState(route.params.text);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
-  async function fetchData() {
-    tasksRef.onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const { heading, text } = doc.data();
-        // console.log({
-        //   id: doc.id,
-        //   heading,
-        //   text,
-        // });
-      });
-      //   setTask();
-    });
-  }
+  // async function fetchData() {
+  //   tasksRef.onSnapshot((querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       const { heading, text } = doc.data();
+  //       // console.log({
+  //       //   id: doc.id,
+  //       //   heading,
+  //       //   text,
+  //       // });
+  //     });
+  //     //   setTask();
+  //   });
+  // }
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  const updateTask = async () => {
+    console.log("updateTask called");
+    if (taskHeader && taskHeader.length > 0) {
+      // get the timestamp
+      const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+      const data = {
+        heading: taskHeader,
+        text: taskText,
+        updatedAt: timestamp,
+      };
+      console.log(data);
+      tasksRef
+        .doc(taskId)
+        .update(data)
+        // .then(() => {
+        //   //setNoteHeader("");
+        //   // release Keyboard
+        //   Keyboard.dismiss();
+        // })
+        .then(() => {
+          navigation.navigate("Task List");
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
+  };
 
   const renderTask = ({ item }) => (
     <TouchableOpacity style={styles.itemStyle}>
@@ -52,25 +81,32 @@ const TaskDetail = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        value={taskHeader}
-        onChangeText={setTaskHeader}
-        placeholder={taskHeader}
-        placeholderTextColor="black"
-        style={{ color: "ccc", fontSize: 22 }}
-        autoFocus
-        selectionColor="#fff"
-      />
-      <TextInput
-        value={taskDetail}
-        onChangeText={setTaskDetail}
-        placeholder={taskDetail}
-        style={{ color: "ccc", fontSize: 22 }}
-        multiline={true}
-        autoFocus
-        selectionColor="#fff"
-        style={styles.mainSection}
-      />
+      <View style={styles.screenWrapper}>
+        <TextInput
+          value={taskHeader}
+          onChangeText={setTaskHeader}
+          placeholder={taskHeader}
+          placeholderTextColor="black"
+          style={{ color: "ccc", fontSize: 22 }}
+          autoFocus
+          selectionColor="#aaa"
+        />
+        <TextInput
+          value={taskText}
+          onChangeText={setTaskText}
+          placeholder={taskText}
+          style={{ color: "ccc", fontSize: 22 }}
+          multiline={true}
+          autoFocus
+          selectionColor="#aaa"
+          style={styles.mainSection}
+        />
+        <View style={styles.bottomSection}>
+          <TouchableOpacity style={styles.plusBtn} onPress={() => updateTask()}>
+            <Text style={styles.plusText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -79,6 +115,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  screenWrapper: {
+    flex: 1,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    // flexDirection: "column",
   },
   headerSection: {
     flex: 1,
@@ -89,9 +131,8 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     flex: 1,
-    backgroundColor: "red",
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   item: {
     width: 80,
@@ -106,13 +147,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   plusBtn: {
-    backgroundColor: "green",
-    width: 80,
-    height: 80,
-
-    borderRadius: 45,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 72,
+    borderRadius: 4,
+    elevation: 4,
+    backgroundColor: "green",
   },
   plusText: {
     fontSize: 30,

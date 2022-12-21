@@ -15,7 +15,7 @@ import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
 
 const CreateTask = ({ route, navigation }) => {
-  const [taskHeader, setTaskHeader] = useState(route.params.taskDetails);
+  const [taskHeader, setTaskHeader] = useState(route.params);
   const [taskDetail, setTaskDetail] = useState("");
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -40,7 +40,7 @@ const CreateTask = ({ route, navigation }) => {
         Keyboard.dismiss();
       })
       .then(() => {
-        navigation.navigate("TaskList");
+        navigation.navigate("Task List");
       })
       .catch((error) => {
         alert(error);
@@ -56,7 +56,7 @@ const CreateTask = ({ route, navigation }) => {
         placeholderTextColor="black"
         style={{ color: "ccc", fontSize: 22 }}
         autoFocus
-        selectionColor="#fff"
+        selectionColor="#aaa"
       />
       <TextInput
         value={taskDetail}
@@ -65,7 +65,7 @@ const CreateTask = ({ route, navigation }) => {
         style={{ color: "ccc", fontSize: 22 }}
         multiline={true}
         autoFocus
-        selectionColor="#fff"
+        selectionColor="#aaa"
         style={styles.mainSection}
       />
       {/* <Text>TaskHeader: {JSON.stringify(taskDetails)}</Text> */}
@@ -76,16 +76,12 @@ const CreateTask = ({ route, navigation }) => {
       >
         <Button
           style={styles.button}
-          onPress={saveTask}
+          onPress={() => {
+            saveTask();
+            navigation.navigate("Task List");
+          }}
           color="#841584"
           title="Create Task"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <Button
-          style={styles.button}
-          onPress={() => navigation.navigate("TaskList")}
-          color="#841584"
-          title="Back"
           accessibilityLabel="Learn more about this purple button"
         />
       </KeyboardAvoidingView>
@@ -96,7 +92,7 @@ const CreateTask = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fcd",
+    backgroundColor: "#fff",
     padding: 30,
     paddingTop: 20,
     width: Dimensions.get("window").width,

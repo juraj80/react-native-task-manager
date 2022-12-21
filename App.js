@@ -8,6 +8,7 @@ import BrainMapScreen from "./src/BrainMapScreen";
 import CreateNote from "./src/CreateNote";
 import CreateTask from "./src/CreateTask";
 import TaskDetail from "./src/TaskDetailScreen";
+import NoteDetail from "./src/NoteDetailScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import AppDrawerNavigator from "./components/DrawerNavigator";
@@ -19,7 +20,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="drawer"
+          name="Back"
           component={AppDrawerNavigator}
           headerShown={false}
           options={{ headerMode: "none", headerShown: false }}
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="Create Note" component={CreateNote} />
         <Stack.Screen name="Create Task" component={CreateTask} />
         <Stack.Screen name="Task Detail" component={TaskDetail} />
+        <Stack.Screen name="Note Detail" component={NoteDetail} />
       </Stack.Navigator>
 
       <StatusBar style="auto" />

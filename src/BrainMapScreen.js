@@ -9,6 +9,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/core";
 import { getOuterBindingIdentifiers } from "@babel/types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
 import { setUserProperties } from "@firebase/analytics";
@@ -46,42 +47,53 @@ const BrainMapScreen = ({ navigation }) => {
   }, []);
 
   const renderNote = ({ item }) => (
-    <TouchableOpacity style={styles.itemStyle} onPress={() => createTask(item)}>
-      <Text>{item.heading}</Text>
-      <Text>{item.text}</Text>
+    <TouchableOpacity
+      style={styles.itemStyle}
+      onPress={() => createNote(item)}
+      onLongPress={() => createTask(item)}
+    >
+      <MaterialCommunityIcons name="note" size={18} color="black" />
+
+      <Text numberOfLines={1} style={styles.itemText}>
+        {item.heading}
+      </Text>
+      {/* <Text>{item.text}</Text> */}
     </TouchableOpacity>
   );
 
   const createTask = (item) => {
-    console.log(item);
-    navigation.navigate("Create Task", { taskDetails: item.heading });
+    navigation.navigate("Create Task", item.heading);
+  };
+
+  const createNote = (item) => {
+    navigation.navigate("Note Detail", item);
   };
 
   return (
-    // <View style={styles.container}>
-    <View
-      style={styles.container}
-      //   onPress={() => navigation.navigate("TaskList")}
-    >
-      <View style={styles.mainSection}>
-        <FlatList
-          style={{ height: "100%" }}
-          data={allNotes}
-          numColumns={1}
-          renderItem={renderNote}
-        ></FlatList>
-      </View>
+    <View style={styles.container}>
+      <View style={styles.screenWrapper}>
+        <View style={styles.headerSection}>
+          <Text style={styles.screenTitle}>Brain Map</Text>
+        </View>
+        <View style={styles.mainSection}>
+          <FlatList
+            style={{ height: "100%" }}
+            data={allNotes}
+            numColumns={1}
+            renderItem={renderNote}
+          ></FlatList>
+        </View>
 
-      <View style={styles.bottomSection}>
-        <TouchableOpacity
-          style={styles.plusBtn}
-          onPress={() => navigation.navigate("CreateNote")}
-        >
-          <Text style={styles.plusText}>+</Text>
-        </TouchableOpacity>
+        <View style={styles.bottomSection}>
+          <TouchableOpacity
+            style={styles.plusBtn}
+            onPress={() => navigation.navigate("Create Note")}
+          >
+            <Text style={styles.plusText}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-    // </View>
   );
 };
 
@@ -93,9 +105,20 @@ const styles = StyleSheet.create({
   headerSection: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  screenTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  screenWrapper: {
+    flex: 1,
+    paddingTop: 40,
+    paddingHorizontal: 20,
+    // flexDirection: "column",
   },
   mainSection: {
-    flex: 3,
+    flex: 5,
   },
   bottomSection: {
     flex: 1,
@@ -129,8 +152,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   itemStyle: {
-    padding: 5,
-    backgroundColor: "yellow",
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    flexDirection: "row",
   },
 });
 export default BrainMapScreen;
