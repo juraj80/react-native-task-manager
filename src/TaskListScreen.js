@@ -13,6 +13,9 @@ import AnimatedCheckbox from "react-native-checkbox-reanimated";
 import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
+
+import { HorizontalTimeline } from "react-native-horizontal-timeline";
+
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
@@ -129,8 +132,11 @@ const TaskList = ({ navigation }) => {
           <Animated.Text
             style={[item.checked ? styles.checkedItem : "", opacityStyle]}
             // style={opacityStyle}
+            numberOfLines={1}
           >
-            {item.heading}
+            {item.heading.length < 35
+              ? `${item.heading}`
+              : `${item.heading.substring(0, 32)}...`}
           </Animated.Text>
           {/* <Text>{item.text}</Text> */}
         </TouchableOpacity>
@@ -138,7 +144,17 @@ const TaskList = ({ navigation }) => {
     );
   };
 
-  const renderTask = ({ item }) => <Task item={item} />;
+  const renderTask = ({ item, drag, isActive }) => (
+    <ScaleDecorator>
+      <TouchableOpacity
+        onLongPress={drag}
+        disabled={isActive}
+        style={styles.dragItem}
+      >
+        <Task item={item} />
+      </TouchableOpacity>
+    </ScaleDecorator>
+  );
 
   const showTaskDetail = (item) => {
     console.log("item", item);
@@ -146,25 +162,45 @@ const TaskList = ({ navigation }) => {
   };
 
   const createTask = () => {
-    navigation.navigate("Create Task", { taskDetails: "Add Header" });
+    console.log("Create Task pressed");
+    // navigation.navigate("Create Task", { taskDetails: "Add Header" });
+    navigation.navigate("Create Task");
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.mainSection}>
-        <FlatList
-          style={{ height: "100%" }}
-          data={allTasks}
-          numColumns={1}
-          renderItem={renderTask}
-        ></FlatList>
+      <View style={styles.screenWrapper}>
+        <View style={styles.timeline}>
+          <HorizontalTimeline
+            date={new Date().toISOString()}
+            data={{
+              3: { marked: true, info: "Info" },
+              1: { marked: true, info: "Info" },
+            }}
+          />
+        </View>
+
+        <View style={styles.mainSection}>
+          <DraggableFlatList
+            style={{ height: "100%" }}
+            data={allTasks}
+            onDragEnd={({ data }) => setAllTasks(data)}
+            keyExtractor={(task) => task.id}
+            // numColumns={1}
+            renderItem={renderTask}
+          ></DraggableFlatList>
+        </View>
+
+        <View style={styles.bottomSection}>
+          <View style={styles.btnWhiteBackground}>
+            <TouchableOpacity style={styles.plusBtn} onPress={createTask}>
+              <Text style={styles.plusText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.bottomSection}>
-        <TouchableOpacity style={styles.plusBtn} onPress={createTask}>
-          <Text style={styles.plusText}>+</Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.bottomRow}></View>
     </View>
   );
 };
@@ -203,9 +239,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  timeline: {
+    height: 50,
+    marginBottom: 10,
+  },
+  screenWrapper: {
+    flex: 1,
+    // paddingTop: 20,
+    paddingHorizontal: 20,
+    // flexDirection: "column",
+  },
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
+    padding: 10,
+    backgroundColor: "rgba(173, 216, 230, 0.5)",
+    borderRadius: 7,
+  },
+  dragItem: {
     padding: 5,
   },
 
@@ -215,13 +266,43 @@ const styles = StyleSheet.create({
   },
   mainSection: {
     flex: 3,
-    backgroundColor: "yellow",
     padding: 5,
   },
   bottomSection: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+  },
+  bottomRow: {
+    // flex: 1,
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+    height: 70,
+    zIndex: -99,
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "rgba(173, 216, 230, 0.9)",
+  },
+
+  btnWhiteBackground: {
+    backgroundColor: "white",
+    width: 63,
+    height: 63,
+    borderRadius: 45,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btnGreyBackground: {
+    position: "absolute",
+    right: -15,
+    backgroundColor: "lightgrey",
+    width: 75,
+    height: 75,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   item: {
     width: 80,
@@ -236,9 +317,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   plusBtn: {
-    backgroundColor: "blue",
-    width: 80,
-    height: 80,
+    backgroundColor: "rgba(173, 216, 230, 0.9)",
+    width: 60,
+    height: 60,
 
     borderRadius: 45,
     justifyContent: "center",

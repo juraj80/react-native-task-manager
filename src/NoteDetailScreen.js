@@ -89,7 +89,7 @@ const NoteDetail = ({ route, navigation }) => {
           style={{ color: "ccc", fontSize: 22 }}
           multiline={true}
           autoFocus
-          selectionColor="#fff"
+          selectionColor="#000"
         />
         <TextInput
           value={noteDetail}
@@ -98,7 +98,7 @@ const NoteDetail = ({ route, navigation }) => {
           style={{ color: "ccc", fontSize: 22 }}
           multiline={true}
           autoFocus
-          selectionColor="#fff"
+          selectionColor="#000"
           style={styles.mainSection}
         />
         <View style={styles.bottomSection}>

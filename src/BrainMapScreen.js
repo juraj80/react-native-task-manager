@@ -52,7 +52,7 @@ const BrainMapScreen = ({ navigation }) => {
       onPress={() => createNote(item)}
       onLongPress={() => createTask(item)}
     >
-      <MaterialCommunityIcons name="note" size={18} color="black" />
+      {/* <MaterialCommunityIcons name="note-outline" size={18} color="black" /> */}
 
       <Text numberOfLines={1} style={styles.itemText}>
         {item.heading}
@@ -85,14 +85,19 @@ const BrainMapScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.bottomSection}>
-          <TouchableOpacity
-            style={styles.plusBtn}
-            onPress={() => navigation.navigate("Create Note")}
-          >
-            <Text style={styles.plusText}>+</Text>
-          </TouchableOpacity>
+          <View style={styles.btnGreyBackground}>
+            <View style={styles.btnWhiteBackground}>
+              <TouchableOpacity
+                style={styles.plusBtn}
+                onPress={() => navigation.navigate("Create Note")}
+              >
+                <Text style={styles.plusText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
+      <View style={styles.bottomRow}></View>
     </View>
   );
 };
@@ -100,7 +105,8 @@ const BrainMapScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#3EB489",
+    opacity: 0.8,
   },
   headerSection: {
     flex: 1,
@@ -110,11 +116,12 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: "bold",
+    color: "white",
   },
   screenWrapper: {
     flex: 1,
-    paddingTop: 40,
-    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     // flexDirection: "column",
   },
   mainSection: {
@@ -122,9 +129,19 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     flex: 1,
-    backgroundColor: "red",
     justifyContent: "center",
     alignItems: "flex-end",
+  },
+  bottomRow: {
+    // flex: 1,
+    position: "absolute",
+    width: "100%",
+    bottom: 0,
+    height: 70,
+    zIndex: -99,
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "lightgrey",
   },
   item: {
     width: 80,
@@ -138,11 +155,30 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 12,
   },
-  plusBtn: {
-    backgroundColor: "green",
-    width: 80,
-    height: 80,
+  btnWhiteBackground: {
+    backgroundColor: "white",
+    width: 63,
+    height: 63,
+    borderRadius: 45,
 
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btnGreyBackground: {
+    position: "absolute",
+    right: -15,
+    backgroundColor: "lightgrey",
+    width: 75,
+    height: 75,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  plusBtn: {
+    backgroundColor: "rgba(173, 173, 173, 0.9)",
+    width: 60,
+    height: 60,
     borderRadius: 45,
     justifyContent: "center",
     alignItems: "center",
@@ -155,6 +191,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 15,
     flexDirection: "row",
+  },
+  itemText: {
+    marginLeft: 5,
+    color: "white",
+    fontSize: 15,
   },
 });
 export default BrainMapScreen;

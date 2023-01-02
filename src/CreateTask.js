@@ -52,7 +52,7 @@ const CreateTask = ({ route, navigation }) => {
       <TextInput
         value={taskHeader}
         onChangeText={setTaskHeader}
-        placeholder={taskHeader}
+        placeholder="Add Header"
         placeholderTextColor="black"
         style={{ color: "ccc", fontSize: 22 }}
         autoFocus
@@ -74,6 +74,13 @@ const CreateTask = ({ route, navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.bottom}
       >
+        <Button
+          style={styles.button}
+          onPress={() => {}}
+          color="#841584"
+          title="Set Due Date "
+          accessibilityLabel="Learn more about this purple button"
+        />
         <Button
           style={styles.button}
           onPress={() => {
