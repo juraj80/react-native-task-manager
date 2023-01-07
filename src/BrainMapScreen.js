@@ -21,21 +21,16 @@ const BrainMapScreen = ({ navigation }) => {
 
   const notesRef = firebase.firestore().collection("notes");
 
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //       getNotes();
-  //     }, [])
-  //   );
-
   async function fetchData() {
     notesRef.onSnapshot((querySnapshot) => {
       const users = [];
       querySnapshot.forEach((doc) => {
-        const { heading, text } = doc.data();
+        const { heading, text, createdAt } = doc.data();
         users.push({
           id: doc.id,
           heading,
           text,
+          createdAt,
         });
       });
       setAllNotes(users);
@@ -73,7 +68,7 @@ const BrainMapScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
         <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Brain Map</Text>
+          <Text style={styles.screenTitle}>Notes</Text>
         </View>
         <View style={styles.mainSection}>
           <FlatList
@@ -105,7 +100,7 @@ const BrainMapScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3EB489",
+    backgroundColor: "#4682B4",
     opacity: 0.8,
   },
   headerSection: {

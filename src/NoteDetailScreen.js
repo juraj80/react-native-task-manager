@@ -59,7 +59,7 @@ const NoteDetail = ({ route, navigation }) => {
         //   Keyboard.dismiss();
         // })
         .then(() => {
-          navigation.navigate("Brain Map");
+          navigation.navigate("Notes");
         })
         .catch((error) => {
           alert(error);
@@ -87,6 +87,7 @@ const NoteDetail = ({ route, navigation }) => {
           placeholder={noteHeader}
           placeholderTextColor="black"
           style={{ color: "ccc", fontSize: 22 }}
+          spellCheck={false}
           multiline={true}
           autoFocus
           selectionColor="#000"
@@ -96,6 +97,7 @@ const NoteDetail = ({ route, navigation }) => {
           onChangeText={setNoteDetail}
           placeholder={noteDetail}
           style={{ color: "ccc", fontSize: 22 }}
+          spellCheck={false}
           multiline={true}
           autoFocus
           selectionColor="#000"

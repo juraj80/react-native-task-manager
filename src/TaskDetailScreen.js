@@ -10,9 +10,14 @@ import {
   Button,
   KeyboardAvoidingView,
   Dimensions,
+  LogBox,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 const TaskDetail = ({ route, navigation }) => {
   const [task, setTask] = useState("");
@@ -60,7 +65,7 @@ const TaskDetail = ({ route, navigation }) => {
         //   Keyboard.dismiss();
         // })
         .then(() => {
-          navigation.navigate("Task List");
+          navigation.navigate("Tasks");
         })
         .catch((error) => {
           alert(error);
@@ -88,6 +93,7 @@ const TaskDetail = ({ route, navigation }) => {
           placeholder={taskHeader}
           placeholderTextColor="black"
           style={{ color: "ccc", fontSize: 22 }}
+          spellCheck={false}
           autoFocus
           selectionColor="#aaa"
         />
@@ -96,6 +102,7 @@ const TaskDetail = ({ route, navigation }) => {
           onChangeText={setTaskText}
           placeholder={taskText}
           style={{ color: "ccc", fontSize: 22 }}
+          spellCheck={false}
           multiline={true}
           autoFocus
           selectionColor="#aaa"

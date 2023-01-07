@@ -14,28 +14,43 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
-import { HorizontalTimeline } from "react-native-horizontal-timeline";
+// import { HorizontalTimeline } from "react-native-horizontal-timeline";
+import HorizontalTimeline from "../components/CustomTimeline";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
 const TaskList = ({ navigation }) => {
   const [allTasks, setAllTasks] = useState([]);
+  const [timelineData, setTimelineData] = useState({});
 
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
+      const data = {};
       querySnapshot.forEach((doc) => {
-        const { heading, text } = doc.data();
+        const { heading, text, completed } = doc.data();
+
+        const dueDate = doc.data().dueDateAt.toDate();
+        const date = dueDate.getDate();
         tasks.push({
           id: doc.id,
           heading,
           text,
+          completed,
+          dueDateAt: dueDate,
+        });
+
+        Object.assign(data, {
+          [date]: { id: doc.id, marked: true, info: heading },
         });
       });
       setAllTasks(tasks);
+      setTimelineData(data);
+      // console.log("setTimelineData called");
+      // console.log(data);
     });
   }
 
@@ -43,46 +58,39 @@ const TaskList = ({ navigation }) => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   let temp = allTasks.filter((el) => !el.checked);
-
-  //   const timeout = setTimeout(() => {
-  //     setAllTasks(temp);
-  //   }, 1000);
-  // }, [allTasks]);
-
-  // const onChecked = (id) => {
-  //   console.log("onchecked called with id ", id);
-  //   const data = allTasks;
-  //   const index = data.findIndex((x) => x.id === id);
-  //   console.log("index", index);
-  //   data[index].checked = !data[index].checked;
-  //   console.log("DATA", data);
-  //   setAllTasks(data);
-  // };
-
   const handleChange = (id) => {
     let temp = allTasks.map((product) => {
       if (id === product.id) {
-        return { ...product, checked: !product.checked };
+        return { ...product, completed: !product.completed };
       }
       return product;
     });
     // temp = temp.filter((el) => !el.checked);
     // console.log("TEMP", temp);
+
     setAllTasks(temp);
 
+    const completed = temp.filter((el) => el.completed);
+    console.log("completed", completed[0].dueDateAt.getDate());
+    const date = completed[0].dueDateAt.getDate();
+    let timelineDataTemp = { ...timelineData };
+
+    console.log("timeTemp", timelineDataTemp);
+    delete timelineDataTemp[date];
+    setTimelineData(timelineDataTemp);
+
     const timeout = setTimeout(() => {
-      temp = temp.filter((el) => !el.checked);
+      temp = temp.filter((el) => !el.completed);
       setAllTasks(temp);
+      console.log("timelineData", timelineData);
     }, 2000);
   };
 
-  const removeTask = () => {
-    let temp = allTasks.filter((el) => !el.checked);
-    console.log("TEMP", temp);
-    setAllTasks(temp);
-  };
+  // const removeTask = () => {
+  //   let temp = allTasks.filter((el) => !el.completed);
+  //   console.log("TEMP", temp);
+  //   setAllTasks(temp);
+  // };
 
   // const handleCheckboxPress = () => {
   //   setChecked((prev) => {
@@ -94,15 +102,12 @@ const TaskList = ({ navigation }) => {
     const fadeAnim = useRef(new Animated.Value(1)).current;
 
     const fadeOut = () => {
-      console.log("FADE OUT called with fadeAnim value", fadeAnim);
       // Will change fadeAnim value to 0 in 3 seconds
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1500,
         useNativeDriver: true,
-      }).start(() => {
-        console.log("FADE ANIM", fadeAnim);
-      });
+      }).start(() => {});
     };
     const opacityStyle = { opacity: fadeAnim };
 
@@ -117,10 +122,10 @@ const TaskList = ({ navigation }) => {
           style={styles.checkbox}
         >
           <AnimatedCheckbox
-            checked={item.checked}
-            highlightColor="#4444ff"
-            checkmarkColor="#ffffff"
-            boxOutlineColor="#4444ff"
+            checked={item.completed}
+            highlightColor="#ffffff"
+            checkmarkColor="#000000"
+            boxOutlineColor="#ffffff"
           />
         </Pressable>
         <TouchableOpacity
@@ -130,7 +135,11 @@ const TaskList = ({ navigation }) => {
           }}
         >
           <Animated.Text
-            style={[item.checked ? styles.checkedItem : "", opacityStyle]}
+            style={[
+              item.completed ? styles.checkedItem : "",
+              opacityStyle,
+              styles.itemText,
+            ]}
             // style={opacityStyle}
             numberOfLines={1}
           >
@@ -170,13 +179,13 @@ const TaskList = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
+        <View style={styles.headerSection}>
+          <Text style={styles.screenTitle}>Tasks</Text>
+        </View>
         <View style={styles.timeline}>
           <HorizontalTimeline
             date={new Date().toISOString()}
-            data={{
-              3: { marked: true, info: "Info" },
-              1: { marked: true, info: "Info" },
-            }}
+            data={timelineData}
           />
         </View>
 
@@ -245,17 +254,24 @@ const styles = StyleSheet.create({
   },
   screenWrapper: {
     flex: 1,
-    // paddingTop: 20,
+    paddingTop: 40,
     paddingHorizontal: 20,
     // flexDirection: "column",
+  },
+  screenTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#4169E1",
   },
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "rgba(173, 216, 230, 0.5)",
+    // backgroundColor: "rgba(173, 216, 230, 0.5)",
+    backgroundColor: "#6495ED",
     borderRadius: 7,
   },
+  itemText: { color: "white" },
   dragItem: {
     padding: 5,
   },
@@ -265,11 +281,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainSection: {
-    flex: 3,
+    flex: 9,
     padding: 5,
   },
   bottomSection: {
-    flex: 1,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -278,11 +294,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     bottom: 0,
-    height: 70,
+    height: 50,
     zIndex: -99,
     // justifyContent: "center",
     // alignItems: "center",
-    backgroundColor: "rgba(173, 216, 230, 0.9)",
+    backgroundColor: "#4169E1",
   },
 
   btnWhiteBackground: {
@@ -317,7 +333,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   plusBtn: {
-    backgroundColor: "rgba(173, 216, 230, 0.9)",
+    backgroundColor: "#4169E1",
     width: 60,
     height: 60,
 

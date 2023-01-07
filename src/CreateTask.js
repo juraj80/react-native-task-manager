@@ -14,14 +14,32 @@ import {
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
 
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 const CreateTask = ({ route, navigation }) => {
   const [taskHeader, setTaskHeader] = useState(route.params);
   const [taskDetail, setTaskDetail] = useState("");
+  const [taskDueDate, setTaskDueDate] = useState(new Date());
+
   const tasksRef = firebase.firestore().collection("tasks");
+
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setTaskDueDate(date);
+    hideDatePicker();
+  };
 
   const saveTask = async () => {
     // if (taskHeader && taskHeader.length > 0) {
-    console.log("f saveTask called");
 
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -29,6 +47,8 @@ const CreateTask = ({ route, navigation }) => {
       heading: taskHeader,
       text: taskDetail,
       createdAt: timestamp,
+      dueDateAt: taskDueDate,
+      completed: false,
     };
 
     tasksRef
@@ -40,7 +60,7 @@ const CreateTask = ({ route, navigation }) => {
         Keyboard.dismiss();
       })
       .then(() => {
-        navigation.navigate("Task List");
+        navigation.navigate("Tasks");
       })
       .catch((error) => {
         alert(error);
@@ -55,6 +75,7 @@ const CreateTask = ({ route, navigation }) => {
         placeholder="Add Header"
         placeholderTextColor="black"
         style={{ color: "ccc", fontSize: 22 }}
+        spellCheck={false}
         autoFocus
         selectionColor="#aaa"
       />
@@ -63,6 +84,7 @@ const CreateTask = ({ route, navigation }) => {
         onChangeText={setTaskDetail}
         placeholder="Add Details"
         style={{ color: "ccc", fontSize: 22 }}
+        spellCheck={false}
         multiline={true}
         autoFocus
         selectionColor="#aaa"
@@ -74,9 +96,15 @@ const CreateTask = ({ route, navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.bottom}
       >
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
         <Button
           style={styles.button}
-          onPress={() => {}}
+          onPress={showDatePicker}
           color="#841584"
           title="Set Due Date "
           accessibilityLabel="Learn more about this purple button"
@@ -85,7 +113,7 @@ const CreateTask = ({ route, navigation }) => {
           style={styles.button}
           onPress={() => {
             saveTask();
-            navigation.navigate("Task List");
+            navigation.navigate("Tasks");
           }}
           color="#841584"
           title="Create Task"

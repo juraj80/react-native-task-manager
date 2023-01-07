@@ -34,7 +34,7 @@ const CreateNote = ({ navigation }) => {
           Keyboard.dismiss();
         })
         .then(() => {
-          navigation.navigate("Brain Map");
+          navigation.navigate("Notes");
         })
         .catch((error) => {
           alert(error);
@@ -47,6 +47,7 @@ const CreateNote = ({ navigation }) => {
         value={note}
         onChangeText={setNote}
         style={{ color: "ccc", fontSize: 22 }}
+        spellCheck={false}
         multiline={true}
         autoFocus
         selectionColor="#aaa"
