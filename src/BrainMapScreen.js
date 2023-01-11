@@ -74,13 +74,13 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   // const MyModal = ({ item, setNote }) => {
-  const MyModal = () => {
-    const [textValue, setTextValue] = useState(selectedNote.heading);
+  const MyModal = ({ note, setNote }) => {
+    const [textValue, setTextValue] = useState(note.heading);
 
     const onFormSubmitted = () => {
       console.log("onFormSubmitted called");
       const new_obj = { ...selectedNote, heading: textValue };
-      setSelectedNote(new_obj);
+      setNote(new_obj);
     };
 
     return (
@@ -142,7 +142,7 @@ const BrainMapScreen = ({ navigation }) => {
               <Pressable
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => {
-                  createTask(selectedNote);
+                  createTask(note);
                   setModalVisible(!modalVisible);
                 }}
               >
@@ -151,7 +151,7 @@ const BrainMapScreen = ({ navigation }) => {
               <Pressable
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => {
-                  deleteNote(selectedNote);
+                  deleteNote(note);
                   setModalVisible(!modalVisible);
                 }}
               >
@@ -240,8 +240,7 @@ const BrainMapScreen = ({ navigation }) => {
             renderItem={renderNote}
           ></FlatList>
         </View>
-        {/* <MyModal item={selectedNote} setNote={setSelectedNote} /> */}
-        <MyModal />
+        <MyModal note={selectedNote} setNote={setSelectedNote} />
 
         <View style={styles.bottomSection}>
           <View style={styles.btnGreyBackground}>
