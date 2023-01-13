@@ -13,12 +13,31 @@ import React, { useState, useEffect } from "react";
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
 // Start of MyModal component
-const MyModal = ({ note, setNote }) => {
-  const [textValue, setTextValue] = useState(note.heading);
+
+// const MyModal = ({ item, setNote }) => {
+const TaskModal = ({
+  note,
+  setNote,
+  isVisible,
+  setIsVisible,
+  updateNote,
+  saveNote,
+}) => {
+  const [textValue, setTextValue] = useState("");
 
   const onFormSubmitted = () => {
     console.log("onFormSubmitted called");
-    const new_obj = { ...note, heading: textValue };
+    const new_obj = { ...selectedNote, heading: textValue };
+    setNote(new_obj);
+  };
+
+  //   useEffect(() => {
+  //     setTextValue(note.heading);
+  //   }, []);
+
+  const inputHandler = (enteredText) => {
+    console.log(enteredText);
+    const new_obj = { ...note, heading: enteredText };
     setNote(new_obj);
   };
 
@@ -26,13 +45,20 @@ const MyModal = ({ note, setNote }) => {
     <Modal
       animationType="fade"
       transparent={true}
-      visible={modalVisible}
+      visible={isVisible}
       onRequestClose={() => {
         Alert.alert("Modal has been closed.");
-        setModalVisible(!modalVisible);
+        // setModalVisible(!modalVisible);
+        setIsVisible(!isVisible);
       }}
     >
-      <TouchableWithoutFeedback onPress={() => setModalVisible(!modalVisible)}>
+      {console.log("received props NOTE", note)}
+      {console.log("textValue", textValue)}
+
+      <TouchableWithoutFeedback
+        // onPress={() => setModalVisible(!modalVisible)}
+        onPress={() => setIsVisible(!isVisible)}
+      >
         <View style={styles.modalOverlay} />
       </TouchableWithoutFeedback>
       <View style={styles.centeredView}>
@@ -47,9 +73,9 @@ const MyModal = ({ note, setNote }) => {
           />
           <View style={styles.textInputSection}>
             <TextInput
-              value={textValue}
+              value={note.heading}
               onChangeText={(text) => {
-                setTextValue(text);
+                inputHandler(text);
               }}
               placeholder={"Add Note"}
               onEndEditing={() => onFormSubmitted()}
@@ -69,18 +95,19 @@ const MyModal = ({ note, setNote }) => {
           />
 
           {/* <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable> */}
+                  style={[styles.buttonModal, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Hide Modal</Text>
+                </Pressable> */}
 
           <View style={styles.modalBtnSection}>
             <Pressable
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
                 createTask(note);
-                setModalVisible(!modalVisible);
+                // setModalVisible(!modalVisible);
+                setIsVisible(!isVisible);
               }}
             >
               <Text style={styles.textStyle}>Create Task</Text>
@@ -89,7 +116,8 @@ const MyModal = ({ note, setNote }) => {
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
                 deleteNote(note);
-                setModalVisible(!modalVisible);
+                // setModalVisible(!modalVisible);
+                setIsVisible(!isVisible);
               }}
             >
               <Text style={styles.textStyle}>Delete</Text>
@@ -97,7 +125,13 @@ const MyModal = ({ note, setNote }) => {
             <Pressable
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
-                updateNote(textValue);
+                console.log(note.heading);
+                if (note.id) {
+                  updateNote(note.heading);
+                } else {
+                  console.log("Need to create new Note");
+                  saveNote(note.heading);
+                }
               }}
             >
               <Text style={styles.textStyle}>Update</Text>
@@ -278,4 +312,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 });
-export default MyModal;
+export default TaskModal;

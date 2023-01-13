@@ -11,12 +11,16 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
+import TaskModal from "../components/MyModal";
+
+// import MyModal from "../components/MyModal";
 import { useFocusEffect } from "@react-navigation/core";
 import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
 import { setUserProperties } from "@firebase/analytics";
+import { set } from "react-native-reanimated";
 
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
@@ -73,8 +77,8 @@ const BrainMapScreen = ({ navigation }) => {
     setSelectedNote(new_obj);
   };
 
-  // const MyModal = ({ item, setNote }) => {
-  const MyModal = ({ note, setNote }) => {
+  /*** MODAL START */
+  const MyModal = ({ note, setNote, isVisible, setIsVisible }) => {
     const [textValue, setTextValue] = useState(note.heading);
 
     const onFormSubmitted = () => {
@@ -87,14 +91,16 @@ const BrainMapScreen = ({ navigation }) => {
       <Modal
         animationType="fade"
         transparent={true}
-        visible={modalVisible}
+        visible={isVisible}
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+          // setModalVisible(!modalVisible);
+          setIsVisible(!isVisible);
         }}
       >
         <TouchableWithoutFeedback
-          onPress={() => setModalVisible(!modalVisible)}
+          // onPress={() => setModalVisible(!modalVisible)}
+          onPress={() => setIsVisible(!isVisible)}
         >
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
@@ -143,7 +149,8 @@ const BrainMapScreen = ({ navigation }) => {
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => {
                   createTask(note);
-                  setModalVisible(!modalVisible);
+                  // setModalVisible(!modalVisible);
+                  setIsVisible(!isVisible);
                 }}
               >
                 <Text style={styles.textStyle}>Create Task</Text>
@@ -152,7 +159,8 @@ const BrainMapScreen = ({ navigation }) => {
                 style={[styles.buttonModal, styles.buttonClose]}
                 onPress={() => {
                   deleteNote(note);
-                  setModalVisible(!modalVisible);
+                  // setModalVisible(!modalVisible);
+                  setIsVisible(!isVisible);
                 }}
               >
                 <Text style={styles.textStyle}>Delete</Text>
@@ -172,11 +180,13 @@ const BrainMapScreen = ({ navigation }) => {
     );
   };
 
+  /*** MODAL END */
+
   const renderNote = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.itemStyle}
-        onPress={() => createNote(item)}
+        onPress={() => showNoteDetail(item)}
         // onLongPress={() => createTask(item)}
         onLongPress={() => {
           setModalVisible(!modalVisible);
@@ -198,10 +208,9 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const updateNote = (text) => {
-    console.log("updateNote called with " + text);
     const new_obj = { ...selectedNote, heading: text };
     setSelectedNote(new_obj);
-    console.log("befor update", allNotes);
+    // console.log("befor update: ", allNotes);
 
     const updated_notes = allNotes.map((note) => {
       if (note.id == selectedNote.id) {
@@ -209,10 +218,32 @@ const BrainMapScreen = ({ navigation }) => {
       }
       return note;
     });
-    console.log("update", updated_notes);
+    // console.log("updated notes: ", updated_notes);
     setAllNotes(updated_notes);
 
     setModalVisible(!modalVisible);
+  };
+
+  const saveNote = async (text) => {
+    // get the timestamp
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const data = {
+      heading: text,
+      createdAt: timestamp,
+    };
+    notesRef
+      .add(data)
+      .then(() => {
+        setSelectedNote({});
+        // release Keyboard
+        //Keyboard.dismiss();
+      })
+      .then(() => {
+        setModalVisible(!modalVisible);
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   const deleteNote = (item) => {
@@ -222,8 +253,13 @@ const BrainMapScreen = ({ navigation }) => {
     deleteNoteFromDB(item.id);
   };
 
-  const createNote = (item) => {
+  const showNoteDetail = (item) => {
     navigation.navigate("Note Detail", item);
+  };
+
+  const createNote = () => {
+    setSelectedNote({});
+    setModalVisible(!modalVisible);
   };
 
   return (
@@ -240,14 +276,22 @@ const BrainMapScreen = ({ navigation }) => {
             renderItem={renderNote}
           ></FlatList>
         </View>
-        <MyModal note={selectedNote} setNote={setSelectedNote} />
+        <TaskModal
+          note={selectedNote}
+          setNote={setSelectedNote}
+          isVisible={modalVisible}
+          setIsVisible={setModalVisible}
+          updateNote={updateNote}
+          saveNote={saveNote}
+        />
 
         <View style={styles.bottomSection}>
           <View style={styles.btnGreyBackground}>
             <View style={styles.btnWhiteBackground}>
               <TouchableOpacity
                 style={styles.plusBtn}
-                onPress={() => navigation.navigate("Create Note")}
+                // onPress={() => navigation.navigate("Create Note")}
+                onPress={() => createNote()}
               >
                 <Text style={styles.plusText}>+</Text>
               </TouchableOpacity>
