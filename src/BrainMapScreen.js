@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import TaskModal from "../components/MyModal";
+import NoteModal from "../components/NoteModal";
 
 // import MyModal from "../components/MyModal";
 import { useFocusEffect } from "@react-navigation/core";
@@ -71,116 +71,11 @@ const BrainMapScreen = ({ navigation }) => {
   }, []);
 
   const inputHandler = (enteredText) => {
-    console.log(enteredText);
-    console.log(selectedNote);
+    // console.log(enteredText);
+    // console.log(selectedNote);
     const new_obj = { ...selectedNote, heading: enteredText };
     setSelectedNote(new_obj);
   };
-
-  /*** MODAL START */
-  const MyModal = ({ note, setNote, isVisible, setIsVisible }) => {
-    const [textValue, setTextValue] = useState(note.heading);
-
-    const onFormSubmitted = () => {
-      console.log("onFormSubmitted called");
-      const new_obj = { ...selectedNote, heading: textValue };
-      setNote(new_obj);
-    };
-
-    return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          // setModalVisible(!modalVisible);
-          setIsVisible(!isVisible);
-        }}
-      >
-        <TouchableWithoutFeedback
-          // onPress={() => setModalVisible(!modalVisible)}
-          onPress={() => setIsVisible(!isVisible)}
-        >
-          <View style={styles.modalOverlay} />
-        </TouchableWithoutFeedback>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {/* <Text style={styles.modalText}> {selectedNote.heading}</Text> */}
-            <View
-              style={{
-                borderBottomColor: "grey",
-                borderBottomWidth: 1,
-                alignSelf: "stretch",
-              }}
-            />
-            <View style={styles.textInputSection}>
-              <TextInput
-                value={textValue}
-                onChangeText={(text) => {
-                  setTextValue(text);
-                }}
-                placeholder={"Add Note"}
-                onEndEditing={() => onFormSubmitted()}
-                style={{ color: "ccc", fontSize: 22 }}
-                spellCheck={false}
-                multiline={true}
-                autofocus
-                selectionColor="#aaa"
-              />
-            </View>
-            <View
-              style={{
-                borderBottomColor: "grey",
-                borderBottomWidth: 1,
-                alignSelf: "stretch",
-              }}
-            />
-
-            {/* <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable> */}
-
-            <View style={styles.modalBtnSection}>
-              <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
-                onPress={() => {
-                  createTask(note);
-                  // setModalVisible(!modalVisible);
-                  setIsVisible(!isVisible);
-                }}
-              >
-                <Text style={styles.textStyle}>Create Task</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
-                onPress={() => {
-                  deleteNote(note);
-                  // setModalVisible(!modalVisible);
-                  setIsVisible(!isVisible);
-                }}
-              >
-                <Text style={styles.textStyle}>Delete</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
-                onPress={() => {
-                  updateNote(textValue);
-                }}
-              >
-                <Text style={styles.textStyle}>Update</Text>
-              </Pressable>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
-
-  /*** MODAL END */
 
   const renderNote = ({ item }) => {
     return (
@@ -247,7 +142,7 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const deleteNote = (item) => {
-    console.log(item.id);
+    // console.log(item.id);
     filtered = allNotes.filter((note) => note.id != item.id);
     setAllNotes(filtered);
     deleteNoteFromDB(item.id);
@@ -257,6 +152,7 @@ const BrainMapScreen = ({ navigation }) => {
     navigation.navigate("Note Detail", item);
   };
 
+  // creates a new Note on the plus button press
   const createNote = () => {
     setSelectedNote({});
     setModalVisible(!modalVisible);
@@ -276,13 +172,15 @@ const BrainMapScreen = ({ navigation }) => {
             renderItem={renderNote}
           ></FlatList>
         </View>
-        <TaskModal
+        <NoteModal
           note={selectedNote}
           setNote={setSelectedNote}
           isVisible={modalVisible}
           setIsVisible={setModalVisible}
           updateNote={updateNote}
           saveNote={saveNote}
+          createTask={createTask}
+          deleteNote={deleteNote}
         />
 
         <View style={styles.bottomSection}>

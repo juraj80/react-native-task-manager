@@ -16,19 +16,21 @@ var height = Dimensions.get("window").height; //full width
 
 // const MyModal = ({ item, setNote }) => {
 const TaskModal = ({
-  note,
-  setNote,
+  task,
+  setTask,
   isVisible,
   setIsVisible,
-  updateNote,
-  saveNote,
+  updateTask,
+  saveTask,
+  // createTask,
+  deleteTask,
 }) => {
   const [textValue, setTextValue] = useState("");
 
   const onFormSubmitted = () => {
-    console.log("onFormSubmitted called");
-    const new_obj = { ...selectedNote, heading: textValue };
-    setNote(new_obj);
+    console.log("onFormSubmitted called", textValue);
+    const new_obj = { ...task, heading: textValue };
+    setTask(new_obj);
   };
 
   //   useEffect(() => {
@@ -37,8 +39,8 @@ const TaskModal = ({
 
   const inputHandler = (enteredText) => {
     console.log(enteredText);
-    const new_obj = { ...note, heading: enteredText };
-    setNote(new_obj);
+    const new_obj = { ...task, heading: enteredText };
+    setTask(new_obj);
   };
 
   return (
@@ -52,8 +54,7 @@ const TaskModal = ({
         setIsVisible(!isVisible);
       }}
     >
-      {console.log("received props NOTE", note)}
-      {console.log("textValue", textValue)}
+      {console.log("received props TASK", task)}
 
       <TouchableWithoutFeedback
         // onPress={() => setModalVisible(!modalVisible)}
@@ -73,11 +74,11 @@ const TaskModal = ({
           />
           <View style={styles.textInputSection}>
             <TextInput
-              value={note.heading}
+              value={task.heading}
               onChangeText={(text) => {
                 inputHandler(text);
               }}
-              placeholder={"Add Note"}
+              placeholder={"Add Task"}
               onEndEditing={() => onFormSubmitted()}
               style={{ color: "ccc", fontSize: 22 }}
               spellCheck={false}
@@ -105,32 +106,35 @@ const TaskModal = ({
             <Pressable
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
-                createTask(note);
+                createTask(task);
                 // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
               <Text style={styles.textStyle}>Create Task</Text>
             </Pressable>
+            {task.heading && (
+              <Pressable
+                style={[styles.buttonModal, styles.buttonClose]}
+                onPress={() => {
+                  deleteTask(task);
+                  // setModalVisible(!modalVisible);
+                  setIsVisible(!isVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Delete</Text>
+              </Pressable>
+            )}
+
             <Pressable
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
-                deleteNote(note);
-                // setModalVisible(!modalVisible);
-                setIsVisible(!isVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Delete</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
-              onPress={() => {
-                console.log(note.heading);
-                if (note.id) {
-                  updateNote(note.heading);
+                console.log(task.heading);
+                if (task.id) {
+                  updateTask(task.heading);
                 } else {
-                  console.log("Need to create new Note");
-                  saveNote(note.heading);
+                  console.log("Need to create new TASK");
+                  saveTask(task.heading);
                 }
               }}
             >

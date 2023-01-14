@@ -14,8 +14,11 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 // import { HorizontalTimeline } from "react-native-horizontal-timeline";
 import HorizontalTimeline from "../components/CustomTimeline";
+import TaskModal from "../components/TaskModal";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
@@ -23,6 +26,11 @@ import { firebase } from "../firebaseConfig";
 const TaskList = ({ navigation }) => {
   const [allTasks, setAllTasks] = useState([]);
   const [timelineData, setTimelineData] = useState({});
+  const [selectedTask, setSelectedTask] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [taskDueDate, setTaskDueDate] = useState(new Date());
+
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -58,6 +66,20 @@ const TaskList = ({ navigation }) => {
     fetchData();
   }, []);
 
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setTaskDueDate(date);
+    hideDatePicker();
+  };
+
+  // handler for completed tasks
   const handleChange = (id) => {
     let temp = allTasks.map((product) => {
       if (id === product.id) {
@@ -67,7 +89,6 @@ const TaskList = ({ navigation }) => {
     });
     // temp = temp.filter((el) => !el.checked);
     // console.log("TEMP", temp);
-
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
@@ -133,6 +154,11 @@ const TaskList = ({ navigation }) => {
           onPress={() => {
             showTaskDetail(item);
           }}
+          onLongPress={() => {
+            console.log("long press");
+            setModalVisible(!modalVisible);
+            setSelectedTask(item);
+          }}
         >
           <Animated.Text
             style={[
@@ -165,6 +191,45 @@ const TaskList = ({ navigation }) => {
     </ScaleDecorator>
   );
 
+  const updateTask = (text) => {
+    // updates the state of the selected task
+    const new_obj = { ...selectedTask, heading: text };
+    setSelectedTask(new_obj);
+
+    // updates the state of all tasks
+    const updated_tasks = allTasks.map((task) => {
+      if (task.id == selectedTask.id) {
+        return { task, heading: text };
+      }
+      return task;
+    });
+    setAllTasks(updated_tasks);
+
+    setModalVisible(!modalVisible);
+  };
+
+  const saveTask = async (text) => {
+    // get the timestamp
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const data = {
+      heading: text,
+      createdAt: timestamp,
+    };
+    tasksRef
+      .add(data)
+      .then(() => {
+        setSelectedTask({});
+        // release Keyboard
+        //Keyboard.dismiss();
+      })
+      .then(() => {
+        setModalVisible(!modalVisible);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
   const showTaskDetail = (item) => {
     console.log("item", item);
     navigation.navigate("Task Detail", item);
@@ -172,8 +237,9 @@ const TaskList = ({ navigation }) => {
 
   const createTask = () => {
     console.log("Create Task pressed");
-    // navigation.navigate("Create Task", { taskDetails: "Add Header" });
-    navigation.navigate("Create Task");
+    // navigation.navigate("Create Task");
+    setSelectedTask({});
+    setModalVisible(!modalVisible);
   };
 
   return (
@@ -194,11 +260,23 @@ const TaskList = ({ navigation }) => {
             style={{ height: "100%" }}
             data={allTasks}
             onDragEnd={({ data }) => setAllTasks(data)}
-            keyExtractor={(task) => task.id}
+            keyExtractor={(task, index) => {
+              return task.id, index.toString();
+            }}
             // numColumns={1}
             renderItem={renderTask}
           ></DraggableFlatList>
         </View>
+        <TaskModal
+          task={selectedTask}
+          setTask={setSelectedTask}
+          isVisible={modalVisible}
+          setIsVisible={setModalVisible}
+          updateTask={updateTask}
+          saveTask={saveTask}
+          // createTask={createTask}
+          // deleteTask={deleteTask}
+        />
 
         <View style={styles.bottomSection}>
           <View style={styles.btnWhiteBackground}>
@@ -208,6 +286,12 @@ const TaskList = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
 
       <View style={styles.bottomRow}></View>
     </View>
