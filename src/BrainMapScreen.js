@@ -153,10 +153,7 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   // creates a new Note on the plus button press
-  const createNote = () => {
-    setSelectedNote({});
-    setModalVisible(!modalVisible);
-  };
+  const createNote = () => {};
 
   return (
     <View style={styles.container}>

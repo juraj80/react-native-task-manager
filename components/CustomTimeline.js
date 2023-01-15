@@ -115,7 +115,7 @@ class HorizontalTimeline extends Component {
 
     const timelineDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-    console.log("PROPS", props.data);
+    // console.log("PROPS", props.data);
     const keys = props.data ? Object.keys(props.data) : null;
 
     // this.renderDays = this.renderDays.bind(this);

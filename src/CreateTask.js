@@ -39,8 +39,6 @@ const CreateTask = ({ route, navigation }) => {
   };
 
   const saveTask = async () => {
-    // if (taskHeader && taskHeader.length > 0) {
-
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const data = {

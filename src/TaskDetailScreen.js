@@ -55,7 +55,7 @@ const TaskDetail = ({ route, navigation }) => {
         text: taskText,
         updatedAt: timestamp,
       };
-      console.log(data);
+      console.log("DATA: ", data);
       tasksRef
         .doc(taskId)
         .update(data)

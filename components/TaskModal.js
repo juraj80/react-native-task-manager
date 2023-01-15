@@ -24,6 +24,7 @@ const TaskModal = ({
   saveTask,
   // createTask,
   deleteTask,
+  showDatePicker,
 }) => {
   const [textValue, setTextValue] = useState("");
 
@@ -54,8 +55,6 @@ const TaskModal = ({
         setIsVisible(!isVisible);
       }}
     >
-      {console.log("received props TASK", task)}
-
       <TouchableWithoutFeedback
         // onPress={() => setModalVisible(!modalVisible)}
         onPress={() => setIsVisible(!isVisible)}
@@ -106,12 +105,12 @@ const TaskModal = ({
             <Pressable
               style={[styles.buttonModal, styles.buttonClose]}
               onPress={() => {
-                createTask(task);
+                showDatePicker();
                 // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
-              <Text style={styles.textStyle}>Create Task</Text>
+              <Text style={styles.textStyle}>Set Due Date</Text>
             </Pressable>
             {task.heading && (
               <Pressable

@@ -77,6 +77,7 @@ const TaskList = ({ navigation }) => {
   const handleConfirm = (date) => {
     setTaskDueDate(date);
     hideDatePicker();
+    setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   // handler for completed tasks
@@ -92,18 +93,18 @@ const TaskList = ({ navigation }) => {
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
-    console.log("completed", completed[0].dueDateAt.getDate());
+    // console.log("completed", completed[0].dueDateAt.getDate());
     const date = completed[0].dueDateAt.getDate();
     let timelineDataTemp = { ...timelineData };
 
-    console.log("timeTemp", timelineDataTemp);
+    // console.log("timeTemp", timelineDataTemp);
     delete timelineDataTemp[date];
     setTimelineData(timelineDataTemp);
 
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
       setAllTasks(temp);
-      console.log("timelineData", timelineData);
+      // console.log("timelineData", timelineData);
     }, 2000);
   };
 
@@ -192,14 +193,17 @@ const TaskList = ({ navigation }) => {
   );
 
   const updateTask = (text) => {
+    console.log("Update task called");
     // updates the state of the selected task
-    const new_obj = { ...selectedTask, heading: text };
+    console.log("taskDueDate: ", taskDueDate);
+    const new_obj = { ...selectedTask, heading: text, dueDateAt: taskDueDate };
+    console.log("new_obj: ", new_obj);
     setSelectedTask(new_obj);
 
     // updates the state of all tasks
     const updated_tasks = allTasks.map((task) => {
       if (task.id == selectedTask.id) {
-        return { task, heading: text };
+        return { ...task, heading: text, dueDateAt: taskDueDate };
       }
       return task;
     });
@@ -208,12 +212,15 @@ const TaskList = ({ navigation }) => {
     setModalVisible(!modalVisible);
   };
 
+  // save a new task to the firestore db
   const saveTask = async (text) => {
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       heading: text,
       createdAt: timestamp,
+      dueDateAt: taskDueDate,
+      completed: false,
     };
     tasksRef
       .add(data)
@@ -267,16 +274,6 @@ const TaskList = ({ navigation }) => {
             renderItem={renderTask}
           ></DraggableFlatList>
         </View>
-        <TaskModal
-          task={selectedTask}
-          setTask={setSelectedTask}
-          isVisible={modalVisible}
-          setIsVisible={setModalVisible}
-          updateTask={updateTask}
-          saveTask={saveTask}
-          // createTask={createTask}
-          // deleteTask={deleteTask}
-        />
 
         <View style={styles.bottomSection}>
           <View style={styles.btnWhiteBackground}>
@@ -286,6 +283,18 @@ const TaskList = ({ navigation }) => {
           </View>
         </View>
       </View>
+      {console.log(allTasks)}
+      <TaskModal
+        task={selectedTask}
+        setTask={setSelectedTask}
+        isVisible={modalVisible}
+        setIsVisible={setModalVisible}
+        updateTask={updateTask}
+        saveTask={saveTask}
+        showDatePicker={showDatePicker}
+        // createTask={createTask}
+        // deleteTask={deleteTask}
+      />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
@@ -298,35 +307,6 @@ const TaskList = ({ navigation }) => {
   );
 };
 
-// const styles = StyleSheet.create({
-//   formContainer: {
-//     flexDirection: "row",
-//     height: 80,
-//     marginLeft: 10,
-//     marginRight: 10,
-//   },
-//   input: {
-//     height: 48,
-//     borderRadius: 5,
-//     overflow: "hidden",
-//     backgroundColor: "white",
-//     paddingLeft: 16,
-//     flex: 1,
-//     marginRight: 5,
-//   },
-//   button: {
-//     height: 47,
-//     borderRadius: 5,
-//     backgroundColor: "#788eec",
-//     width: 80,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   buttonText: {
-//     color: "white",
-//     fontSize: 20,
-//   },
-// });
 const styles = StyleSheet.create({
   container: {
     flex: 1,
