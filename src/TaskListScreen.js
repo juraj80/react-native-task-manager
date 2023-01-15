@@ -8,6 +8,7 @@ import {
   FlatList,
   Pressable,
   Animated,
+  Alert,
 } from "react-native";
 import AnimatedCheckbox from "react-native-checkbox-reanimated";
 import DraggableFlatList, {
@@ -65,6 +66,30 @@ const TaskList = ({ navigation }) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const deleteTaskFromDB = async (id) => {
+    tasksRef
+      .doc(id)
+      .delete()
+      .then(() => {
+        Alert.alert("Task Message", "Task was deleted", [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+      })
+      //   //setNoteHeader("");
+      //   // release Keyboard
+      //   Keyboard.dismiss();
+      // })
+      .then(() => {})
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -237,6 +262,13 @@ const TaskList = ({ navigation }) => {
       });
   };
 
+  const deleteTask = (item) => {
+    console.log("Delete Task func called", item.id);
+    filtered = allTasks.filter((task) => task.id != item.id);
+    setAllTasks(filtered);
+    deleteTaskFromDB(item.id);
+  };
+
   const showTaskDetail = (item) => {
     console.log("item", item);
     navigation.navigate("Task Detail", item);
@@ -293,7 +325,7 @@ const TaskList = ({ navigation }) => {
         saveTask={saveTask}
         showDatePicker={showDatePicker}
         // createTask={createTask}
-        // deleteTask={deleteTask}
+        deleteTask={deleteTask}
       />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
