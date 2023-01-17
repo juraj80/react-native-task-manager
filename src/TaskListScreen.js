@@ -24,7 +24,7 @@ import TaskModal from "../components/TaskModal";
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
-const TaskList = ({ navigation }) => {
+const TaskList = ({ route, navigation }) => {
   const [allTasks, setAllTasks] = useState([]);
   const [timelineData, setTimelineData] = useState({});
   const [selectedTask, setSelectedTask] = useState({});
@@ -66,6 +66,18 @@ const TaskList = ({ navigation }) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // to make focused screen refreshed when navigation is used
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      Alert.alert("Refreshed");
+      if (route.params?.heading) {
+        createTaskFromNote(route.params.heading);
+      }
+      navigation.setParams({ heading: "" });
+    });
+    return focusHandler;
+  }, [navigation]);
 
   const deleteTaskFromDB = async (id) => {
     tasksRef
@@ -205,6 +217,7 @@ const TaskList = ({ navigation }) => {
     );
   };
 
+  // callback that is passed to the flatlist component that renders the task item
   const renderTask = ({ item, drag, isActive }) => (
     <ScaleDecorator>
       <TouchableOpacity
@@ -281,6 +294,13 @@ const TaskList = ({ navigation }) => {
     setModalVisible(!modalVisible);
   };
 
+  const createTaskFromNote = (text) => {
+    console.log(
+      "createTaskFromNote called with heading " + JSON.stringify(text)
+    );
+    // navigation.setParams({ heading: "NEJDE TO" });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
@@ -315,7 +335,10 @@ const TaskList = ({ navigation }) => {
           </View>
         </View>
       </View>
-      {console.log(allTasks)}
+      {/* {console.log(allTasks)} */}
+      {console.log(
+        "ROUTE PARAMS line 335:" + JSON.stringify(route.params?.heading)
+      )}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}

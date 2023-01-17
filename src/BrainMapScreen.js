@@ -99,7 +99,7 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const createTask = (item) => {
-    navigation.navigate("Create Task", item.heading);
+    navigation.navigate("Tasks", { heading: item.heading });
   };
 
   const updateNote = (text) => {

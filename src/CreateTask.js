@@ -17,6 +17,8 @@ import { firebase } from "../firebaseConfig";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const CreateTask = ({ route, navigation }) => {
+  const { heading, isVisible } = route.params;
+
   const [taskHeader, setTaskHeader] = useState(route.params);
   const [taskDetail, setTaskDetail] = useState("");
   const [taskDueDate, setTaskDueDate] = useState(new Date());
