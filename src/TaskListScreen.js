@@ -16,6 +16,7 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useFocusEffect } from "@react-navigation/native";
 
 // import { HorizontalTimeline } from "react-native-horizontal-timeline";
 import HorizontalTimeline from "../components/CustomTimeline";
@@ -25,6 +26,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
 const TaskList = ({ route, navigation }) => {
+  const taskHeading = route.params.heading;
+
+  const [noteTask, setNoteTask] = useState("");
   const [allTasks, setAllTasks] = useState([]);
   const [timelineData, setTimelineData] = useState({});
   const [selectedTask, setSelectedTask] = useState({});
@@ -64,20 +68,33 @@ const TaskList = ({ route, navigation }) => {
   }
 
   useEffect(() => {
+    // console.log("route params frou useEffect", route.params);
+    //createTaskFromNote(route.params?.heading);
+
     fetchData();
   }, []);
 
-  // to make focused screen refreshed when navigation is used
-  useEffect(() => {
-    const focusHandler = navigation.addListener("focus", () => {
-      Alert.alert("Refreshed");
-      if (route.params?.heading) {
-        createTaskFromNote(route.params.heading);
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("scrren is focused" + JSON.stringify(taskHeading));
+      if (taskHeading) {
+        setNoteTask(taskHeading);
+        console.log("selectedTask: ", selectedTask);
+        setSelectedTask({ heading: taskHeading });
+        setModalVisible(true);
       }
-      navigation.setParams({ heading: "" });
-    });
-    return focusHandler;
-  }, [navigation]);
+    }, [taskHeading])
+  );
+
+  // to make focused screen refreshed when navigation is used
+  // useEffect(() => {
+  //   const focusHandler = navigation.addListener("focus", () => {
+
+  //     navigation.setParams({ heading: null });
+  //   });
+
+  //   return focusHandler;
+  // }, [navigation]);
 
   const deleteTaskFromDB = async (id) => {
     tasksRef
@@ -336,9 +353,7 @@ const TaskList = ({ route, navigation }) => {
         </View>
       </View>
       {/* {console.log(allTasks)} */}
-      {console.log(
-        "ROUTE PARAMS line 335:" + JSON.stringify(route.params?.heading)
-      )}
+      {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}

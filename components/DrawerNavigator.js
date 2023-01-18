@@ -21,6 +21,7 @@ const AppDrawerNavigator = () => {
         name="Tasks"
         component={TaskList}
         options={{ headerMode: "none", headerShown: false }}
+        initialParams={{ heading: null }}
       />
       <Drawer.Screen name="Pomodoro" component={PomodoroTimer} />
       {/* <Drawer.Screen name="Animation" component={AnimationExample} />
