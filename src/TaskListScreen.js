@@ -27,7 +27,7 @@ import { firebase } from "../firebaseConfig";
 
 const TaskList = ({ route, navigation }) => {
   const taskHeading = route.params.heading;
-
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [noteTask, setNoteTask] = useState("");
   const [allTasks, setAllTasks] = useState([]);
   const [timelineData, setTimelineData] = useState({});
@@ -53,7 +53,7 @@ const TaskList = ({ route, navigation }) => {
           heading,
           text,
           completed,
-          dueDateAt: dueDate,
+          dueDateAt: dueDate.toISOString(),
         });
 
         Object.assign(data, {
@@ -64,15 +64,28 @@ const TaskList = ({ route, navigation }) => {
       setTimelineData(data);
       // console.log("setTimelineData called");
       // console.log(data);
+      console.log(tasks);
     });
   }
 
   useEffect(() => {
-    // console.log("route params frou useEffect", route.params);
-    //createTaskFromNote(route.params?.heading);
-
     fetchData();
   }, []);
+
+  useEffect(() => {
+    getDayReminder();
+  }, []);
+
+  const getDayReminder = () => {
+    // let today = currentDate.toString().split("T")[0];
+    let today = "2023-01-09";
+    allTasks.forEach((obj) => {
+      if (obj.dueDateAt.split("T")[0] === today) {
+        console.log("Alert For this day: ", today, "from object: ", obj);
+        Alert.alert("Reminder", "Task: " + obj.heading + "is due today");
+      }
+    });
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -82,6 +95,7 @@ const TaskList = ({ route, navigation }) => {
         console.log("selectedTask: ", selectedTask);
         setSelectedTask({ heading: taskHeading });
         setModalVisible(true);
+        navigation.setParams({ heading: null });
       }
     }, [taskHeading])
   );
@@ -201,7 +215,7 @@ const TaskList = ({ route, navigation }) => {
             checked={item.completed}
             highlightColor="#ffffff"
             checkmarkColor="#000000"
-            boxOutlineColor="#ffffff"
+            boxOutlineColor="#000000"
           />
         </Pressable>
         <TouchableOpacity
@@ -395,17 +409,20 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#4169E1",
+    // color: "#4169E1",
+    color: "black",
   },
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
     // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    backgroundColor: "#6495ED",
+    // backgroundColor: "#6495ED",
+    borderColor: "black",
+    borderWidth: 1,
     borderRadius: 7,
   },
-  itemText: { color: "white" },
+  itemText: { color: "black" },
   dragItem: {
     padding: 5,
   },
@@ -432,7 +449,9 @@ const styles = StyleSheet.create({
     zIndex: -99,
     // justifyContent: "center",
     // alignItems: "center",
-    backgroundColor: "#4169E1",
+    // backgroundColor: "#4169E1",
+    borderWidth: 1,
+    borderColor: "black",
   },
 
   btnWhiteBackground: {
@@ -467,7 +486,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   plusBtn: {
-    backgroundColor: "#4169E1",
+    // backgroundColor: "#4169E1",
+    borderColor: "black",
+    borderWidth: 1,
     width: 60,
     height: 60,
 
@@ -477,7 +498,7 @@ const styles = StyleSheet.create({
   },
   plusText: {
     fontSize: 30,
-    color: "white",
+    color: "black",
   },
   itemStyle: {
     padding: 5,

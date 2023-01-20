@@ -171,11 +171,11 @@ HorizontalTimeline.propTypes = {
 };
 
 HorizontalTimeline.defaultProps = {
-  backgroundColor: "#white",
+  backgroundColor: "white",
   data: null,
   height: 50,
-  // color: '#ac78fb',
-  color: "#4169E1",
+  color: "black",
+  // color: "#4169E1",
   width: 60,
 };
 
@@ -185,8 +185,9 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   dayElevated: {
-    backgroundColor: "lightgray",
-    borderColor: "lightgray",
+    // backgroundColor: "lightgray",
+    borderColor: "black",
+    borderWidth: 1,
     borderRadius: 10,
     elevation: 5,
     marginVertical: 5,
@@ -208,7 +209,8 @@ const styles = StyleSheet.create({
   lineContainer: {
     height: 3,
     borderTopWidth: 3,
-    borderColor: "#6699CC",
+    // borderColor: "#6699CC",
+    borderColor: "black",
     marginTop: 10,
   },
   textContainer: {
@@ -223,16 +225,17 @@ const styles = StyleSheet.create({
     textAlign: "right",
     marginRight: 2,
     marginTop: 5,
-    color: "#6699CC",
+    // color: "#6699CC",
 
-    // color:"red"
+    color: "black",
   },
   subTitle: {
     fontSize: 12,
     flex: 1,
     alignSelf: "flex-end",
     marginRight: 5,
-    color: "#6699CC",
+    // color: "#6699CC",
+    color: "black",
   },
   dayInfo: {
     fontSize: 14,
