@@ -25,6 +25,7 @@ const TaskModal = ({
   // createTask,
   deleteTask,
   showDatePicker,
+  showDateTimePicker,
 }) => {
   const [textValue, setTextValue] = useState("");
 
@@ -112,6 +113,16 @@ const TaskModal = ({
             >
               <Text style={styles.textStyle}>Set Due Date</Text>
             </Pressable>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonClose]}
+              onPress={() => {
+                showDateTimePicker();
+                // setModalVisible(!modalVisible);
+                setIsVisible(!isVisible);
+              }}
+            >
+              <Text style={styles.textStyle}>Reminder</Text>
+            </Pressable>
             {task.heading && (
               <Pressable
                 style={[styles.buttonModal, styles.buttonClose]}
@@ -137,7 +148,7 @@ const TaskModal = ({
                 }
               }}
             >
-              <Text style={styles.textStyle}>Update</Text>
+              <Text style={styles.textStyle}>Save</Text>
             </Pressable>
           </View>
         </View>

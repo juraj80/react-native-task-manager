@@ -138,7 +138,7 @@ const NoteModal = ({
                 }
               }}
             >
-              <Text style={styles.textStyle}>Update</Text>
+              <Text style={styles.textStyle}>Save</Text>
             </Pressable>
           </View>
         </View>

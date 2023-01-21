@@ -33,9 +33,14 @@ const TaskList = ({ route, navigation }) => {
   const [timelineData, setTimelineData] = useState({});
   const [selectedTask, setSelectedTask] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
-  const [taskDueDate, setTaskDueDate] = useState(new Date());
+  const [taskDueDate, setTaskDueDate] = useState(new Date(1900, 1, 1));
+  const [taskReminderDate, setTaskReminderDate] = useState(
+    new Date(1900, 1, 1)
+  );
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDateTimePickerVisible, setDateTimePickerVisibility] =
+    useState(false);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -47,6 +52,7 @@ const TaskList = ({ route, navigation }) => {
         const { heading, text, completed } = doc.data();
 
         const dueDate = doc.data().dueDateAt.toDate();
+        const reminderAt = doc.data().reminderAt.toDate();
         const date = dueDate.getDate();
         tasks.push({
           id: doc.id,
@@ -54,6 +60,7 @@ const TaskList = ({ route, navigation }) => {
           text,
           completed,
           dueDateAt: dueDate.toISOString(),
+          reminderAt: reminderAt.toISOString(),
         });
 
         Object.assign(data, {
@@ -73,16 +80,46 @@ const TaskList = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    getDayReminder();
+    isDueToday();
   }, []);
 
-  // check if any of the stored task is due today
-  const getDayReminder = () => {
-    let today = currentDate.toString().split("T")[0];
+  // set timer to check each task reminder date every second
+  useEffect(() => {
+    let secTimer = setInterval(() => {
+      sendReminderNotification();
+    }, 60000);
+    return () => clearInterval(secTimer);
+  }, []);
+
+  const sendReminderNotification = () => {
+    let currentDateTime = new Date().toISOString().slice(0, 16);
+    console.log("displaying now", currentDateTime);
+    console.log("");
+    console.log("ALL TASKS:", allTasks);
     allTasks.forEach((obj) => {
-      if (obj.dueDateAt.split("T")[0] === today) {
+      // console.log(obj.reminderAt.toISOString().slice(0, 16));
+      // console.log(obj.reminderAt.slice(0, 16));
+      // console.log(typeof obj.reminderAt);
+      if (
+        obj.reminderAt instanceof Date &&
+        obj.reminderAt.slice(0, 16) === currentDateTime
+      ) {
+        console.log("Alert For reminder: ", now, "from object: ", obj);
+      }
+    });
+  };
+
+  // check if any of the stored task is due today
+  const isDueToday = () => {
+    let today = currentDate.toISOString().split("T")[0];
+    allTasks.forEach((obj) => {
+      if (
+        obj.dueDate instanceof Date &&
+        obj.dueDateAt.split("T")[0] === today
+      ) {
         console.log("Alert For this day: ", today, "from object: ", obj);
         Alert.alert("Reminder", "Task: " + obj.heading + "is due today");
+        // TODO: Need to send notificiations to the user with the message
       }
     });
   };
@@ -138,13 +175,29 @@ const TaskList = ({ route, navigation }) => {
     setDatePickerVisibility(true);
   };
 
+  const showDateTimePicker = () => {
+    setDateTimePickerVisibility(true);
+  };
+
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
+    setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const hideDateTimePicker = () => {
+    setDateTimePickerVisibility(false);
+    setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   const handleConfirm = (date) => {
     setTaskDueDate(date);
     hideDatePicker();
+    setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const handleReminderConfirm = (datetime) => {
+    setTaskReminderDate(datetime);
+    hideDateTimePicker();
     setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
@@ -265,14 +318,25 @@ const TaskList = ({ route, navigation }) => {
     console.log("Update task called");
     // updates the state of the selected task
     console.log("taskDueDate: ", taskDueDate);
-    const new_obj = { ...selectedTask, heading: text, dueDateAt: taskDueDate };
+    console.log("reminderDate: ", taskReminderDate);
+    const new_obj = {
+      ...selectedTask,
+      heading: text,
+      dueDateAt: taskDueDate.toISOString(),
+      reminderAt: taskReminderDate.toISOString(),
+    };
     console.log("new_obj: ", new_obj);
     setSelectedTask(new_obj);
 
     // updates the state of all tasks
     const updated_tasks = allTasks.map((task) => {
       if (task.id == selectedTask.id) {
-        return { ...task, heading: text, dueDateAt: taskDueDate };
+        return {
+          ...task,
+          heading: text,
+          dueDateAt: taskDueDate.toISOString(),
+          reminderAt: taskReminderDate.toISOString(),
+        };
       }
       return task;
     });
@@ -289,14 +353,15 @@ const TaskList = ({ route, navigation }) => {
       heading: text,
       createdAt: timestamp,
       dueDateAt: taskDueDate,
+      reminderAt: taskReminderDate,
       completed: false,
     };
     tasksRef
       .add(data)
       .then(() => {
         setSelectedTask({});
-        // release Keyboard
-        //Keyboard.dismiss();
+        setTaskDueDate(undefined);
+        setTaskReminderDate(undefined);
       })
       .then(() => {
         setModalVisible(!modalVisible);
@@ -308,7 +373,7 @@ const TaskList = ({ route, navigation }) => {
 
   const deleteTask = (item) => {
     console.log("Delete Task func called", item.id);
-    filtered = allTasks.filter((task) => task.id != item.id);
+    let filtered = allTasks.filter((task) => task.id != item.id);
     setAllTasks(filtered);
     deleteTaskFromDB(item.id);
   };
@@ -366,8 +431,7 @@ const TaskList = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-      {/* {console.log(allTasks)} */}
-      {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))}
+      {/* {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))} */}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}
@@ -376,6 +440,7 @@ const TaskList = ({ route, navigation }) => {
         updateTask={updateTask}
         saveTask={saveTask}
         showDatePicker={showDatePicker}
+        showDateTimePicker={showDateTimePicker}
         // createTask={createTask}
         deleteTask={deleteTask}
       />
@@ -384,6 +449,12 @@ const TaskList = ({ route, navigation }) => {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+      />
+      <DateTimePickerModal
+        isVisible={isDateTimePickerVisible}
+        mode="datetime"
+        onConfirm={handleReminderConfirm}
+        onCancel={hideDateTimePicker}
       />
 
       <View style={styles.bottomRow}></View>
