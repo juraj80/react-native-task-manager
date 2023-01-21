@@ -64,7 +64,7 @@ const TaskList = ({ route, navigation }) => {
       setTimelineData(data);
       // console.log("setTimelineData called");
       // console.log(data);
-      console.log(tasks);
+      //console.log(tasks);
     });
   }
 
@@ -76,9 +76,9 @@ const TaskList = ({ route, navigation }) => {
     getDayReminder();
   }, []);
 
+  // check if any of the stored task is due today
   const getDayReminder = () => {
-    // let today = currentDate.toString().split("T")[0];
-    let today = "2023-01-09";
+    let today = currentDate.toString().split("T")[0];
     allTasks.forEach((obj) => {
       if (obj.dueDateAt.split("T")[0] === today) {
         console.log("Alert For this day: ", today, "from object: ", obj);

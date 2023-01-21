@@ -143,7 +143,7 @@ const BrainMapScreen = ({ navigation }) => {
 
   const deleteNote = (item) => {
     // console.log(item.id);
-    filtered = allNotes.filter((note) => note.id != item.id);
+    let filtered = allNotes.filter((note) => note.id != item.id);
     setAllNotes(filtered);
     deleteNoteFromDB(item.id);
   };
@@ -153,7 +153,10 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   // creates a new Note on the plus button press
-  const createNote = () => {};
+  const createNote = () => {
+    setSelectedNote({});
+    setModalVisible(!modalVisible);
+  };
 
   return (
     <View style={styles.container}>
