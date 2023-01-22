@@ -45,12 +45,13 @@ const TaskList = ({ route, navigation }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
+    console.log("function fetchData called");
+
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
       const data = {};
       querySnapshot.forEach((doc) => {
         const { heading, text, completed } = doc.data();
-
         const dueDate = doc.data().dueDateAt.toDate();
         const reminderAt = doc.data().reminderAt.toDate();
         const date = dueDate.getDate();
@@ -59,14 +60,16 @@ const TaskList = ({ route, navigation }) => {
           heading,
           text,
           completed,
-          dueDateAt: dueDate.toISOString(),
-          reminderAt: reminderAt.toISOString(),
+          dueDateAt: dueDate,
+          reminderAt: reminderAt,
         });
 
         Object.assign(data, {
           [date]: { id: doc.id, marked: true, info: heading },
         });
       });
+
+      console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setTimelineData(data);
       // console.log("setTimelineData called");
@@ -80,6 +83,10 @@ const TaskList = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
+    console.log("useEffect -> allTask has been updated to: ", allTasks);
+  }, [allTasks]);
+
+  useEffect(() => {
     isDueToday();
   }, []);
 
@@ -89,22 +96,29 @@ const TaskList = ({ route, navigation }) => {
       sendReminderNotification();
     }, 60000);
     return () => clearInterval(secTimer);
-  }, []);
+  });
 
   const sendReminderNotification = () => {
     let currentDateTime = new Date().toISOString().slice(0, 16);
     console.log("displaying now", currentDateTime);
-    console.log("");
-    console.log("ALL TASKS:", allTasks);
+
+    console.log("displaying allTasks from sendReminderNotif ", allTasks);
+    // here allTasks doesnt reflect change made to the updated useState show outside of this function
     allTasks.forEach((obj) => {
-      // console.log(obj.reminderAt.toISOString().slice(0, 16));
+      console.log(obj.reminderAt.toISOString().slice(0, 16));
       // console.log(obj.reminderAt.slice(0, 16));
       // console.log(typeof obj.reminderAt);
+
       if (
         obj.reminderAt instanceof Date &&
-        obj.reminderAt.slice(0, 16) === currentDateTime
+        obj.reminderAt.toISOString().slice(0, 16) === currentDateTime
       ) {
-        console.log("Alert For reminder: ", now, "from object: ", obj);
+        console.log(
+          "Alert For reminder: ",
+          obj.reminderAt.toISOString(),
+          " from object: ",
+          obj
+        );
       }
     });
   };
@@ -114,8 +128,8 @@ const TaskList = ({ route, navigation }) => {
     let today = currentDate.toISOString().split("T")[0];
     allTasks.forEach((obj) => {
       if (
-        obj.dueDate instanceof Date &&
-        obj.dueDateAt.split("T")[0] === today
+        obj.dueDateAt instanceof Date &&
+        obj.dueDateAt.toISOString().split("T")[0] === today
       ) {
         console.log("Alert For this day: ", today, "from object: ", obj);
         Alert.alert("Reminder", "Task: " + obj.heading + "is due today");
@@ -314,6 +328,7 @@ const TaskList = ({ route, navigation }) => {
     </ScaleDecorator>
   );
 
+  // updates existing task in firestore db
   const updateTask = (text) => {
     console.log("Update task called");
     // updates the state of the selected task
@@ -322,11 +337,13 @@ const TaskList = ({ route, navigation }) => {
     const new_obj = {
       ...selectedTask,
       heading: text,
-      dueDateAt: taskDueDate.toISOString(),
-      reminderAt: taskReminderDate.toISOString(),
+      dueDateAt: taskDueDate,
+      reminderAt: taskReminderDate,
     };
     console.log("new_obj: ", new_obj);
     setSelectedTask(new_obj);
+
+    updateTaskDB(new_obj);
 
     // updates the state of all tasks
     const updated_tasks = allTasks.map((task) => {
@@ -334,15 +351,42 @@ const TaskList = ({ route, navigation }) => {
         return {
           ...task,
           heading: text,
-          dueDateAt: taskDueDate.toISOString(),
-          reminderAt: taskReminderDate.toISOString(),
+          dueDateAt: taskDueDate,
+          reminderAt: taskReminderDate,
         };
       }
       return task;
     });
+
     setAllTasks(updated_tasks);
 
     setModalVisible(!modalVisible);
+  };
+
+  const updateTaskDB = async (task) => {
+    console.log("updateInDB called");
+    // get the timestamp
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    // const data = {
+    //   heading: taskHeader,
+    //   text: taskText,
+    //   updatedAt: timestamp,
+    // };
+    console.log("DATA: ", task);
+    tasksRef
+      .doc(task.id)
+      .update(task)
+      // .then(() => {
+      //   //setNoteHeader("");
+      //   // release Keyboard
+      //   Keyboard.dismiss();
+      // })
+      .then(() => {
+        console.log("Task: ", task, " was succesfully updated in the DB");
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   // save a new task to the firestore db
@@ -432,6 +476,7 @@ const TaskList = ({ route, navigation }) => {
         </View>
       </View>
       {/* {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))} */}
+      {console.log("ALL TASKS from re-render: ", allTasks)}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}
