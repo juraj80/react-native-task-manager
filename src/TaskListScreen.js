@@ -21,6 +21,7 @@ import { useFocusEffect } from "@react-navigation/native";
 // import { HorizontalTimeline } from "react-native-horizontal-timeline";
 import HorizontalTimeline from "../components/CustomTimeline";
 import TaskModal from "../components/TaskModal";
+import Task from "../components/Task";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
@@ -72,9 +73,6 @@ const TaskList = ({ route, navigation }) => {
       console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setTimelineData(data);
-      // console.log("setTimelineData called");
-      // console.log(data);
-      //console.log(tasks);
     });
   }
 
@@ -88,7 +86,7 @@ const TaskList = ({ route, navigation }) => {
 
   useEffect(() => {
     isDueToday();
-  }, []);
+  });
 
   // set timer to check each task reminder date every second
   useEffect(() => {
@@ -103,12 +101,7 @@ const TaskList = ({ route, navigation }) => {
     console.log("displaying now", currentDateTime);
 
     console.log("displaying allTasks from sendReminderNotif ", allTasks);
-    // here allTasks doesnt reflect change made to the updated useState show outside of this function
     allTasks.forEach((obj) => {
-      console.log(obj.reminderAt.toISOString().slice(0, 16));
-      // console.log(obj.reminderAt.slice(0, 16));
-      // console.log(typeof obj.reminderAt);
-
       if (
         obj.reminderAt instanceof Date &&
         obj.reminderAt.toISOString().slice(0, 16) === currentDateTime
@@ -150,16 +143,6 @@ const TaskList = ({ route, navigation }) => {
       }
     }, [taskHeading])
   );
-
-  // to make focused screen refreshed when navigation is used
-  // useEffect(() => {
-  //   const focusHandler = navigation.addListener("focus", () => {
-
-  //     navigation.setParams({ heading: null });
-  //   });
-
-  //   return focusHandler;
-  // }, [navigation]);
 
   const deleteTaskFromDB = async (id) => {
     tasksRef
@@ -255,66 +238,6 @@ const TaskList = ({ route, navigation }) => {
   //   });
   // };
 
-  const Task = ({ item }) => {
-    const fadeAnim = useRef(new Animated.Value(1)).current;
-
-    const fadeOut = () => {
-      // Will change fadeAnim value to 0 in 3 seconds
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 1500,
-        useNativeDriver: true,
-      }).start(() => {});
-    };
-    const opacityStyle = { opacity: fadeAnim };
-
-    return (
-      <View style={styles.itemRow}>
-        <Pressable
-          onPress={() => {
-            fadeOut();
-
-            handleChange(item.id);
-          }}
-          style={styles.checkbox}
-        >
-          <AnimatedCheckbox
-            checked={item.completed}
-            highlightColor="#ffffff"
-            checkmarkColor="#000000"
-            boxOutlineColor="#000000"
-          />
-        </Pressable>
-        <TouchableOpacity
-          style={styles.itemStyle}
-          onPress={() => {
-            showTaskDetail(item);
-          }}
-          onLongPress={() => {
-            console.log("long press");
-            setModalVisible(!modalVisible);
-            setSelectedTask(item);
-          }}
-        >
-          <Animated.Text
-            style={[
-              item.completed ? styles.checkedItem : "",
-              opacityStyle,
-              styles.itemText,
-            ]}
-            // style={opacityStyle}
-            numberOfLines={1}
-          >
-            {item.heading.length < 35
-              ? `${item.heading}`
-              : `${item.heading.substring(0, 32)}...`}
-          </Animated.Text>
-          {/* <Text>{item.text}</Text> */}
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   // callback that is passed to the flatlist component that renders the task item
   const renderTask = ({ item, drag, isActive }) => (
     <ScaleDecorator>
@@ -323,7 +246,14 @@ const TaskList = ({ route, navigation }) => {
         disabled={isActive}
         style={styles.dragItem}
       >
-        <Task item={item} />
+        <Task
+          item={item}
+          showTaskDetail={showTaskDetail}
+          setModalVisible={setModalVisible}
+          modalVisible={modalVisible}
+          setSelectedTask={setSelectedTask}
+          handleChange={handleChange}
+        />
       </TouchableOpacity>
     </ScaleDecorator>
   );
@@ -367,12 +297,6 @@ const TaskList = ({ route, navigation }) => {
     console.log("updateInDB called");
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    // const data = {
-    //   heading: taskHeader,
-    //   text: taskText,
-    //   updatedAt: timestamp,
-    // };
-    console.log("DATA: ", task);
     tasksRef
       .doc(task.id)
       .update(task)
@@ -434,13 +358,6 @@ const TaskList = ({ route, navigation }) => {
     setModalVisible(!modalVisible);
   };
 
-  const createTaskFromNote = (text) => {
-    console.log(
-      "createTaskFromNote called with heading " + JSON.stringify(text)
-    );
-    // navigation.setParams({ heading: "NEJDE TO" });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
@@ -476,7 +393,7 @@ const TaskList = ({ route, navigation }) => {
         </View>
       </View>
       {/* {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))} */}
-      {console.log("ALL TASKS from re-render: ", allTasks)}
+      {/* {console.log("ALL TASKS from re-render: ", allTasks)} */}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}
@@ -528,17 +445,6 @@ const styles = StyleSheet.create({
     // color: "#4169E1",
     color: "black",
   },
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    // backgroundColor: "#6495ED",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 7,
-  },
-  itemText: { color: "black" },
   dragItem: {
     padding: 5,
   },
@@ -589,18 +495,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 12,
-  },
   plusBtn: {
     // backgroundColor: "#4169E1",
     borderColor: "black",
@@ -615,16 +509,6 @@ const styles = StyleSheet.create({
   plusText: {
     fontSize: 30,
     color: "black",
-  },
-  itemStyle: {
-    padding: 5,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-  },
-  checkedItem: {
-    textDecorationLine: "line-through",
   },
 });
 
