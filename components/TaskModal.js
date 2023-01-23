@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -62,7 +63,11 @@ const TaskModal = ({
       >
         <View style={styles.modalOverlay} />
       </TouchableWithoutFeedback>
-      <View style={styles.centeredView}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.centeredView}
+      >
+        {/* <View style={styles.centeredView}> */}
         <View style={styles.modalView}>
           {/* <Text style={styles.modalText}> {selectedNote.heading}</Text> */}
           <View
@@ -152,7 +157,7 @@ const TaskModal = ({
             </Pressable>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

@@ -9,6 +9,7 @@ import {
   Dimensions,
   TextInput,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import NoteModal from "../components/NoteModal";
@@ -172,6 +173,7 @@ const BrainMapScreen = ({ navigation }) => {
             renderItem={renderNote}
           ></FlatList>
         </View>
+
         <NoteModal
           note={selectedNote}
           setNote={setSelectedNote}
