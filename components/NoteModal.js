@@ -116,7 +116,7 @@ const NoteModal = ({
                 setIsVisible(!isVisible);
               }}
             >
-              <Text style={styles.textStyle}>Create Task</Text>
+              <Text style={styles.textStyle}>Promote To Task</Text>
             </Pressable>
             {note.heading && (
               <Pressable

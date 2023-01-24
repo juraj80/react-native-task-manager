@@ -12,8 +12,13 @@ import {
   Dimensions,
   LogBox,
 } from "react-native";
+
+import DraggableFlatList, {
+  ScaleDecorator,
+} from "react-native-draggable-flatlist";
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
+import SubTask from "../components/SubTask";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -24,6 +29,7 @@ const TaskDetail = ({ route, navigation }) => {
   const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
   const [taskText, setTaskText] = useState(route.params.text);
+  const [allSubTasks, setAllSubTasks] = useState(["item1", "item2", "item3"]);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -80,6 +86,18 @@ const TaskDetail = ({ route, navigation }) => {
     </TouchableOpacity>
   );
 
+  const renderSubTask = ({ item, drag, isActive }) => (
+    <ScaleDecorator>
+      <TouchableOpacity
+        onLongPress={drag}
+        disabled={isActive}
+        style={styles.dragItem}
+      >
+        <Text>Subtask</Text>
+      </TouchableOpacity>
+    </ScaleDecorator>
+  );
+
   //   const createTask = (item) => {
   //     navigation.navigate("CreateTask", { taskDetails: "Add Header" });
   //   };
@@ -108,6 +126,19 @@ const TaskDetail = ({ route, navigation }) => {
           selectionColor="#aaa"
           style={styles.mainSection}
         />
+        <View style={styles.subTasksSection}>
+          <DraggableFlatList
+            style={{ height: "100%" }}
+            data={allSubTasks}
+            onDragEnd={({ data }) => setAllSubTasks(data)}
+            keyExtractor={(task, index) => {
+              return task.id, index.toString();
+            }}
+            // numColumns={1}
+            renderItem={renderSubTask}
+          ></DraggableFlatList>
+        </View>
+        <View style={styles.calendarSection}></View>
         <View style={styles.bottomSection}>
           <TouchableOpacity style={styles.plusBtn} onPress={() => updateTask()}>
             <Text style={styles.plusText}>Save</Text>
@@ -127,6 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 20,
+    backgroundColor: "red",
     // flexDirection: "column",
   },
   headerSection: {
@@ -134,12 +166,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   mainSection: {
+    flex: 1,
+  },
+
+  subTasksSection: {
     flex: 3,
+    backgroundColor: "yellow",
+  },
+  calendarSection: {
+    flex: 3,
+    backgroundColor: "blue",
   },
   bottomSection: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "green",
   },
   item: {
     width: 80,
@@ -169,6 +211,9 @@ const styles = StyleSheet.create({
   itemStyle: {
     padding: 5,
     backgroundColor: "yellow",
+  },
+  dragItem: {
+    padding: 5,
   },
 });
 
