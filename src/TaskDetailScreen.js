@@ -29,7 +29,11 @@ const TaskDetail = ({ route, navigation }) => {
   const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
   const [taskText, setTaskText] = useState(route.params.text);
-  const [allSubTasks, setAllSubTasks] = useState(["item1", "item2", "item3"]);
+  const [allSubTasks, setAllSubTasks] = useState([
+    { id: "1", completed: false, heading: "Subtask1", text: "Subtask text1" },
+    { id: "2", completed: false, heading: "Subtask2", text: "Subtask text2" },
+    { id: "3", completed: false, heading: "Subtask3", text: "Subtask text3" },
+  ]);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -93,10 +97,40 @@ const TaskDetail = ({ route, navigation }) => {
         disabled={isActive}
         style={styles.dragItem}
       >
-        <Text>Subtask</Text>
+        <SubTask item={item} handleChange={handleChange}>
+          Subtask
+        </SubTask>
       </TouchableOpacity>
     </ScaleDecorator>
   );
+
+  // handler for completed tasks
+  const handleChange = (id) => {
+    let temp = allSubTasks.map((product) => {
+      if (id === product.id) {
+        return { ...product, completed: !product.completed };
+      }
+      return product;
+    });
+    // temp = temp.filter((el) => !el.checked);
+    // console.log("TEMP", temp);
+    setAllSubTasks(temp);
+
+    const completed = temp.filter((el) => el.completed);
+    // console.log("completed", completed[0].dueDateAt.getDate());
+    // const date = completed[0].dueDateAt.getDate();
+    // let timelineDataTemp = { ...timelineData };
+
+    // // console.log("timeTemp", timelineDataTemp);
+    // delete timelineDataTemp[date];
+    // setTimelineData(timelineDataTemp);
+
+    const timeout = setTimeout(() => {
+      temp = temp.filter((el) => !el.completed);
+      setAllSubTasks(temp);
+      // console.log("timelineData", timelineData);
+    }, 2000);
+  };
 
   //   const createTask = (item) => {
   //     navigation.navigate("CreateTask", { taskDetails: "Add Header" });
