@@ -52,7 +52,7 @@ const TaskList = ({ route, navigation }) => {
       const tasks = [];
       const data = {};
       querySnapshot.forEach((doc) => {
-        const { heading, text, completed } = doc.data();
+        const { heading, text, completed, subtasks } = doc.data();
         const dueDate = doc.data().dueDateAt.toDate();
         const reminderAt = doc.data().reminderAt.toDate();
         const date = dueDate.getDate();
@@ -63,6 +63,7 @@ const TaskList = ({ route, navigation }) => {
           completed,
           dueDateAt: dueDate,
           reminderAt: reminderAt,
+          subtasks,
         });
 
         Object.assign(data, {

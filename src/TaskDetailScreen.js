@@ -13,6 +13,8 @@ import {
   LogBox,
 } from "react-native";
 
+import { v4 as uuid } from "uuid";
+
 import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
@@ -25,15 +27,20 @@ LogBox.ignoreLogs([
 ]);
 
 const TaskDetail = ({ route, navigation }) => {
+  let subTasksArr = [
+    { id: "1", completed: false, text: "Subtask text1" },
+    { id: "2", completed: false, text: "Subtask text2" },
+    { id: "3", completed: false, text: "Subtask text3" },
+  ];
+
   const [task, setTask] = useState("");
   const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
   const [taskText, setTaskText] = useState(route.params.text);
-  const [allSubTasks, setAllSubTasks] = useState([
-    { id: "1", completed: false, heading: "Subtask1", text: "Subtask text1" },
-    { id: "2", completed: false, heading: "Subtask2", text: "Subtask text2" },
-    { id: "3", completed: false, heading: "Subtask3", text: "Subtask text3" },
-  ]);
+  // const [allSubTasks, setAllSubTasks] = useState(route.params.subtasks);
+
+  const [subTaskText, setSubTaskText] = useState("");
+  const [allSubTasks, setAllSubTasks] = useState(subTasksArr);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -64,8 +71,9 @@ const TaskDetail = ({ route, navigation }) => {
         heading: taskHeader,
         text: taskText,
         updatedAt: timestamp,
+        subtasks: subTasksArr,
       };
-      console.log("DATA: ", data);
+      console.log("UPDATED DATA: ", data);
       tasksRef
         .doc(taskId)
         .update(data)
@@ -97,12 +105,29 @@ const TaskDetail = ({ route, navigation }) => {
         disabled={isActive}
         style={styles.dragItem}
       >
-        <SubTask item={item} handleChange={handleChange}>
-          Subtask
-        </SubTask>
+        <SubTask
+          item={item}
+          taskId={taskId}
+          subTaskText={subTaskText}
+          setSubTaskText={setSubTaskText}
+          handleChange={handleChange}
+        />
       </TouchableOpacity>
     </ScaleDecorator>
   );
+
+  const createSubTask = () => {
+    console.log("Create SubTask pressed!");
+    setAllSubTasks([
+      ...allSubTasks,
+      { id: getId(), completed: false, text: subTaskText },
+    ]);
+    setSubTaskText("");
+  };
+
+  const getId = () => {
+    return uuid();
+  };
 
   // handler for completed tasks
   const handleChange = (id) => {
@@ -112,18 +137,9 @@ const TaskDetail = ({ route, navigation }) => {
       }
       return product;
     });
-    // temp = temp.filter((el) => !el.checked);
-    // console.log("TEMP", temp);
     setAllSubTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
-    // console.log("completed", completed[0].dueDateAt.getDate());
-    // const date = completed[0].dueDateAt.getDate();
-    // let timelineDataTemp = { ...timelineData };
-
-    // // console.log("timeTemp", timelineDataTemp);
-    // delete timelineDataTemp[date];
-    // setTimelineData(timelineDataTemp);
 
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
@@ -131,10 +147,6 @@ const TaskDetail = ({ route, navigation }) => {
       // console.log("timelineData", timelineData);
     }, 2000);
   };
-
-  //   const createTask = (item) => {
-  //     navigation.navigate("CreateTask", { taskDetails: "Add Header" });
-  //   };
 
   return (
     <View style={styles.container}>
@@ -161,12 +173,17 @@ const TaskDetail = ({ route, navigation }) => {
           style={styles.mainSection}
         />
         <View style={styles.subTasksSection}>
+          <View>
+            <TouchableOpacity onPress={createSubTask}>
+              <Text>+ Add SubTask</Text>
+            </TouchableOpacity>
+          </View>
           <DraggableFlatList
             style={{ height: "100%" }}
             data={allSubTasks}
             onDragEnd={({ data }) => setAllSubTasks(data)}
-            keyExtractor={(task, index) => {
-              return task.id, index.toString();
+            keyExtractor={(subtask, index) => {
+              return subtask.id, index.toString();
             }}
             // numColumns={1}
             renderItem={renderSubTask}

@@ -4,12 +4,23 @@ import {
   TouchableOpacity,
   Pressable,
   Animated,
+  TextInput,
 } from "react-native";
 import AnimatedCheckbox from "react-native-checkbox-reanimated";
 
-import React, { useRef } from "react";
+import { firebase } from "../firebaseConfig";
+
+import React, { useRef, useState } from "react";
 
 const SubTask = (props) => {
+  const [subTaskHeader, setSubTaskHeader] = useState(props.item.text);
+
+  const subTasksRef = firebase.firestore().collection("tasks");
+
+  //   database.collection('users').doc(uid).update({
+  //     savedSearches: firebase.firestore.FieldValue.arrayUnion(data)
+  // });
+
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const fadeOut = () => {
@@ -19,6 +30,30 @@ const SubTask = (props) => {
       duration: 1500,
       useNativeDriver: true,
     }).start(() => {});
+  };
+
+  const updateSubTask = async () => {
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const data = {
+      text: subTaskHeader,
+      completed: props.item.completed,
+    };
+
+    console.log("UPDATE DATA", data);
+    subTasksRef
+      .doc(props.taskId)
+      .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
+      // .then(() => {
+      //   //setNoteHeader("");
+      //   // release Keyboard
+      //   Keyboard.dismiss();
+      // })
+      .then(() => {
+        console.log("Subtask updated: ", data, " for taskId: ", taskId);
+      })
+      .catch((error) => {
+        alert(error);
+      });
   };
 
   return (
@@ -31,6 +66,12 @@ const SubTask = (props) => {
         }}
         style={styles.checkbox}
       >
+        {console.log(
+          "Subtask item: ",
+          props.item,
+          "for taskId: ",
+          props.taskId
+        )}
         <AnimatedCheckbox
           checked={props.item.completed}
           highlightColor="#ffffff"
@@ -38,28 +79,38 @@ const SubTask = (props) => {
           boxOutlineColor="#000000"
         />
       </Pressable>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.itemStyle}
         onPress={() => {
-          props.showTaskDetail(props.item);
+          // props.showTaskDetail(props.item);
         }}
         onLongPress={() => {
-          props.setModalVisible(!props.modalVisible);
-          props.setSelectedTask(props.item);
+          // props.setModalVisible(!props.modalVisible);
+          // props.setSelectedTask(props.item);
         }}
-      >
-        <Animated.Text
+      > */}
+      {/* <Animated.Text
           style={[
             props.item.completed ? styles.checkedItem : "",
             styles.itemText,
           ]}
           numberOfLines={1}
         >
-          {props.item.heading.length < 35
-            ? `${props.item.heading}`
-            : `${props.item.heading.substring(0, 32)}...`}
-        </Animated.Text>
-      </TouchableOpacity>
+          {props.item.text.length < 35
+            ? `${props.item.text}`
+            : `${props.item.text.substring(0, 32)}...`}
+        </Animated.Text> */}
+
+      <TextInput
+        value={subTaskHeader}
+        onChangeText={setSubTaskHeader}
+        placeholder={subTaskHeader}
+        placeholderTextColor="black"
+        style={{ color: "ccc", fontSize: 15, backgroundColor: "red" }}
+        spellCheck={false}
+        selectionColor="#000"
+      />
+      {/* </TouchableOpacity> */}
     </View>
   );
 };
