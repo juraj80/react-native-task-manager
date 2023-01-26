@@ -43,6 +43,8 @@ const TaskDetail = ({ route, navigation }) => {
 
   const tasksRef = firebase.firestore().collection("tasks");
 
+  TouchableOpacity.defaultProps = { activeOpacity: 0.8 };
+
   async function fetchData() {
     tasksRef
       .doc(taskId)
@@ -191,12 +193,25 @@ const TaskDetail = ({ route, navigation }) => {
             renderItem={renderSubTask}
           ></DraggableFlatList>
         </View>
-        <View style={styles.addSubTaskSection}>
+        <View style={styles.addBtnContainer}>
           <TouchableOpacity onPress={createSubTask}>
-            <Text style={styles.addSubTaskBtn}>+ Add SubTask</Text>
+            <Text style={styles.btnTextStyle}>+ Add SubTask</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.calendarSection}></View>
+        <View style={styles.calendarSection}>
+          <TouchableOpacity style={styles.calendarBtnContainer}>
+            <Text style={styles.btnTextStyle}>Set Due Date</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.calendarBtnContainer}>
+            <Text style={styles.btnTextStyle}>Reminder</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.calendarBtnContainer}>
+            <Text style={styles.btnTextStyle}>Repeat</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.attachmentsSection}>
+          <Text>Attachments</Text>
+        </View>
         <View style={styles.bottomSection}>
           <TouchableOpacity style={styles.plusBtn} onPress={() => updateTask()}>
             <Text style={styles.plusText}>Save</Text>
@@ -232,9 +247,10 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
   },
   calendarSection: {
-    flex: 3,
+    flex: 2,
     backgroundColor: "blue",
   },
+  attachmentsSection: { flex: 2, backgroundColor: "red" },
   bottomSection: {
     flex: 1,
     justifyContent: "center",
@@ -273,19 +289,26 @@ const styles = StyleSheet.create({
   dragItem: {
     padding: 5,
   },
-  addSubTaskSection: {
-    flex: 0.3,
-    backgroundColor: "pink",
-    padding: 2,
+  addBtnContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     margin: 5,
     justifyContent: "center",
-    // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    // backgroundColor: "#6495ED",
     borderColor: "black",
     borderWidth: 1,
     borderRadius: 7,
   },
-  addSubTaskBtn: { color: "black", fontSize: 20, marginLeft: 5 },
+  calendarBtnContainer: {
+    elevation: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    margin: 5,
+    justifyContent: "center",
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 7,
+  },
+  btnTextStyle: { color: "black", fontSize: 20, marginLeft: 5 },
 });
 
 export default TaskDetail;
