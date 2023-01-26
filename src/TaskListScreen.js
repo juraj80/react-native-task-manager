@@ -71,7 +71,7 @@ const TaskList = ({ route, navigation }) => {
         });
       });
 
-      console.log("setAllTasks called ", tasks);
+      // console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setTimelineData(data);
     });
@@ -82,7 +82,7 @@ const TaskList = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log("useEffect -> allTask has been updated to: ", allTasks);
+    // console.log("useEffect -> allTask has been updated to: ", allTasks);
   }, [allTasks]);
 
   useEffect(() => {
@@ -99,9 +99,9 @@ const TaskList = ({ route, navigation }) => {
 
   const sendReminderNotification = () => {
     let currentDateTime = new Date().toISOString().slice(0, 16);
-    console.log("displaying now", currentDateTime);
+    // console.log("displaying now", currentDateTime);
 
-    console.log("displaying allTasks from sendReminderNotif ", allTasks);
+    // console.log("displaying allTasks from sendReminderNotif ", allTasks);
     allTasks.forEach((obj) => {
       if (
         obj.reminderAt instanceof Date &&
@@ -134,10 +134,10 @@ const TaskList = ({ route, navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("scrren is focused" + JSON.stringify(taskHeading));
+      // console.log("scrren is focused" + JSON.stringify(taskHeading));
       if (taskHeading) {
         setNoteTask(taskHeading);
-        console.log("selectedTask: ", selectedTask);
+        // console.log("selectedTask: ", selectedTask);
         setSelectedTask({ heading: taskHeading });
         setModalVisible(true);
         navigation.setParams({ heading: null });
@@ -201,11 +201,11 @@ const TaskList = ({ route, navigation }) => {
 
   // handler for completed tasks
   const handleChange = (id) => {
-    let temp = allTasks.map((product) => {
-      if (id === product.id) {
-        return { ...product, completed: !product.completed };
+    let temp = allTasks.map((item) => {
+      if (id === item.id) {
+        return { ...item, completed: !item.completed };
       }
-      return product;
+      return item;
     });
     // temp = temp.filter((el) => !el.checked);
     // console.log("TEMP", temp);

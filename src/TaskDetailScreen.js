@@ -37,30 +37,36 @@ const TaskDetail = ({ route, navigation }) => {
   const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
   const [taskText, setTaskText] = useState(route.params.text);
-  // const [allSubTasks, setAllSubTasks] = useState(route.params.subtasks);
 
   const [subTaskText, setSubTaskText] = useState("");
-  const [allSubTasks, setAllSubTasks] = useState(subTasksArr);
+  const [allSubTasks, setAllSubTasks] = useState([]);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
-  // async function fetchData() {
-  //   tasksRef.onSnapshot((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       const { heading, text } = doc.data();
-  //       // console.log({
-  //       //   id: doc.id,
-  //       //   heading,
-  //       //   text,
-  //       // });
-  //     });
-  //     //   setTask();
-  //   });
-  // }
+  async function fetchData() {
+    tasksRef
+      .doc(taskId)
+      .get()
+      .then((querySnapshot) => {
+        const subTasks = querySnapshot.data().subtasks;
+        // querySnapshot.forEach((doc) => {
+        //   console.log("FETCHED SUBTASK ARRAY", doc.data());
+        //   const { text, completed } = doc.data();
+        //   // console.log({
+        //   //   id: doc.id,
+        //   //   heading,
+        //   //   text,
+        //   // });
+        // });
+        if (subTasks) {
+          setAllSubTasks(subTasks);
+        }
+      });
+  }
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const updateTask = async () => {
     console.log("updateTask called");
@@ -129,13 +135,13 @@ const TaskDetail = ({ route, navigation }) => {
     return uuid();
   };
 
-  // handler for completed tasks
+  // handler for completed subtasks
   const handleChange = (id) => {
-    let temp = allSubTasks.map((product) => {
-      if (id === product.id) {
-        return { ...product, completed: !product.completed };
+    let temp = allSubTasks.map((item) => {
+      if (id === item.id) {
+        return { ...item, completed: !item.completed };
       }
-      return product;
+      return item;
     });
     setAllSubTasks(temp);
 
@@ -151,43 +157,44 @@ const TaskDetail = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <TextInput
-          value={taskHeader}
-          onChangeText={setTaskHeader}
-          placeholder={taskHeader}
-          placeholderTextColor="black"
-          style={{ color: "ccc", fontSize: 22 }}
-          spellCheck={false}
-          autoFocus
-          selectionColor="#aaa"
-        />
-        <TextInput
-          value={taskText}
-          onChangeText={setTaskText}
-          placeholder={taskText}
-          style={{ color: "ccc", fontSize: 22 }}
-          spellCheck={false}
-          multiline={true}
-          autoFocus
-          selectionColor="#aaa"
-          style={styles.mainSection}
-        />
+        <View style={styles.headerSection}>
+          <TextInput
+            value={taskHeader}
+            onChangeText={setTaskHeader}
+            placeholder={taskHeader}
+            placeholderTextColor="black"
+            style={{ color: "ccc", fontSize: 22 }}
+            spellCheck={false}
+            autoFocus
+            selectionColor="#aaa"
+          />
+          <TextInput
+            value={taskText}
+            onChangeText={setTaskText}
+            placeholder={taskText}
+            style={{ color: "ccc", fontSize: 22 }}
+            spellCheck={false}
+            multiline={true}
+            autoFocus
+            selectionColor="#aaa"
+            style={styles.mainSection}
+          />
+        </View>
         <View style={styles.subTasksSection}>
-          <View>
-            <TouchableOpacity onPress={createSubTask}>
-              <Text>+ Add SubTask</Text>
-            </TouchableOpacity>
-          </View>
           <DraggableFlatList
-            style={{ height: "100%" }}
+            // style={{ height: "90%", flexGrow: 0 }}
             data={allSubTasks}
             onDragEnd={({ data }) => setAllSubTasks(data)}
             keyExtractor={(subtask, index) => {
               return subtask.id, index.toString();
             }}
-            // numColumns={1}
             renderItem={renderSubTask}
           ></DraggableFlatList>
+        </View>
+        <View style={styles.addSubTaskSection}>
+          <TouchableOpacity onPress={createSubTask}>
+            <Text style={styles.addSubTaskBtn}>+ Add SubTask</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.calendarSection}></View>
         <View style={styles.bottomSection}>
@@ -209,19 +216,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 20,
-    backgroundColor: "red",
+    // backgroundColor: "red",
     // flexDirection: "column",
   },
   headerSection: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
   },
   mainSection: {
     flex: 1,
   },
 
   subTasksSection: {
-    flex: 3,
+    flex: 0,
     backgroundColor: "yellow",
   },
   calendarSection: {
@@ -266,6 +273,19 @@ const styles = StyleSheet.create({
   dragItem: {
     padding: 5,
   },
+  addSubTaskSection: {
+    flex: 0.3,
+    backgroundColor: "pink",
+    padding: 2,
+    margin: 5,
+    justifyContent: "center",
+    // backgroundColor: "rgba(173, 216, 230, 0.5)",
+    // backgroundColor: "#6495ED",
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 7,
+  },
+  addSubTaskBtn: { color: "black", fontSize: 20, marginLeft: 5 },
 });
 
 export default TaskDetail;

@@ -32,14 +32,19 @@ const SubTask = (props) => {
     }).start(() => {});
   };
 
-  const updateSubTask = async () => {
+  const addSubTask = async () => {
+    console.log("addSubTask called ");
+
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
+      id: props.item.id,
       text: subTaskHeader,
       completed: props.item.completed,
     };
 
     console.log("UPDATE DATA", data);
+    console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
+
     subTasksRef
       .doc(props.taskId)
       .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
@@ -49,7 +54,7 @@ const SubTask = (props) => {
       //   Keyboard.dismiss();
       // })
       .then(() => {
-        console.log("Subtask updated: ", data, " for taskId: ", taskId);
+        console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
       })
       .catch((error) => {
         alert(error);
@@ -104,9 +109,11 @@ const SubTask = (props) => {
       <TextInput
         value={subTaskHeader}
         onChangeText={setSubTaskHeader}
+        returnKeyType={"next"}
+        onSubmitEditing={() => addSubTask()}
         placeholder={subTaskHeader}
         placeholderTextColor="black"
-        style={{ color: "ccc", fontSize: 15, backgroundColor: "red" }}
+        style={{ color: "black", fontSize: 20, marginLeft: 5 }}
         spellCheck={false}
         selectionColor="#000"
       />

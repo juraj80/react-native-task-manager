@@ -15,6 +15,9 @@ const firebaseConfig = {
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+  firebase
+    .firestore()
+    .settings({ experimentalForceLongPolling: true, merge: true }); //add this..
 }
 
 export { firebase };
