@@ -22,6 +22,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import HorizontalTimeline from "../components/CustomTimeline";
 import TaskModal from "../components/TaskModal";
 import Task from "../components/Task";
+import Footer from "../components/Footer";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
@@ -386,11 +387,7 @@ const TaskList = ({ route, navigation }) => {
         </View>
 
         <View style={styles.bottomSection}>
-          <View style={styles.btnWhiteBackground}>
-            <TouchableOpacity style={styles.plusBtn} onPress={createTask}>
-              <Text style={styles.plusText}>+</Text>
-            </TouchableOpacity>
-          </View>
+          <Footer onPress={createTask} bgColor={"#66CC99"} />
         </View>
       </View>
       {/* {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))} */}
@@ -428,15 +425,16 @@ const TaskList = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#66CC99",
   },
   timeline: {
     height: 50,
     marginBottom: 10,
+    backgroundColor: "lightgray",
   },
   screenWrapper: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 60,
     paddingHorizontal: 20,
     // flexDirection: "column",
   },
@@ -444,7 +442,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     // color: "#4169E1",
-    color: "black",
+    color: "white",
   },
   dragItem: {
     padding: 5,
@@ -456,60 +454,30 @@ const styles = StyleSheet.create({
   },
   mainSection: {
     flex: 9,
-    padding: 5,
+    padding: 0,
   },
-  bottomSection: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   bottomRow: {
     // flex: 1,
     position: "absolute",
     width: "100%",
     bottom: 0,
-    height: 50,
+    height: 70,
     zIndex: -99,
     // justifyContent: "center",
     // alignItems: "center",
     // backgroundColor: "#4169E1",
-    borderWidth: 1,
-    borderColor: "black",
-  },
-
-  btnWhiteBackground: {
-    backgroundColor: "white",
-    width: 63,
-    height: 63,
-    borderRadius: 45,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnGreyBackground: {
-    position: "absolute",
-    right: -15,
     backgroundColor: "lightgrey",
-    width: 75,
-    height: 75,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusBtn: {
-    // backgroundColor: "#4169E1",
-    borderColor: "black",
-    borderWidth: 1,
-    width: 60,
-    height: 60,
 
-    borderRadius: 45,
+    // borderWidth: 1,
+    // borderColor: "black",
+  },
+
+  bottomSection: {
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
-  },
-  plusText: {
-    fontSize: 30,
-    color: "black",
+    // backgroundColor: "red",
   },
 });
 

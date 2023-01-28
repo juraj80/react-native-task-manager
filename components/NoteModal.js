@@ -188,9 +188,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   bottomSection: {
-    flex: 1,
+    flex: 2,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   bottomRow: {
     // flex: 1,
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     padding: 25,
     width: width,
     height: height / 3,
-    alignItems: "center",
+    alignItems: "left",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -301,24 +301,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textStyle: {
-    // color: "red",
-    // fontWeight: "bold",
+    color: "white",
+    fontWeight: "bold",
     textAlign: "center",
   },
   buttonModal: {
     borderRadius: 5,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
     elevation: 2,
     marginHorizontal: 20,
     marginTop: 10,
+    width: width / 3,
+    backgroundColor: "#4682B4",
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
   },
   buttonClose: {
     borderColor: "black",
-    borderWidth: 1,
   },
 });
 export default NoteModal;

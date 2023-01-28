@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "left",
     justifyContent: "center",
   },
   screenTitle: {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   btnWhiteBackground: {
-    backgroundColor: "white",
+    backgroundColor: "red",
     width: 63,
     height: 63,
     borderRadius: 45,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     padding: 25,
     width: width,
     height: height / 3,
-    alignItems: "center",
+    alignItems: "left",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -298,8 +298,8 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   modalBtnSection: {
-    flex: 1,
     flexDirection: "row",
+    paddingVertical: 10,
   },
   button: {
     borderRadius: 20,
@@ -311,24 +311,26 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textStyle: {
-    // color: "red",
-    // fontWeight: "bold",
+    color: "white",
+    fontWeight: "bold",
     textAlign: "center",
   },
   buttonModal: {
     borderRadius: 5,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
     elevation: 2,
     marginHorizontal: 20,
     marginTop: 10,
+    width: width / 4.8,
+    backgroundColor: "rgb(102, 204, 153)",
   },
   buttonOpen: {
     backgroundColor: "#F194FF",
   },
   buttonClose: {
     borderColor: "black",
-    borderWidth: 1,
+    // borderWidth: 1,
   },
 });
 export default TaskModal;

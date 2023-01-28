@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import NoteModal from "../components/NoteModal";
-
+import Footer from "../components/Footer";
 // import MyModal from "../components/MyModal";
 import { useFocusEffect } from "@react-navigation/core";
 import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
@@ -186,7 +186,7 @@ const BrainMapScreen = ({ navigation }) => {
         />
 
         <View style={styles.bottomSection}>
-          <View style={styles.btnGreyBackground}>
+          {/* <View style={styles.btnGreyBackground}>
             <View style={styles.btnWhiteBackground}>
               <TouchableOpacity
                 style={styles.plusBtn}
@@ -196,9 +196,11 @@ const BrainMapScreen = ({ navigation }) => {
                 <Text style={styles.plusText}>+</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
+          <Footer onPress={createNote} bgColor={"#4682B4"} />
         </View>
       </View>
+
       <View style={styles.bottomRow}></View>
     </View>
   );
@@ -240,7 +242,8 @@ const styles = StyleSheet.create({
   bottomSection: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
+    // backgroundColor: "red",
   },
   bottomRow: {
     // flex: 1,
@@ -355,13 +358,24 @@ const styles = StyleSheet.create({
     // fontWeight: "bold",
     textAlign: "center",
   },
+  // buttonModal: {
+  //   borderRadius: 5,
+  //   paddingHorizontal: 10,
+  //   paddingVertical: 5,
+  //   elevation: 2,
+  //   marginHorizontal: 20,
+  //   marginTop: 10,
+  // },
+
   buttonModal: {
     borderRadius: 5,
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
     elevation: 2,
     marginHorizontal: 20,
     marginTop: 10,
+    width: width / 4.8,
+    backgroundColor: "rgb(102, 204, 153)",
   },
   buttonOpen: {
     backgroundColor: "#F194FF",

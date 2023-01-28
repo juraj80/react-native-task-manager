@@ -73,11 +73,19 @@ class HorizontalTimeline extends Component {
       return (
         <Image
           source={require("../assets/dot_blue.png")}
-          style={[styles.dotImage, { left: width / 2, top: height / 2 }]}
+          // style={[styles.dotImage, { left: width / 2, top: height / 2 }]}
+          style={[styles.dotImage]}
         />
       );
     }
     return null;
+  }
+
+  isToday(day) {
+    if (day.currentDate.getDate() == new Date().getDate()) {
+      return true;
+    }
+    return false;
   }
 
   renderDays() {
@@ -86,19 +94,32 @@ class HorizontalTimeline extends Component {
     const days = this.state.days.map((d) => (
       <View
         key={`col${d.date}`}
-        style={[!d.marked ? styles.day : styles.dayElevated, { width }]}
+        // style={[!d.marked ? styles.day : styles.dayElevated, { width }]}
+        style={[!d.marked ? styles.day : styles.dayElevated]}
       >
         {/* <View style={[styles.dayUpper, { backgroundColor }]}> */}
-        <View style={styles.textContainer}>
-          <Text style={[styles.title, { color }]}>{`${d.date}`}</Text>
-          <Text style={[styles.subTitle, { color }]}>
+        {/* <View style={styles.textContainer}> */}
+        <View
+          style={[
+            d.marked
+              ? styles.textContainerElevated
+              : this.isToday(d)
+              ? styles.textContainerGreen
+              : styles.textContainerBlue,
+            styles.textContainer,
+          ]}
+        >
+          {/* <Text style={[styles.title, { color }]}>{`${d.date}`}</Text> */}
+          <Text style={[styles.title]}>{`${d.date}`}</Text>
+          {/* <Text style={[styles.subTitle, { color }]}> */}
+          <Text style={[styles.subTitle]}>
             {`${this.getDayOfTheWeek(d.currentDate.getDay())}`}
           </Text>
         </View>
         {/* </View> */}
 
-        {this.renderDotImage(d)}
-        <View style={styles.lineContainer} />
+        {/* {this.renderDotImage(d)} */}
+        {/* <View style={styles.lineContainer} /> */}
 
         {/* <View style={[styles.dayBottom, { backgroundColor }]}>
           <Text style={[styles.dayInfo, { color }]}>
@@ -174,78 +195,117 @@ HorizontalTimeline.defaultProps = {
   backgroundColor: "white",
   data: null,
   height: 50,
-  color: "black",
+  color: "white",
   // color: "#4169E1",
-  width: 60,
+  width: 80,
 };
 
 const styles = StyleSheet.create({
   day: {
-    // backgroundColor: 'red',
-    marginVertical: 5,
+    // backgroundColor: "red",
+    // borderWidth: 2,
+    // backgroundColor: "lightgray",
+    borderColor: "white",
+    paddingTop: 10,
+    width: 80,
+    marginHorizontal: 5,
   },
   dayElevated: {
-    // backgroundColor: "lightgray",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 10,
-    elevation: 5,
-    marginVertical: 5,
-    marginHorizontal: 3,
-    shadowOffset: { width: 1, height: 2 },
-    shadowColor: "#000000",
-    shadowRadius: 3,
-    shadowOpacity: 0.3,
+    // backgroundColor: "lightblue",
+    borderColor: "white",
+    // borderWidth: 1,
+    // borderRadius: 10,
+    // borderWidth: 2,
+
+    elevation: 2,
+    paddingTop: 10,
+    width: 80,
+
+    // marginVertical: 5,
+    marginHorizontal: 5,
+    // shadowOffset: { width: 1, height: 2 },
+    // shadowColor: "#000000",
+    // shadowRadius: 3,
+    // shadowOpacity: 0.3,
   },
-  dayUpper: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  dayBottom: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  lineContainer: {
-    height: 3,
-    borderTopWidth: 3,
-    // borderColor: "#6699CC",
-    borderColor: "black",
-    marginTop: 10,
-  },
+  // dayUpper: {
+  //   flex: 1,
+  //   flexDirection: "row",
+  //   backgroundColor: "yellow",
+  // },
+  // dayBottom: {
+  //   flex: 1,
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   backgroundColor: "yellow",
+  // },
+  // lineContainer: {
+  //   height: 3,
+  //   // borderTopWidth: 3,
+  //   borderColor: "white",
+  //   marginTop: 10,
+  // },
   textContainer: {
     flexDirection: "row",
-    alignSelf: "top",
-    // backgroundColor:"yellow"
+
+    alignItems: "center",
+    padding: 5,
+    borderRadius: 5,
+    // borderWidth: 2,
+  },
+
+  textContainerBlue: {
+    // flexDirection: "row",
+    // // alignSelf: "center",
+    // alignItems: "center",
+    // padding: 5,
+    backgroundColor: "#6495ED",
+  },
+  textContainerElevated: {
+    // flexDirection: "row",
+    // // alignSelf: "center",
+    // alignItems: "center",
+    // padding: 5,
+    backgroundColor: "red",
+  },
+  textContainerGreen: {
+    // flexDirection: "row",
+    // // alignSelf: "center",
+    // alignItems: "center",
+    // padding: 5,
+    backgroundColor: "green",
   },
   title: {
-    fontSize: 12,
+    fontSize: 15,
     flex: 1,
-    alignSelf: "center",
-    textAlign: "right",
-    marginRight: 2,
-    marginTop: 5,
+    // alignSelf: "center",
+    textAlign: "center",
+    // marginRight: 4,
+    // marginTop: 0,
     // color: "#6699CC",
-
-    color: "black",
+    color: "white",
+    // backgroundColor: "black",
   },
   subTitle: {
-    fontSize: 12,
+    fontSize: 15,
     flex: 1,
-    alignSelf: "flex-end",
-    marginRight: 5,
+    textAlign: "left",
+    // alignSelf: "flex-st",
     // color: "#6699CC",
-    color: "black",
+    color: "white",
   },
-  dayInfo: {
-    fontSize: 14,
-    alignSelf: "center",
-  },
+  // dayInfo: {
+  //   fontSize: 14,
+  //   alignSelf: "center",
+  //   backgroundColor: "red",
+  // },
   dotImage: {
     position: "absolute",
-    width: 14,
-    height: 14,
+    width: 18,
+    height: 18,
     zIndex: 99,
+    left: 30,
+    bottom: 0,
   },
 });
 
