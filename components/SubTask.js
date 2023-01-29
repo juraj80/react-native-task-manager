@@ -42,23 +42,24 @@ const SubTask = (props) => {
       completed: props.item.completed,
     };
 
-    console.log("UPDATE DATA", data);
-    console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
-
-    subTasksRef
-      .doc(props.taskId)
-      .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
-      // .then(() => {
-      //   //setNoteHeader("");
-      //   // release Keyboard
-      //   Keyboard.dismiss();
-      // })
-      .then(() => {
-        console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    // console.log("UPDATE DATA", data);
+    // console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
+    if (subTaskHeader) {
+      subTasksRef
+        .doc(props.taskId)
+        .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
+        // .then(() => {
+        //   //setNoteHeader("");
+        //   // release Keyboard
+        //   Keyboard.dismiss();
+        // })
+        .then(() => {
+          console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
   };
 
   return (
@@ -71,12 +72,12 @@ const SubTask = (props) => {
         }}
         style={styles.checkbox}
       >
-        {console.log(
+        {/* {console.log(
           "Subtask item: ",
           props.item,
           "for taskId: ",
           props.taskId
-        )}
+        )} */}
         <AnimatedCheckbox
           checked={props.item.completed}
           highlightColor="#ffffff"
@@ -109,13 +110,15 @@ const SubTask = (props) => {
       <TextInput
         value={subTaskHeader}
         onChangeText={setSubTaskHeader}
+        // defaultValue="Add Step"
         returnKeyType={"next"}
         onSubmitEditing={() => addSubTask()}
-        placeholder={subTaskHeader}
-        placeholderTextColor="black"
+        placeholder={"Add Sub Task"}
+        placeholderTextColor="lightgray"
         style={{ color: "black", fontSize: 20, marginLeft: 5 }}
         spellCheck={false}
         selectionColor="#000"
+        autoFocus={true}
       />
       {/* </TouchableOpacity> */}
     </View>
@@ -128,8 +131,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    // backgroundColor: "#6495ED",
-    borderColor: "black",
+    backgroundColor: "#f3f1ef",
+    borderColor: "#95a5a6",
     borderWidth: 1,
     borderRadius: 7,
   },

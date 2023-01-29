@@ -34,8 +34,8 @@ const Task = (props) => {
         <AnimatedCheckbox
           checked={props.item.completed}
           highlightColor="white"
-          checkmarkColor="blue"
-          boxOutlineColor="white"
+          checkmarkColor="green"
+          boxOutlineColor="black"
         />
       </Pressable>
       <TouchableOpacity
@@ -70,12 +70,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    backgroundColor: "#6495ED",
+    // backgroundColor: "#6495ED",
+    backgroundColor: "#efeff0",
     // borderColor: "black",
     // borderWidth: 1,
     borderRadius: 5,
+    opacity: 1,
   },
-  itemText: { color: "white" },
+  itemText: { color: "black" },
   dragItem: {
     padding: 5,
   },

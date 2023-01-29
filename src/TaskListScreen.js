@@ -47,7 +47,7 @@ const TaskList = ({ route, navigation }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
-    console.log("function fetchData called");
+    console.log("TaskList fetchData called");
 
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
@@ -371,6 +371,12 @@ const TaskList = ({ route, navigation }) => {
             date={new Date().toISOString()}
             data={timelineData}
           />
+          <View
+            style={{
+              borderBottomColor: "#abb7b7",
+              borderBottomWidth: 2,
+            }}
+          />
         </View>
 
         <View style={styles.mainSection}>
@@ -425,12 +431,14 @@ const TaskList = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#66CC99",
+    // backgroundColor: "#66CC99",
+    backgroundColor: "rgba(102, 204, 153,1)",
   },
   timeline: {
-    height: 50,
+    // height: 70,
+    flex: 1,
     marginBottom: 10,
-    backgroundColor: "lightgray",
+    // backgroundColor: "lightgray",
   },
   screenWrapper: {
     flex: 1,

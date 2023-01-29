@@ -21,6 +21,7 @@ import DraggableFlatList, {
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
 import SubTask from "../components/SubTask";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -40,6 +41,14 @@ const TaskDetail = ({ route, navigation }) => {
 
   const [subTaskText, setSubTaskText] = useState("");
   const [allSubTasks, setAllSubTasks] = useState([]);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [isDateTimePickerVisible, setDateTimePickerVisibility] =
+    useState(false);
+
+  const [taskDueDate, setTaskDueDate] = useState(new Date(1900, 1, 1));
+  const [taskReminderDate, setTaskReminderDate] = useState(
+    new Date(1900, 1, 1)
+  );
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -78,8 +87,10 @@ const TaskDetail = ({ route, navigation }) => {
       const data = {
         heading: taskHeader,
         text: taskText,
+        dueDateAt: taskDueDate,
+        reminderAt: taskReminderDate,
         updatedAt: timestamp,
-        subtasks: subTasksArr,
+        subtasks: allSubTasks,
       };
       console.log("UPDATED DATA: ", data);
       tasksRef
@@ -124,8 +135,9 @@ const TaskDetail = ({ route, navigation }) => {
     </ScaleDecorator>
   );
 
+  // callback called when the +AddSubTask button is pressed
   const createSubTask = () => {
-    console.log("Create SubTask pressed!");
+    console.log("Create SubTask pressed! ", subTaskText);
     setAllSubTasks([
       ...allSubTasks,
       { id: getId(), completed: false, text: subTaskText },
@@ -156,6 +168,36 @@ const TaskDetail = ({ route, navigation }) => {
     }, 2000);
   };
 
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const showDateTimePicker = () => {
+    setDateTimePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+    // setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const hideDateTimePicker = () => {
+    setDateTimePickerVisibility(false);
+    // setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const handleConfirm = (date) => {
+    setTaskDueDate(date);
+    hideDatePicker();
+    // setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const handleReminderConfirm = (datetime) => {
+    setTaskReminderDate(datetime);
+    hideDateTimePicker();
+    // setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
@@ -168,8 +210,13 @@ const TaskDetail = ({ route, navigation }) => {
             style={{ color: "ccc", fontSize: 22 }}
             spellCheck={false}
             autoFocus
-            selectionColor="#aaa"
+            selectionColor="#000"
           />
+          {console.log(
+            "Task detail navigated with the  params : ",
+            route.params
+          )}
+
           <TextInput
             value={taskText}
             onChangeText={setTaskText}
@@ -178,7 +225,7 @@ const TaskDetail = ({ route, navigation }) => {
             spellCheck={false}
             multiline={true}
             autoFocus
-            selectionColor="#aaa"
+            selectionColor="#000"
             style={styles.mainSection}
           />
         </View>
@@ -199,10 +246,16 @@ const TaskDetail = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.calendarSection}>
-          <TouchableOpacity style={styles.calendarBtnContainer}>
+          <TouchableOpacity
+            onPress={showDatePicker}
+            style={styles.calendarBtnContainer}
+          >
             <Text style={styles.btnTextStyle}>Set Due Date</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.calendarBtnContainer}>
+          <TouchableOpacity
+            onPress={showDateTimePicker}
+            style={styles.calendarBtnContainer}
+          >
             <Text style={styles.btnTextStyle}>Reminder</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.calendarBtnContainer}>
@@ -210,13 +263,25 @@ const TaskDetail = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.attachmentsSection}>
-          <Text>Attachments</Text>
+          {/* <Text>Attachments</Text> */}
         </View>
         <View style={styles.bottomSection}>
           <TouchableOpacity style={styles.plusBtn} onPress={() => updateTask()}>
             <Text style={styles.plusText}>Save</Text>
           </TouchableOpacity>
         </View>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+        <DateTimePickerModal
+          isVisible={isDateTimePickerVisible}
+          mode="datetime"
+          onConfirm={handleReminderConfirm}
+          onCancel={hideDateTimePicker}
+        />
       </View>
     </View>
   );
@@ -225,7 +290,7 @@ const TaskDetail = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ff9478",
   },
   screenWrapper: {
     flex: 1,
@@ -244,18 +309,19 @@ const styles = StyleSheet.create({
 
   subTasksSection: {
     flex: 0,
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
   },
   calendarSection: {
     flex: 2,
-    backgroundColor: "blue",
+    marginVertical: 20,
+    // backgroundColor: "blue",
   },
-  attachmentsSection: { flex: 2, backgroundColor: "red" },
+  attachmentsSection: { flex: 2 },
   bottomSection: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "green",
+    // backgroundColor: "green",
   },
   item: {
     width: 80,
@@ -294,7 +360,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     margin: 5,
     justifyContent: "center",
-    borderColor: "black",
+    borderColor: "#95a5a6",
+    backgroundColor: "#95a5a6",
+
     borderWidth: 1,
     borderRadius: 7,
   },
@@ -304,11 +372,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     margin: 5,
     justifyContent: "center",
-    borderColor: "black",
+    borderColor: "#95a5a6",
+    backgroundColor: "#95a5a6",
+
     borderWidth: 1,
     borderRadius: 7,
   },
-  btnTextStyle: { color: "black", fontSize: 20, marginLeft: 5 },
+  btnTextStyle: { color: "white", fontSize: 20, marginLeft: 5 },
 });
 
 export default TaskDetail;

@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -109,7 +110,7 @@ const TaskModal = ({
 
           <View style={styles.modalBtnSection}>
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
+              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               onPress={() => {
                 showDatePicker();
                 // setModalVisible(!modalVisible);
@@ -119,7 +120,7 @@ const TaskModal = ({
               <Text style={styles.textStyle}>Set Due Date</Text>
             </Pressable>
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
+              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               onPress={() => {
                 showDateTimePicker();
                 // setModalVisible(!modalVisible);
@@ -130,7 +131,7 @@ const TaskModal = ({
             </Pressable>
             {task.heading && (
               <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
+                style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
                 onPress={() => {
                   deleteTask(task);
                   // setModalVisible(!modalVisible);
@@ -142,7 +143,7 @@ const TaskModal = ({
             )}
 
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
+              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               onPress={() => {
                 console.log(task.heading);
                 if (task.id) {
@@ -311,20 +312,35 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
+    color: "black",
+    // fontWeight: "bold",
     textAlign: "center",
   },
   buttonModal: {
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 10,
     elevation: 2,
     marginHorizontal: 20,
     marginTop: 10,
     width: width / 4.8,
-    backgroundColor: "rgb(102, 204, 153)",
+    // backgroundColor: "rgb(102, 204, 153)",
+    borderWidth: 1,
+    opacity: 0.7,
   },
+
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+
   buttonOpen: {
     backgroundColor: "#F194FF",
   },

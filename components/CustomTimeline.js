@@ -95,7 +95,7 @@ class HorizontalTimeline extends Component {
       <View
         key={`col${d.date}`}
         // style={[!d.marked ? styles.day : styles.dayElevated, { width }]}
-        style={[!d.marked ? styles.day : styles.dayElevated]}
+        style={[!d.marked ? styles.day : styles.dayElevated, styles.shadow]}
       >
         {/* <View style={[styles.dayUpper, { backgroundColor }]}> */}
         {/* <View style={styles.textContainer}> */}
@@ -204,12 +204,25 @@ const styles = StyleSheet.create({
   day: {
     // backgroundColor: "red",
     // borderWidth: 2,
-    // backgroundColor: "lightgray",
     borderColor: "white",
     paddingTop: 10,
-    width: 80,
-    marginHorizontal: 5,
+    width: 72,
+    marginHorizontal: 2,
+    opacity: 1,
   },
+
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+
   dayElevated: {
     // backgroundColor: "lightblue",
     borderColor: "white",
@@ -220,9 +233,10 @@ const styles = StyleSheet.create({
     elevation: 2,
     paddingTop: 10,
     width: 80,
+    opacity: 1,
 
     // marginVertical: 5,
-    marginHorizontal: 5,
+    marginHorizontal: 2,
     // shadowOffset: { width: 1, height: 2 },
     // shadowColor: "#000000",
     // shadowRadius: 3,
@@ -249,50 +263,42 @@ const styles = StyleSheet.create({
     flexDirection: "row",
 
     alignItems: "center",
-    padding: 5,
-    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 7,
     // borderWidth: 2,
   },
 
   textContainerBlue: {
-    // flexDirection: "row",
-    // // alignSelf: "center",
-    // alignItems: "center",
-    // padding: 5,
-    backgroundColor: "#6495ED",
+    // backgroundColor: "#6495ED",
+    backgroundColor: "#efeff0",
   },
   textContainerElevated: {
-    // flexDirection: "row",
-    // // alignSelf: "center",
-    // alignItems: "center",
-    // padding: 5,
-    backgroundColor: "red",
+    backgroundColor: "#fbc093",
   },
   textContainerGreen: {
-    // flexDirection: "row",
-    // // alignSelf: "center",
-    // alignItems: "center",
-    // padding: 5,
-    backgroundColor: "green",
+    backgroundColor: "#b2de27",
   },
   title: {
     fontSize: 15,
-    flex: 1,
+    flex: 2,
     // alignSelf: "center",
     textAlign: "center",
-    // marginRight: 4,
     // marginTop: 0,
     // color: "#6699CC",
-    color: "white",
+    color: "black",
+    // fontWeight: "bold",
     // backgroundColor: "black",
   },
   subTitle: {
     fontSize: 15,
-    flex: 1,
-    textAlign: "left",
+    flex: 3,
+    textAlign: "center",
     // alignSelf: "flex-st",
     // color: "#6699CC",
-    color: "white",
+    // fontWeight: "bold",
+
+    color: "lightblack",
   },
   // dayInfo: {
   //   fontSize: 14,
