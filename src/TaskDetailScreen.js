@@ -10,6 +10,7 @@ import {
   Button,
   KeyboardAvoidingView,
   Dimensions,
+  Flatlist,
   LogBox,
 } from "react-native";
 
@@ -119,23 +120,25 @@ const TaskDetail = ({ route, navigation }) => {
   );
 
   const renderSubTask = ({ item, drag, isActive }) => (
-    <ScaleDecorator>
-      <TouchableOpacity
-        onLongPress={drag}
-        disabled={isActive}
-        style={styles.dragItem}
-      >
-        <SubTask
-          item={item}
-          taskId={taskId}
-          allSubTasks={allSubTasks}
-          setAllSubTasks={setAllSubTasks}
-          subTaskText={subTaskText}
-          setSubTaskText={setSubTaskText}
-          handleChange={handleChange}
-        />
-      </TouchableOpacity>
-    </ScaleDecorator>
+    <TouchableOpacity
+      // onLongPress={drag}
+      // onPress={() => deleteSubTask(item)}
+      onLongPress={() => handleDelete(item.id)}
+      disabled={isActive}
+      style={styles.dragItem}
+    >
+      <SubTask
+        item={item}
+        taskId={taskId}
+        allSubTasks={allSubTasks}
+        setAllSubTasks={setAllSubTasks}
+        subTaskText={subTaskText}
+        setSubTaskText={setSubTaskText}
+        handleChange={handleChange}
+        handleDelete={handleDelete}
+        deleteSubTask={deleteSubTask}
+      />
+    </TouchableOpacity>
   );
 
   // callback called when the +AddSubTask button is pressed
@@ -143,13 +146,31 @@ const TaskDetail = ({ route, navigation }) => {
     console.log("Create SubTask pressed! ", subTaskText);
     setAllSubTasks([
       ...allSubTasks,
-      { id: getId(), completed: false, text: subTaskText },
+      { id: getId(), completed: false, text: subTaskText, marked: false },
     ]);
     setSubTaskText("");
   };
 
   const getId = () => {
     return uuid();
+  };
+
+  const deleteSubTask = (item) => {
+    console.log("Delete SubTask func called", item);
+    let filtered = allSubTasks.filter((task) => task.id != item.id);
+    console.log("filtered: ", filtered);
+    setAllSubTasks(filtered);
+    // deleteTaskFromDB(item.id);
+  };
+
+  const handleDelete = (id) => {
+    let temp = allSubTasks.map((item) => {
+      if (id === item.id) {
+        return { ...item, marked: !item.marked };
+      }
+      return item;
+    });
+    setAllSubTasks(temp);
   };
 
   // handler for completed subtasks
@@ -216,8 +237,8 @@ const TaskDetail = ({ route, navigation }) => {
             selectionColor="#000"
           />
           {console.log(
-            "Task detail Screen navigated with the  params : ",
-            route.params
+            "Task detail Screen rendered with the  subtask : ",
+            allSubTasks
           )}
 
           <TextInput
@@ -233,7 +254,7 @@ const TaskDetail = ({ route, navigation }) => {
           />
         </View>
         <View style={styles.subTasksSection}>
-          <DraggableFlatList
+          {/* <DraggableFlatList
             // style={{ height: "90%", flexGrow: 0 }}
             data={allSubTasks}
             onDragEnd={({ data }) => setAllSubTasks(data)}
@@ -241,7 +262,13 @@ const TaskDetail = ({ route, navigation }) => {
               return subtask.id, index.toString();
             }}
             renderItem={renderSubTask}
-          ></DraggableFlatList>
+          ></DraggableFlatList> */}
+          <FlatList
+            // style={{ height: "100%" }}
+            data={allSubTasks}
+            numColumns={1}
+            renderItem={renderSubTask}
+          ></FlatList>
         </View>
         <View style={styles.addBtnContainer}>
           <TouchableOpacity onPress={createSubTask}>
