@@ -129,7 +129,7 @@ const TaskModal = ({
             >
               <Text style={styles.textStyle}>Reminder</Text>
             </Pressable>
-            {task.heading && (
+            {/* {task.heading && (
               <Pressable
                 style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
                 onPress={() => {
@@ -140,7 +140,7 @@ const TaskModal = ({
               >
                 <Text style={styles.textStyle}>Delete</Text>
               </Pressable>
-            )}
+            )} */}
 
             <Pressable
               style={[styles.buttonModal, styles.buttonClose, styles.shadow]}

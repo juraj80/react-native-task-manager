@@ -32,6 +32,7 @@ const SubTask = (props) => {
     }).start(() => {});
   };
 
+  // callback that runs on the subtask textinput submit
   const addSubTask = async () => {
     console.log("addSubTask called ");
 
@@ -42,23 +43,28 @@ const SubTask = (props) => {
       completed: props.item.completed,
     };
 
-    // console.log("UPDATE DATA", data);
-    // console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
     if (subTaskHeader) {
-      subTasksRef
-        .doc(props.taskId)
-        .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
-        // .then(() => {
-        //   //setNoteHeader("");
-        //   // release Keyboard
-        //   Keyboard.dismiss();
-        // })
-        .then(() => {
-          console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
-        })
-        .catch((error) => {
-          alert(error);
-        });
+      // subTasksRef
+      //   .doc(props.taskId)
+      //   .update({ subtasks: firebase.firestore.FieldValue.arrayUnion(data) })
+      //   // .then(() => {
+      //   //   //setNoteHeader("");
+      //   //   // release Keyboard
+      //   //   Keyboard.dismiss();
+      //   // })
+      //   .then(() => {
+      //     console.log("Subtask updated: ", data, " for taskId: ", props.taskId);
+      //   })
+      //   .catch((error) => {
+      //     alert(error);
+      //   });
+      const updated_subtasks = props.allSubTasks.map((obj) => {
+        if (obj.id == props.item.id) {
+          obj.text = subTaskHeader;
+        }
+        return obj;
+      });
+      props.setAllSubTasks(updated_subtasks);
     }
   };
 

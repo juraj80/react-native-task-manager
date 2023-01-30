@@ -79,6 +79,7 @@ const TaskDetail = ({ route, navigation }) => {
     fetchData();
   }, []);
 
+  // callback that saves the task detail in the DB when the SAVE button is pressed
   const updateTask = async () => {
     console.log("updateTask called");
     if (taskHeader && taskHeader.length > 0) {
@@ -127,6 +128,8 @@ const TaskDetail = ({ route, navigation }) => {
         <SubTask
           item={item}
           taskId={taskId}
+          allSubTasks={allSubTasks}
+          setAllSubTasks={setAllSubTasks}
           subTaskText={subTaskText}
           setSubTaskText={setSubTaskText}
           handleChange={handleChange}
@@ -213,7 +216,7 @@ const TaskDetail = ({ route, navigation }) => {
             selectionColor="#000"
           />
           {console.log(
-            "Task detail navigated with the  params : ",
+            "Task detail Screen navigated with the  params : ",
             route.params
           )}
 

@@ -310,9 +310,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     elevation: 2,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     marginTop: 10,
-    width: width / 3,
+    width: width / 4,
     backgroundColor: "#4682B4",
   },
   buttonOpen: {
