@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 15,
+    padding: 5,
     // backgroundColor: "rgba(173, 216, 230, 0.5)",
     // backgroundColor: "#6495ED",
     backgroundColor: "#efeff0",
@@ -83,6 +83,10 @@ const styles = StyleSheet.create({
   },
   itemStyle: {
     padding: 5,
+    backgroundColor: "red",
+    flex: 1,
+    textAlign: "center",
+    justifyContent: "center",
   },
   checkbox: {
     width: 24,

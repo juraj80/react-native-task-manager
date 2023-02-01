@@ -31,13 +31,7 @@ const TaskCompleted = (props) => {
             props.showTaskDetail(props.item);
           }}
         >
-          <Text
-            style={[
-              props.item.completed ? styles.checkedItem : "",
-              styles.itemText,
-            ]}
-            numberOfLines={1}
-          >
+          <Text style={styles.itemText} numberOfLines={1}>
             {props.item.heading.length < 35
               ? `${props.item.heading}`
               : `${props.item.heading.substring(0, 32)}...`}

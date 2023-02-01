@@ -27,12 +27,14 @@ import Footer from "../components/Footer";
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
+import { v4 as uuid } from "uuid";
+
 const TaskList = ({ route, navigation }) => {
   const taskHeading = route.params.heading;
   const [currentDate, setCurrentDate] = useState(new Date());
   const [noteTask, setNoteTask] = useState("");
   const [allTasks, setAllTasks] = useState([]);
-  const [activeTasks, setActiveTasks] = useState([]);
+  const [completeTasks, setCompleteTasks] = useState([]);
   const [timelineData, setTimelineData] = useState({});
   const [selectedTask, setSelectedTask] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
@@ -40,6 +42,7 @@ const TaskList = ({ route, navigation }) => {
   const [taskReminderDate, setTaskReminderDate] = useState(
     new Date(1900, 1, 1)
   );
+  const [taskCompletionDate, setTaskCompletionDate] = useState(null);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDateTimePickerVisible, setDateTimePickerVisibility] =
@@ -52,29 +55,37 @@ const TaskList = ({ route, navigation }) => {
 
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
+      const completeTasks = [];
       const data = {};
       querySnapshot.forEach((doc) => {
-        const { heading, text, completed, subtasks } = doc.data();
+        const { id, heading, text, completed, subtasks } = doc.data();
         const dueDate = doc.data().dueDateAt.toDate();
         const reminderAt = doc.data().reminderAt.toDate();
+        const completedAt = doc.data().completedAt;
+
         const date = dueDate.getDate();
-        tasks.push({
-          id: doc.id,
+
+        const task = {
+          id: id, //doc.id
           heading,
           text,
           completed,
+          completedAt: completedAt,
           dueDateAt: dueDate,
           reminderAt: reminderAt,
           subtasks,
-        });
+        };
+
+        completed ? completeTasks.push(task) : tasks.push(task);
 
         Object.assign(data, {
-          [date]: { id: doc.id, marked: true, info: heading },
+          [date]: { id: id, marked: true, info: heading }, //doc.id
         });
       });
 
       // console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
+      setCompleteTasks(completeTasks);
       setTimelineData(data);
     });
   }
@@ -83,13 +94,15 @@ const TaskList = ({ route, navigation }) => {
     fetchData();
   }, []);
 
+  // may cause issues with re-rendering of component
   useEffect(() => {
+    updateCompletedInDB(completeTasks);
     // console.log("useEffect -> allTask has been updated to: ", allTasks);
-  }, [allTasks]);
+  }, [completeTasks]);
 
   useEffect(() => {
     isDueToday();
-  });
+  }, []);
 
   // set timer to check each task reminder date every second
   useEffect(() => {
@@ -100,7 +113,6 @@ const TaskList = ({ route, navigation }) => {
   });
 
   const updateCompletedInDB = (tasks) => {
-    console.log("Updatecompleted in DB called with all Tasks", tasks);
     tasks.forEach((item) => {
       if (item.completed) {
         updateTaskDB(item);
@@ -110,9 +122,8 @@ const TaskList = ({ route, navigation }) => {
 
   const sendReminderNotification = () => {
     let currentDateTime = new Date().toISOString().slice(0, 16);
-    // console.log("displaying now", currentDateTime);
 
-    // console.log("displaying allTasks from sendReminderNotif ", allTasks);
+    // check each task if it has reminder set to current day
     allTasks.forEach((obj) => {
       if (
         obj.reminderAt instanceof Date &&
@@ -136,7 +147,7 @@ const TaskList = ({ route, navigation }) => {
         obj.dueDateAt instanceof Date &&
         obj.dueDateAt.toISOString().split("T")[0] === today
       ) {
-        console.log("Alert For this day: ", today, "from object: ", obj);
+        // console.log("Alert For this day: ", today, "from object: ", obj);
         Alert.alert("Reminder", "Task: " + obj.heading + "is due today");
         // TODO: Need to send notificiations to the user with the message
       }
@@ -170,10 +181,7 @@ const TaskList = ({ route, navigation }) => {
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
       })
-      //   //setNoteHeader("");
-      //   // release Keyboard
-      //   Keyboard.dismiss();
-      // })
+
       .then(() => {})
       .catch((error) => {
         alert(error);
@@ -214,17 +222,16 @@ const TaskList = ({ route, navigation }) => {
   const handleChange = (id) => {
     let temp = allTasks.map((item) => {
       if (id === item.id) {
-        return { ...item, completed: !item.completed };
+        return { ...item, completed: !item.completed, completedAt: new Date() };
       }
       return item;
     });
 
-    // temp = temp.filter((el) => !el.checked);
-    // console.log("TEMP", temp);
+    // console.log("Updated completion date in array: ", temp);
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
-    // console.log("completed", completed[0].dueDateAt.getDate());
+    setCompleteTasks(completed);
     const date = completed[0].dueDateAt.getDate();
     let timelineDataTemp = { ...timelineData };
 
@@ -237,18 +244,6 @@ const TaskList = ({ route, navigation }) => {
       setAllTasks(temp);
     }, 1000);
   };
-
-  // const removeTask = () => {
-  //   let temp = allTasks.filter((el) => !el.completed);
-  //   console.log("TEMP", temp);
-  //   setAllTasks(temp);
-  // };
-
-  // const handleCheckboxPress = () => {
-  //   setChecked((prev) => {
-  //     return !prev;
-  //   });
-  // };
 
   // callback that is passed to the flatlist component that renders the task item
   const renderTask = ({ item, drag, isActive }) => (
@@ -265,6 +260,7 @@ const TaskList = ({ route, navigation }) => {
           modalVisible={modalVisible}
           setSelectedTask={setSelectedTask}
           handleChange={handleChange}
+          // setTaskCompletionDate={setTaskCompletionDate}
         />
       </TouchableOpacity>
     </ScaleDecorator>
@@ -274,15 +270,17 @@ const TaskList = ({ route, navigation }) => {
   const updateTask = (text) => {
     console.log("Update task called");
     // updates the state of the selected task
-    console.log("taskDueDate: ", taskDueDate);
-    console.log("reminderDate: ", taskReminderDate);
+    // console.log("taskDueDate: ", taskDueDate);
+    // console.log("reminderDate: ", taskReminderDate);
     const new_obj = {
       ...selectedTask,
       heading: text,
       dueDateAt: taskDueDate,
       reminderAt: taskReminderDate,
+      completedAt: taskCompletionDate,
+      text: "",
     };
-    console.log("new_obj: ", new_obj);
+    // console.log("new_obj: ", new_obj);
     setSelectedTask(new_obj);
 
     updateTaskDB(new_obj);
@@ -295,6 +293,7 @@ const TaskList = ({ route, navigation }) => {
           heading: text,
           dueDateAt: taskDueDate,
           reminderAt: taskReminderDate,
+          completedAt: taskCompletionDate,
         };
       }
       return task;
@@ -306,42 +305,61 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const updateTaskDB = async (task) => {
-    console.log("updateInDB called");
+    console.log("updateInDB called with task", task);
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+    // update the task in DB based on the id field
     tasksRef
-      .doc(task.id)
-      .update(task)
-      // .then(() => {
-      //   //setNoteHeader("");
-      //   // release Keyboard
-      //   Keyboard.dismiss();
-      // })
+      .where("id", "==", task.id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // console.log(doc.id, " => ", doc.data());
+          doc.ref.update(task); //not doc.update({foo: "bar"})
+        });
+      })
       .then(() => {
         console.log("Task: ", task, " was succesfully updated in the DB");
       })
       .catch((error) => {
         alert(error);
       });
+
+    // tasksRef
+    //   .doc(task.id)
+    //   .update(task)
+    //   .then(() => {
+    //     console.log("Task: ", task, " was succesfully updated in the DB");
+    //   })
+    //   .catch((error) => {
+    //     alert(error);
+    //   });
   };
 
   // save a new task to the firestore db
   const saveTask = async (text) => {
+    console.log("saveTask f called");
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const data = {
       heading: text,
+      id: uuid(),
       createdAt: timestamp,
       dueDateAt: taskDueDate,
       reminderAt: taskReminderDate,
       completed: false,
+      completedAt: taskCompletionDate,
+      subtasks: [],
+      text: "",
     };
     tasksRef
       .add(data)
       .then(() => {
         setSelectedTask({});
-        setTaskDueDate(undefined);
-        setTaskReminderDate(undefined);
+        setTaskDueDate(new Date(1900, 1, 1));
+        setTaskReminderDate(new Date(1900, 1, 1));
+        setTaskCompletionDate(null);
       })
       .then(() => {
         setModalVisible(!modalVisible);
