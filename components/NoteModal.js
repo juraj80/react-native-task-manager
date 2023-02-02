@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
