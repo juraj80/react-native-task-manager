@@ -11,6 +11,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 
 var width = Dimensions.get("window").width; //full width
@@ -111,23 +112,31 @@ const TaskModal = ({
 
           <View style={styles.modalBtnSection}>
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              style={styles.iconWrap}
               onPress={() => {
                 showDatePicker();
                 // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
+              <MaterialCommunityIcons
+                name="calendar-cursor"
+                size={34}
+                color="black"
+              />
               <Text style={styles.textStyle}>Set Due Date</Text>
             </Pressable>
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              style={styles.iconWrap}
+              // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               onPress={() => {
                 showDateTimePicker();
                 // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
+              <MaterialCommunityIcons name="reminder" size={34} color="black" />
               <Text style={styles.textStyle}>Reminder</Text>
             </Pressable>
             {/* {task.heading && (
@@ -144,7 +153,8 @@ const TaskModal = ({
             )} */}
 
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              style={styles.iconWrap}
               onPress={() => {
                 console.log(task.heading);
                 if (task.id) {
@@ -155,6 +165,7 @@ const TaskModal = ({
                 }
               }}
             >
+              <Feather name="arrow-up-circle" size={34} color="black" />
               <Text style={styles.textStyle}>Save</Text>
             </Pressable>
           </View>
@@ -302,6 +313,7 @@ const styles = StyleSheet.create({
   modalBtnSection: {
     flexDirection: "row",
     paddingVertical: 10,
+    // justifyContent: "space-between",
   },
   button: {
     borderRadius: 20,
@@ -328,6 +340,12 @@ const styles = StyleSheet.create({
     // backgroundColor: "rgb(102, 204, 153)",
     borderWidth: 1,
     opacity: 0.7,
+  },
+  iconWrap: {
+    flex: 1,
+    backgroundColor: "lightgrey",
+    margin: 3,
+    alignItems: "center",
   },
 
   shadow: {

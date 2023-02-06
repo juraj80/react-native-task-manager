@@ -12,14 +12,14 @@ const Drawer = createDrawerNavigator();
 
 const AppDrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="Brain Map">
+    <Drawer.Navigator initialRouteName="My Scribbles">
       <Drawer.Screen
-        name="Notes"
+        name="My Scribbles"
         component={BrainMapScreen}
         options={{ headerMode: "none", headerShown: false }}
       />
       <Drawer.Screen
-        name="Tasks"
+        name="My Actions"
         component={TaskList}
         options={{ headerMode: "none", headerShown: false }}
         initialParams={{ heading: null }}
@@ -28,7 +28,7 @@ const AppDrawerNavigator = () => {
       {/* <Drawer.Screen name="Animation" component={AnimationExample} />
       <Drawer.Screen name="Draggable" component={DraggableExample} /> */}
       <Drawer.Screen
-        name="Completed"
+        name="Finished To-Dos"
         component={TaskListCompleted}
         initialParams={{ heading: null }}
       />

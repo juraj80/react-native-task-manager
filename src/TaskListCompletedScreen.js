@@ -141,7 +141,7 @@ const TaskListCompleted = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
         <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Completed Tasks</Text>
+          <Text style={styles.screenTitle}>Finished To-Dos</Text>
         </View>
         <View style={styles.mainSection}>
           <FlatList

@@ -20,8 +20,6 @@ import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
-import { setUserProperties } from "@firebase/analytics";
-import { set } from "react-native-reanimated";
 
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
@@ -100,7 +98,7 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const createTask = (item) => {
-    navigation.navigate("Tasks", { heading: item.heading });
+    navigation.navigate("My Actions", { heading: item.heading });
   };
 
   const updateNote = (text) => {
@@ -163,7 +161,7 @@ const BrainMapScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
         <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Notes</Text>
+          <Text style={styles.screenTitle}>My Scribbles</Text>
         </View>
         <View style={styles.mainSection}>
           <FlatList

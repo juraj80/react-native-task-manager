@@ -60,7 +60,7 @@ const CreateTask = ({ route, navigation }) => {
         Keyboard.dismiss();
       })
       .then(() => {
-        navigation.navigate("Tasks");
+        navigation.navigate("My Actions");
       })
       .catch((error) => {
         alert(error);
@@ -113,7 +113,7 @@ const CreateTask = ({ route, navigation }) => {
           style={styles.button}
           onPress={() => {
             saveTask();
-            navigation.navigate("Tasks");
+            navigation.navigate("My Actions");
           }}
           color="#841584"
           title="Create Task"

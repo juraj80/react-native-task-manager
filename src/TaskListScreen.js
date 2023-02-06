@@ -392,7 +392,7 @@ const TaskList = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
         <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Tasks</Text>
+          <Text style={styles.screenTitle}>My Actions</Text>
         </View>
         <View style={styles.timeline}>
           <HorizontalTimeline

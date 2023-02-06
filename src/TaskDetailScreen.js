@@ -104,7 +104,7 @@ const TaskDetail = ({ route, navigation }) => {
         //   Keyboard.dismiss();
         // })
         .then(() => {
-          navigation.navigate("Tasks");
+          navigation.navigate("My Actions");
         })
         .catch((error) => {
           alert(error);
