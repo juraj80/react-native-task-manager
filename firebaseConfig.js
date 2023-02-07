@@ -18,6 +18,10 @@ if (!firebase.apps.length) {
   firebase
     .firestore()
     .settings({ experimentalForceLongPolling: true, merge: true }); //add this..
+} else {
+  firebase.app();
 }
 
-export { firebase };
+const auth = firebase.auth();
+
+export { auth, firebase };

@@ -9,6 +9,7 @@ import CreateNote from "./src/CreateNote";
 import CreateTask from "./src/CreateTask";
 import TaskDetail from "./src/TaskDetailScreen";
 import NoteDetail from "./src/NoteDetailScreen";
+import LoginScreen from "./src/LoginScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import AppDrawerNavigator from "./components/DrawerNavigator";
@@ -18,7 +19,13 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName={"Login"}>
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="Back"
           component={AppDrawerNavigator}

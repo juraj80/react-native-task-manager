@@ -12,7 +12,8 @@ const Drawer = createDrawerNavigator();
 
 const AppDrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="My Scribbles">
+    // <Drawer.Navigator initialRouteName="My Scribbles">
+    <Drawer.Navigator>
       <Drawer.Screen
         name="My Scribbles"
         component={BrainMapScreen}

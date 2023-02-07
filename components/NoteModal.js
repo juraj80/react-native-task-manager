@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 
 var width = Dimensions.get("window").width; //full width
@@ -110,30 +111,36 @@ const NoteModal = ({
 
           <View style={styles.modalBtnSection}>
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
+              // style={[styles.buttonModal, styles.buttonClose]}
+              style={styles.iconWrap}
               onPress={() => {
                 createTask(note);
                 // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
+              <MaterialIcons name="add-task" size={34} color="black" />
+
               <Text style={styles.textStyle}>Promote To Task</Text>
             </Pressable>
             {note.heading && (
               <Pressable
-                style={[styles.buttonModal, styles.buttonClose]}
+                // style={[styles.buttonModal, styles.buttonClose]}
+                style={styles.iconWrap}
                 onPress={() => {
                   deleteNote(note);
                   // setModalVisible(!modalVisible);
                   setIsVisible(!isVisible);
                 }}
               >
+                <MaterialIcons name="delete-outline" size={34} color="black" />
                 <Text style={styles.textStyle}>Delete</Text>
               </Pressable>
             )}
 
             <Pressable
-              style={[styles.buttonModal, styles.buttonClose]}
+              // style={[styles.buttonModal, styles.buttonClose]}
+              style={styles.iconWrap}
               onPress={() => {
                 // console.log(note.heading);
                 if (note.id) {
@@ -144,6 +151,8 @@ const NoteModal = ({
                 }
               }}
             >
+              <Feather name="arrow-up-circle" size={34} color="black" />
+
               <Text style={styles.textStyle}>Save</Text>
             </Pressable>
           </View>
@@ -291,6 +300,7 @@ const styles = StyleSheet.create({
   modalBtnSection: {
     flex: 1,
     flexDirection: "row",
+    paddingVertical: 10,
   },
   button: {
     borderRadius: 20,
@@ -302,7 +312,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textStyle: {
-    color: "white",
+    color: "black",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -321,6 +331,12 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     borderColor: "black",
+  },
+  iconWrap: {
+    flex: 1,
+    backgroundColor: "lightgrey",
+    margin: 3,
+    alignItems: "center",
   },
 });
 export default NoteModal;
