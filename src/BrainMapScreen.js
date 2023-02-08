@@ -216,9 +216,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   screenTitle: {
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "IndieFlower-Regular",
   },
   screenWrapper: {
     flex: 1,

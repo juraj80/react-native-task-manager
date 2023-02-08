@@ -172,9 +172,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   screenTitle: {
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: "bold",
     color: "white",
+    fontFamily: "IndieFlower-Regular",
   },
   dragItem: {
     padding: 5,

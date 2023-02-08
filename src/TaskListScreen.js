@@ -475,10 +475,11 @@ const styles = StyleSheet.create({
     // flexDirection: "column",
   },
   screenTitle: {
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: "bold",
     // color: "#4169E1",
     color: "white",
+    fontFamily: "IndieFlower-Regular",
   },
   dragItem: {
     padding: 5,

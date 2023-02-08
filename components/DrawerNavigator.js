@@ -7,13 +7,13 @@ import TaskListCompleted from "../src/TaskListCompletedScreen";
 import PomodoroTimer from "../src/PomodoroScreen";
 import AnimationExample from "../src/AnimationExample";
 import DraggableExample from "../src/DraggableExample";
+import SettingsScreen from "../src/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
 const AppDrawerNavigator = () => {
   return (
-    // <Drawer.Navigator initialRouteName="My Scribbles">
-    <Drawer.Navigator>
+    <Drawer.Navigator initialRouteName="My Scribbles">
       <Drawer.Screen
         name="My Scribbles"
         component={BrainMapScreen}
@@ -25,14 +25,20 @@ const AppDrawerNavigator = () => {
         options={{ headerMode: "none", headerShown: false }}
         initialParams={{ heading: null }}
       />
-      <Drawer.Screen name="Pomodoro" component={PomodoroTimer} />
+      <Drawer.Screen
+        name="Pomodoro"
+        component={PomodoroTimer}
+        options={{ headerMode: "none", headerShown: false }}
+      />
       {/* <Drawer.Screen name="Animation" component={AnimationExample} />
       <Drawer.Screen name="Draggable" component={DraggableExample} /> */}
       <Drawer.Screen
         name="Finished To-Dos"
         component={TaskListCompleted}
         initialParams={{ heading: null }}
+        options={{ headerMode: "none", headerShown: false }}
       />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
       {/* <Drawer.Screen name="Task Detail" component={TaskDetail} /> */}
     </Drawer.Navigator>
   );

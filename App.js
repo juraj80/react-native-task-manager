@@ -13,13 +13,19 @@ import LoginScreen from "./src/LoginScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import AppDrawerNavigator from "./components/DrawerNavigator";
+import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "IndieFlower-Regular": require("./assets/fonts/IndieFlower-Regular.ttf"),
+  });
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={"Login"}>
+      {/* <Stack.Navigator initialRouteName={"Login"}> */}
+      <Stack.Navigator>
         <Stack.Screen
           name="Login"
           component={LoginScreen}
