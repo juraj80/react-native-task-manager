@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
   headerStyle: {
     flex: 1,
     width: "100%",
-    // backgroundColor: 'lightgreen',
+    backgroundColor: "lightgreen",
     alignItems: "center",
   },
   displayStyle: {
     flex: 5,
     width: "100%",
-    // backgroundColor: 'brown',
+    // backgroundColor: "brown",
     alignItems: "center",
   },
   buttonsStyle: {

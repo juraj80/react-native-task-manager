@@ -44,6 +44,9 @@ const PomodoroScreen = () => {
   let time = handleTime();
   return (
     <View style={styles.container}>
+      <View style={styles.headerSection}>
+        <Text style={styles.screenTitle}>My Timer</Text>
+      </View>
       <View style={styles.row}>
         <View style={styles.inputField}>
           <Text style={styles.inputHeading}>Work</Text>
@@ -69,11 +72,13 @@ const PomodoroScreen = () => {
           ></TextInput>
         </View>
       </View>
-      <PomodoroTimer
-        intervalType={intervalType}
-        onComplete={handleTimeCompleted}
-        period={time}
-      ></PomodoroTimer>
+      <View style={styles.timerStyle}>
+        <PomodoroTimer
+          intervalType={intervalType}
+          onComplete={handleTimeCompleted}
+          period={time}
+        ></PomodoroTimer>
+      </View>
     </View>
   );
 };
@@ -82,12 +87,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    // backgroundColor: 'blue',
   },
   row: {
+    flex: 2,
     flexDirection: "row",
-    // backgroundColor: 'red',
     padding: 15,
+    backgroundColor: "green",
+  },
+  headerSection: {
+    flex: 3,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  timerStyle: { flex: 10 },
+
+  screenTitle: {
+    fontSize: 34,
+    fontWeight: "bold",
+    color: "black",
+    fontFamily: "IndieFlower-Regular",
   },
   inputField: {
     flex: 1,
