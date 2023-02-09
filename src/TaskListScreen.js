@@ -23,11 +23,15 @@ import HorizontalTimeline from "../components/CustomTimeline";
 import TaskModal from "../components/TaskModal";
 import Task from "../components/Task";
 import Footer from "../components/Footer";
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 
 import { v4 as uuid } from "uuid";
+import MenuNavigationComponent from "../components/MenuNavigationComponent";
+import HeaderComponent from "../components/HeaderComponent";
 
 const TaskList = ({ route, navigation }) => {
   const taskHeading = route.params.heading;
@@ -260,7 +264,6 @@ const TaskList = ({ route, navigation }) => {
           modalVisible={modalVisible}
           setSelectedTask={setSelectedTask}
           handleChange={handleChange}
-          // setTaskCompletionDate={setTaskCompletionDate}
         />
       </TouchableOpacity>
     </ScaleDecorator>
@@ -269,9 +272,6 @@ const TaskList = ({ route, navigation }) => {
   // updates existing task in firestore db when pressing Save in the Task modal
   const updateTask = (text) => {
     console.log("Update task called");
-    // updates the state of the selected task
-    // console.log("taskDueDate: ", taskDueDate);
-    // console.log("reminderDate: ", taskReminderDate);
     const new_obj = {
       ...selectedTask,
       heading: text,
@@ -325,16 +325,6 @@ const TaskList = ({ route, navigation }) => {
       .catch((error) => {
         alert(error);
       });
-
-    // tasksRef
-    //   .doc(task.id)
-    //   .update(task)
-    //   .then(() => {
-    //     console.log("Task: ", task, " was succesfully updated in the DB");
-    //   })
-    //   .catch((error) => {
-    //     alert(error);
-    //   });
   };
 
   // save a new task to the firestore db
@@ -383,7 +373,6 @@ const TaskList = ({ route, navigation }) => {
 
   const createTask = () => {
     console.log("Create Task pressed");
-    // navigation.navigate("Create Task");
     setSelectedTask({});
     setModalVisible(!modalVisible);
   };
@@ -391,9 +380,7 @@ const TaskList = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>My Actions</Text>
-        </View>
+        <HeaderComponent menu={true} title={"My Actions"} />
         <View style={styles.timeline}>
           <HorizontalTimeline
             date={new Date().toISOString()}
@@ -415,7 +402,6 @@ const TaskList = ({ route, navigation }) => {
             keyExtractor={(task, index) => {
               return task.id, index.toString();
             }}
-            // numColumns={1}
             renderItem={renderTask}
           ></DraggableFlatList>
         </View>
@@ -424,8 +410,6 @@ const TaskList = ({ route, navigation }) => {
           <Footer onPress={createTask} bgColor={"#66CC99"} />
         </View>
       </View>
-      {/* {console.log("ROUTE PARAMS line 351:" + JSON.stringify(taskHeading))} */}
-      {/* {console.log("ALL TASKS from re-render: ", allTasks)} */}
       <TaskModal
         task={selectedTask}
         setTask={setSelectedTask}
@@ -474,21 +458,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     // flexDirection: "column",
   },
-  screenTitle: {
-    fontSize: 34,
-    fontWeight: "bold",
-    // color: "#4169E1",
-    color: "white",
-    fontFamily: "IndieFlower-Regular",
-  },
+  // screenTitle: {
+  //   fontSize: 34,
+  //   fontWeight: "bold",
+  //   // color: "#4169E1",
+  //   color: "white",
+  //   fontFamily: "IndieFlower-Regular",
+  // },
   dragItem: {
     padding: 5,
   },
 
-  headerSection: {
-    flex: 1,
-    alignItems: "center",
-  },
+  // headerSection: {
+  //   flex: 1,
+  //   alignItems: "center",
+  // },
   mainSection: {
     flex: 9,
     padding: 0,
@@ -516,6 +500,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "red",
   },
+  // backArrow: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  // },
+  // backArrowComponent: {
+  //   // alignSelf: "flex-start",
+  //   position: "absolute",
+  //   left: "0%",
+  //   top: "8%",
+  // },
+  // backArrowText: {
+  //   fontSize: 20,
+  //   color: "#fff",
+  // },
 });
 
 export default TaskList;

@@ -13,6 +13,7 @@ import TaskCompleted from "../components/TaskCompleted";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
+import HeaderComponent from "../components/HeaderComponent";
 
 const TaskListCompleted = ({ route, navigation }) => {
   const taskHeading = route.params.heading;
@@ -140,9 +141,10 @@ const TaskListCompleted = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <View style={styles.headerSection}>
+        {/* <View style={styles.headerSection}>
           <Text style={styles.screenTitle}>Finished To-Dos</Text>
-        </View>
+        </View> */}
+        <HeaderComponent title={"Finished To-Dos"} menu={true} />
         <View style={styles.mainSection}>
           <FlatList
             style={{ height: "100%" }}
@@ -171,20 +173,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 20,
   },
-  screenTitle: {
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "white",
-    fontFamily: "IndieFlower-Regular",
-  },
+
   dragItem: {
     padding: 5,
   },
 
-  headerSection: {
-    flex: 1,
-    alignItems: "center",
-  },
   mainSection: {
     flex: 9,
     padding: 0,

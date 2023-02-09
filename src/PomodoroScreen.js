@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React, { useState } from "react";
 import PomodoroTimer from "../components/PomodoroTimer";
+import HeaderComponent from "../components/HeaderComponent";
 
 const PomodoroScreen = () => {
   const [intervalType, setIntervalType] = useState("Working");
@@ -44,40 +45,43 @@ const PomodoroScreen = () => {
   let time = handleTime();
   return (
     <View style={styles.container}>
-      <View style={styles.headerSection}>
+      <View style={styles.screenWrapper}>
+        {/* <View style={styles.headerSection}>
         <Text style={styles.screenTitle}>My Timer</Text>
-      </View>
-      <View style={styles.row}>
-        <View style={styles.inputField}>
-          <Text style={styles.inputHeading}>Work</Text>
+      </View> */}
+        <HeaderComponent title={"My Timer"} menu={true} />
+        <View style={styles.row}>
+          <View style={styles.inputField}>
+            <Text style={styles.inputHeading}>Work</Text>
 
-          <TextInput
-            style={styles.inputStyle}
-            maxLength={3}
-            keyboardType={"numeric"}
-            defaultValue={"" + workTime}
-            placeholder="mins"
-            onChangeText={handleWorkTime}
-          ></TextInput>
+            <TextInput
+              style={styles.inputStyle}
+              maxLength={3}
+              keyboardType={"numeric"}
+              defaultValue={"" + workTime}
+              placeholder="mins"
+              onChangeText={handleWorkTime}
+            ></TextInput>
+          </View>
+          <View style={styles.inputField}>
+            <Text style={styles.inputHeading}>Break</Text>
+            <TextInput
+              style={styles.inputStyle}
+              maxLength={3}
+              keyboardType={"numeric"}
+              defaultValue={"" + breakTime}
+              placeholder="mins"
+              onChangeText={handleBreakTime}
+            ></TextInput>
+          </View>
         </View>
-        <View style={styles.inputField}>
-          <Text style={styles.inputHeading}>Break</Text>
-          <TextInput
-            style={styles.inputStyle}
-            maxLength={3}
-            keyboardType={"numeric"}
-            defaultValue={"" + breakTime}
-            placeholder="mins"
-            onChangeText={handleBreakTime}
-          ></TextInput>
+        <View style={styles.timerStyle}>
+          <PomodoroTimer
+            intervalType={intervalType}
+            onComplete={handleTimeCompleted}
+            period={time}
+          ></PomodoroTimer>
         </View>
-      </View>
-      <View style={styles.timerStyle}>
-        <PomodoroTimer
-          intervalType={intervalType}
-          onComplete={handleTimeCompleted}
-          period={time}
-        ></PomodoroTimer>
       </View>
     </View>
   );
@@ -87,6 +91,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
+    backgroundColor: "green",
+  },
+  screenWrapper: {
+    flex: 1,
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    // flexDirection: "column",
   },
   row: {
     flex: 2,
@@ -94,19 +105,9 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "green",
   },
-  headerSection: {
-    flex: 3,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   timerStyle: { flex: 10 },
 
-  screenTitle: {
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "black",
-    fontFamily: "IndieFlower-Regular",
-  },
   inputField: {
     flex: 1,
     justifyContent: "center",

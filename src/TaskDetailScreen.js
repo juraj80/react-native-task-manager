@@ -23,6 +23,10 @@ import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
 import SubTask from "../components/SubTask";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+// import Icons from "react-native-vector-icons/MaterialIcons";
+import { Ionicons } from "@expo/vector-icons";
+// import BackNavigationComponent from "../components/BackNavigationComponent";
+import HeaderComponent from "../components/HeaderComponent";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -60,7 +64,7 @@ const TaskDetail = ({ route, navigation }) => {
       .doc(taskId)
       .get()
       .then((querySnapshot) => {
-        const subTasks = querySnapshot.data().subtasks;
+        const subTasks = querySnapshot.data()?.subtasks;
         // querySnapshot.forEach((doc) => {
         //   console.log("FETCHED SUBTASK ARRAY", doc.data());
         //   const { text, completed } = doc.data();
@@ -225,7 +229,8 @@ const TaskDetail = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <View style={styles.headerSection}>
+        <HeaderComponent title={"My Task"} back={true} />
+        <View style={styles.inputSection}>
           <TextInput
             value={taskHeader}
             onChangeText={setTaskHeader}
@@ -322,19 +327,43 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ff9478",
   },
+  backArrow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  backArrowComponent: {
+    // alignSelf: "flex-start",
+    position: "absolute",
+    left: "2%",
+    top: "30%",
+  },
+  backArrowText: {
+    fontSize: 20,
+    color: "#fff",
+  },
   screenWrapper: {
-    flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    flex: 5,
+    paddingTop: 60,
+    paddingHorizontal: 10,
     // backgroundColor: "red",
     // flexDirection: "column",
   },
   headerSection: {
     flex: 1,
-    // alignItems: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "green",
   },
+  inputSection: { flex: 2 },
   mainSection: {
-    flex: 1,
+    flex: 5,
+  },
+  screenTitle: {
+    fontSize: 34,
+    fontWeight: "bold",
+    // color: "#4169E1",
+    color: "white",
+    fontFamily: "IndieFlower-Regular",
   },
 
   subTasksSection: {

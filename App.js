@@ -40,7 +40,11 @@ export default function App() {
         />
         <Stack.Screen name="Create Note" component={CreateNote} />
         <Stack.Screen name="Create Task" component={CreateTask} />
-        <Stack.Screen name="Task Detail" component={TaskDetail} />
+        <Stack.Screen
+          name="Task Detail"
+          component={TaskDetail}
+          options={{ headerMode: "none", headerShown: false }}
+        />
         <Stack.Screen name="Note Detail" component={NoteDetail} />
       </Stack.Navigator>
 

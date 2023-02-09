@@ -20,6 +20,7 @@ import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
+import HeaderComponent from "../components/HeaderComponent";
 
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
@@ -160,9 +161,10 @@ const BrainMapScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <View style={styles.headerSection}>
+        <HeaderComponent title={"My Scribbles"} menu={true} />
+        {/* <View style={styles.headerSection}>
           <Text style={styles.screenTitle}>My Scribbles</Text>
-        </View>
+        </View> */}
         <View style={styles.mainSection}>
           <FlatList
             style={{ height: "100%" }}
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   },
   screenWrapper: {
     flex: 1,
-    paddingVertical: 20,
+    paddingTop: 60,
     paddingHorizontal: 10,
     // flexDirection: "column",
   },

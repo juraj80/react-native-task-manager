@@ -7,6 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import AnimatedCheckbox from "react-native-checkbox-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
 
@@ -122,8 +123,14 @@ const SubTask = (props) => {
             onPress={() => {
               props.deleteSubTask(props.item);
             }}
-            style={styles.cancel}
-          ></Pressable>
+            // style={styles.cancel}
+          >
+            <MaterialCommunityIcons
+              name="trash-can-outline"
+              size={24}
+              color="black"
+            />
+          </Pressable>
         )}
       </View>
     </View>
