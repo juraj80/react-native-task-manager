@@ -144,12 +144,6 @@ const styles = StyleSheet.create({
   mainSection: {
     flex: 9,
   },
-  bottomSection: {
-    flex: 1,
-    backgroundColor: "red",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   button: {
     marginBottom: 30,
   },

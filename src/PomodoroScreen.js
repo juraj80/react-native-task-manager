@@ -112,13 +112,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // borderColor: '#0F0',
-    // borderWidth: 1,
   },
   inputStyle: {
     height: 60,
-    // borderColor: 'gray',
-    // borderWidth: 1,
     width: "40%",
     borderRadius: 50,
     color: "#fff",

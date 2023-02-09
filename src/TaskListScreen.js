@@ -458,21 +458,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     // flexDirection: "column",
   },
-  // screenTitle: {
-  //   fontSize: 34,
-  //   fontWeight: "bold",
-  //   // color: "#4169E1",
-  //   color: "white",
-  //   fontFamily: "IndieFlower-Regular",
-  // },
+
   dragItem: {
     padding: 5,
   },
-
-  // headerSection: {
-  //   flex: 1,
-  //   alignItems: "center",
-  // },
   mainSection: {
     flex: 9,
     padding: 0,
@@ -485,13 +474,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 70,
     zIndex: -99,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // backgroundColor: "#4169E1",
-    backgroundColor: "lightgrey",
 
-    // borderWidth: 1,
-    // borderColor: "black",
+    backgroundColor: "lightgrey",
   },
 
   bottomSection: {
@@ -500,20 +484,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "red",
   },
-  // backArrow: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  // },
-  // backArrowComponent: {
-  //   // alignSelf: "flex-start",
-  //   position: "absolute",
-  //   left: "0%",
-  //   top: "8%",
-  // },
-  // backArrowText: {
-  //   fontSize: 20,
-  //   color: "#fff",
-  // },
 });
 
 export default TaskList;

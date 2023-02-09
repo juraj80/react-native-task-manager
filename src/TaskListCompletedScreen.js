@@ -141,9 +141,6 @@ const TaskListCompleted = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        {/* <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>Finished To-Dos</Text>
-        </View> */}
         <HeaderComponent title={"Finished To-Dos"} menu={true} />
         <View style={styles.mainSection}>
           <FlatList
@@ -164,10 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(102, 204, 153,1)",
   },
-  timeline: {
-    flex: 1,
-    marginBottom: 10,
-  },
+
   screenWrapper: {
     flex: 1,
     paddingTop: 60,
@@ -190,12 +184,6 @@ const styles = StyleSheet.create({
     height: 70,
     zIndex: -99,
     backgroundColor: "lightgrey",
-  },
-
-  bottomSection: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

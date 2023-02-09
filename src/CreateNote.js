@@ -81,19 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginBottom: 36,
   },
-  headerSection: {
-    flex: 1,
-    alignItems: "center",
-  },
-  mainSection: {
-    flex: 3,
-  },
-  bottomSection: {
-    flex: 1,
-    backgroundColor: "red",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   button: {
     marginBottom: 30,
   },

@@ -21,24 +21,6 @@ const NoteDetail = ({ route, navigation }) => {
 
   const notesRef = firebase.firestore().collection("notes");
 
-  // async function fetchData() {
-  //   notesRef.onSnapshot((querySnapshot) => {
-  //     querySnapshot.forEach((doc) => {
-  //       const { heading, text } = doc.data();
-  //       // console.log({
-  //       //   id: doc.id,
-  //       //   heading,
-  //       //   text,
-  //       // });
-  //     });
-  //     //   setTask();
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
   const updateNote = async () => {
     console.log("updateNote called");
     if (noteHeader && noteHeader.length > 0) {
@@ -67,16 +49,12 @@ const NoteDetail = ({ route, navigation }) => {
     }
   };
 
-  const renderTask = ({ item }) => (
-    <TouchableOpacity style={styles.itemStyle}>
-      <Text>{item.heading}</Text>
-      <Text>{item.text}</Text>
-    </TouchableOpacity>
-  );
-
-  //   const createTask = (item) => {
-  //     navigation.navigate("CreateTask", { taskDetails: "Add Header" });
-  //   };
+  // const renderTask = ({ item }) => (
+  //   <TouchableOpacity style={styles.itemStyle}>
+  //     <Text>{item.heading}</Text>
+  //     <Text>{item.text}</Text>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <View style={styles.container}>
@@ -145,9 +123,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     borderRadius: 15,
   },
-  title: {
-    fontSize: 12,
-  },
+
   plusBtn: {
     alignItems: "center",
     justifyContent: "center",

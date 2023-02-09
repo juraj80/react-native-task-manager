@@ -232,29 +232,25 @@ const styles = StyleSheet.create({
   mainSection: {
     flex: 5,
   },
-  modalOverlay: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
+  // modalOverlay: {
+  //   position: "absolute",
+  //   top: 0,
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  //   backgroundColor: "rgba(0,0,0,0.5)",
+  // },
   bottomSection: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "red",
   },
   bottomRow: {
-    // flex: 1,
     position: "absolute",
     width: "100%",
     bottom: 0,
     height: 70,
     zIndex: -99,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: "lightgrey",
   },
   item: {
@@ -274,7 +270,6 @@ const styles = StyleSheet.create({
     width: 63,
     height: 63,
     borderRadius: 45,
-
     justifyContent: "center",
     alignItems: "center",
   },
@@ -288,7 +283,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   plusBtn: {
     backgroundColor: "rgba(173, 173, 173, 0.9)",
     width: 60,
@@ -311,79 +305,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
-  centeredView: {
-    // flex: 1,
-    position: "absolute",
-    bottom: 0,
-    // alignSelf: "stretch",
-    // width: width,
-    justifyContent: "center",
-    alignItems: "center",
-    // marginTop: 22,
-  },
-  modalView: {
-    // margin: 20,
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 25,
-    width: width,
-    height: height / 3,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  textInputSection: {
-    flex: 3,
-  },
-  modalBtnSection: {
-    flex: 1,
-    flexDirection: "row",
-  },
   button: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  textStyle: {
-    // color: "red",
-    // fontWeight: "bold",
-    textAlign: "center",
-  },
-  // buttonModal: {
-  //   borderRadius: 5,
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 5,
-  //   elevation: 2,
-  //   marginHorizontal: 20,
-  //   marginTop: 10,
-  // },
-
-  buttonModal: {
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    elevation: 2,
-    marginHorizontal: 20,
-    marginTop: 10,
-    width: width / 4.8,
-    backgroundColor: "rgb(102, 204, 153)",
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    borderColor: "black",
-    borderWidth: 1,
   },
 });
 export default BrainMapScreen;

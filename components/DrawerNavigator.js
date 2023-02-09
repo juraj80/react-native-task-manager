@@ -5,8 +5,6 @@ import BrainMapScreen from "../src/BrainMapScreen";
 import TaskList from "../src/TaskListScreen";
 import TaskListCompleted from "../src/TaskListCompletedScreen";
 import PomodoroTimer from "../src/PomodoroScreen";
-import AnimationExample from "../src/AnimationExample";
-import DraggableExample from "../src/DraggableExample";
 import SettingsScreen from "../src/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
