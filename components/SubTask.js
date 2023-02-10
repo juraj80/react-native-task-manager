@@ -35,14 +35,6 @@ const SubTask = (props) => {
 
   // callback that runs on the subtask textinput submit
   const addSubTask = async () => {
-    // console.log("addSubTask called ");
-
-    // const data = {
-    //   id: props.item.id,
-    //   text: subTaskHeader,
-    //   completed: props.item.completed,
-    // };
-
     if (subTaskHeader) {
       const updated_subtasks = props.allSubTasks.map((obj) => {
         if (obj.id == props.item.id) {
@@ -65,12 +57,6 @@ const SubTask = (props) => {
           }}
           style={styles.checkbox}
         >
-          {/* {console.log(
-          "Subtask item: ",
-          props.item,
-          "for taskId: ",
-          props.taskId
-        )} */}
           <AnimatedCheckbox
             checked={props.item.completed}
             highlightColor="#ffffff"
@@ -140,9 +126,7 @@ const SubTask = (props) => {
 const styles = StyleSheet.create({
   itemRow: {
     flexDirection: "row",
-    // alignItems: "center",
     padding: 10,
-    //backgroundColor: "rgba(173, 216, 230, 0.5)",
     backgroundColor: "#f3f1ef",
     borderColor: "#95a5a6",
     borderWidth: 1,
@@ -150,16 +134,11 @@ const styles = StyleSheet.create({
   },
   leftAlign: {
     flexDirection: "row",
-    // backgroundColor: "green",
     flex: 7,
-    // alignItems: "flex-start",
-    // justifyContent: "flex-start",
   },
   rightAlign: {
     flex: 1,
-    // flexDirection: "row",
     alignItems: "center",
-
     justifyContent: "center",
   },
 
@@ -179,7 +158,6 @@ const styles = StyleSheet.create({
     height: 20,
     backgroundColor: "red",
   },
-
   checkedItem: {
     textDecorationLine: "line-through",
   },

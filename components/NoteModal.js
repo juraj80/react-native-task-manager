@@ -17,7 +17,6 @@ var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
 // Start of MyModal component
 
-// const MyModal = ({ item, setNote }) => {
 const NoteModal = ({
   note,
   setNote,
@@ -31,17 +30,11 @@ const NoteModal = ({
   const [textValue, setTextValue] = useState("");
 
   const onFormSubmitted = () => {
-    // console.log("onFormSubmitted called");
     const new_obj = { ...selectedNote, heading: textValue };
     setNote(new_obj);
   };
 
-  //   useEffect(() => {
-  //     setTextValue(note.heading);
-  //   }, []);
-
   const inputHandler = (enteredText) => {
-    // console.log(enteredText);
     const new_obj = { ...note, heading: enteredText };
     setNote(new_obj);
   };
@@ -53,25 +46,17 @@ const NoteModal = ({
       visible={isVisible}
       onRequestClose={() => {
         Alert.alert("Modal has been closed.");
-        // setModalVisible(!modalVisible);
         setIsVisible(!isVisible);
       }}
     >
-      {/* {console.log("received props NOTE", note)} */}
-
-      <TouchableWithoutFeedback
-        // onPress={() => setModalVisible(!modalVisible)}
-        onPress={() => setIsVisible(!isVisible)}
-      >
+      <TouchableWithoutFeedback onPress={() => setIsVisible(!isVisible)}>
         <View style={styles.modalOverlay} />
       </TouchableWithoutFeedback>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.centeredView}
       >
-        {/* <View style={styles.centeredView}> */}
         <View style={styles.modalView}>
-          {/* <Text style={styles.modalText}> {selectedNote.heading}</Text> */}
           <View
             style={{
               borderBottomColor: "grey",
@@ -102,20 +87,11 @@ const NoteModal = ({
             }}
           />
 
-          {/* <Pressable
-                  style={[styles.buttonModal, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Hide Modal</Text>
-                </Pressable> */}
-
           <View style={styles.modalBtnSection}>
             <Pressable
-              // style={[styles.buttonModal, styles.buttonClose]}
               style={styles.iconWrap}
               onPress={() => {
                 createTask(note);
-                // setModalVisible(!modalVisible);
                 setIsVisible(!isVisible);
               }}
             >
@@ -125,11 +101,9 @@ const NoteModal = ({
             </Pressable>
             {note.heading && (
               <Pressable
-                // style={[styles.buttonModal, styles.buttonClose]}
                 style={styles.iconWrap}
                 onPress={() => {
                   deleteNote(note);
-                  // setModalVisible(!modalVisible);
                   setIsVisible(!isVisible);
                 }}
               >
@@ -139,14 +113,11 @@ const NoteModal = ({
             )}
 
             <Pressable
-              // style={[styles.buttonModal, styles.buttonClose]}
               style={styles.iconWrap}
               onPress={() => {
-                // console.log(note.heading);
                 if (note.id) {
                   updateNote(note.heading);
                 } else {
-                  // console.log("Need to create new Note");
                   saveNote(note.heading);
                 }
               }}
@@ -165,30 +136,6 @@ const NoteModal = ({
 // End of MyModal component
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4682B4",
-    opacity: 0.8,
-  },
-  headerSection: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-  screenWrapper: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    // flexDirection: "column",
-  },
-  mainSection: {
-    flex: 5,
-  },
   modalOverlay: {
     position: "absolute",
     top: 0,
@@ -197,85 +144,11 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  bottomSection: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomRow: {
-    // flex: 1,
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    height: 70,
-    zIndex: -99,
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: "lightgrey",
-  },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 12,
-  },
-  btnWhiteBackground: {
-    backgroundColor: "white",
-    width: 63,
-    height: 63,
-    borderRadius: 45,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnGreyBackground: {
-    position: "absolute",
-    right: -15,
-    backgroundColor: "lightgrey",
-    width: 75,
-    height: 75,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  plusBtn: {
-    backgroundColor: "rgba(173, 173, 173, 0.9)",
-    width: 60,
-    height: 60,
-    borderRadius: 45,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusText: {
-    fontSize: 30,
-    color: "white",
-  },
-  itemStyle: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    flexDirection: "row",
-  },
-  itemText: {
-    marginLeft: 5,
-    color: "white",
-    fontSize: 15,
-  },
   centeredView: {
-    // flex: 1,
     position: "absolute",
     bottom: 0,
-    // alignSelf: "stretch",
-    // width: width,
     justifyContent: "center",
     alignItems: "center",
-    // marginTop: 22,
   },
   modalView: {
     // margin: 20,
@@ -302,11 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 10,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
@@ -325,9 +193,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: width / 4,
     backgroundColor: "#4682B4",
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
   },
   buttonClose: {
     borderColor: "black",

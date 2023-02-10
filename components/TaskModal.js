@@ -178,30 +178,6 @@ const TaskModal = ({
 // End of MyModal component
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#4682B4",
-    opacity: 0.8,
-  },
-  headerSection: {
-    flex: 1,
-    alignItems: "left",
-    justifyContent: "center",
-  },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  },
-  screenWrapper: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    // flexDirection: "column",
-  },
-  mainSection: {
-    flex: 5,
-  },
   modalOverlay: {
     position: "absolute",
     top: 0,
@@ -210,85 +186,11 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  bottomSection: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-  bottomRow: {
-    // flex: 1,
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    height: 70,
-    zIndex: -99,
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: "lightgrey",
-  },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 12,
-  },
-  btnWhiteBackground: {
-    backgroundColor: "red",
-    width: 63,
-    height: 63,
-    borderRadius: 45,
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnGreyBackground: {
-    position: "absolute",
-    right: -15,
-    backgroundColor: "lightgrey",
-    width: 75,
-    height: 75,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  plusBtn: {
-    backgroundColor: "rgba(173, 173, 173, 0.9)",
-    width: 60,
-    height: 60,
-    borderRadius: 45,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusText: {
-    fontSize: 30,
-    color: "white",
-  },
-  itemStyle: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    flexDirection: "row",
-  },
-  itemText: {
-    marginLeft: 5,
-    color: "white",
-    fontSize: 15,
-  },
   centeredView: {
-    // flex: 1,
     position: "absolute",
     bottom: 0,
-    // alignSelf: "stretch",
-    // width: width,
     justifyContent: "center",
     alignItems: "center",
-    // marginTop: 22,
   },
   modalView: {
     // margin: 20,
@@ -314,11 +216,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 10,
     // justifyContent: "space-between",
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
   },
   modalText: {
     marginBottom: 15,
@@ -358,14 +255,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
-  },
-
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    borderColor: "black",
-    // borderWidth: 1,
   },
 });
 export default TaskModal;

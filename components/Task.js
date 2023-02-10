@@ -69,18 +69,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
-    // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    // backgroundColor: "#6495ED",
     backgroundColor: "#efeff0",
-    // borderColor: "black",
-    // borderWidth: 1,
     borderRadius: 5,
     opacity: 1,
   },
   itemText: { color: "black" },
-  dragItem: {
-    padding: 5,
-  },
   itemStyle: {
     padding: 5,
     flex: 1,

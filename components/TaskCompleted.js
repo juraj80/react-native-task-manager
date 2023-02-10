@@ -57,42 +57,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 5,
-    // backgroundColor: "rgba(173, 216, 230, 0.5)",
-    // backgroundColor: "#6495ED",
     backgroundColor: "#efeff0",
-    // borderColor: "black",
-    // borderWidth: 1,
     borderRadius: 5,
     opacity: 1,
   },
   leftAlign: {
     flexDirection: "row",
-    // backgroundColor: "green",
     flex: 7,
-    // alignItems: "flex-start",
-    // justifyContent: "flex-start",
   },
   rightAlign: {
     flex: 1,
-    // flexDirection: "row",
     alignItems: "center",
-
     justifyContent: "center",
   },
-
   itemText: { color: "black" },
-  dragItem: {
-    padding: 5,
-  },
   itemStyle: {
     padding: 5,
   },
   checkbox: {
     width: 24,
     height: 24,
-  },
-  checkedItem: {
-    textDecorationLine: "line-through",
   },
   cancel: {
     width: 20,

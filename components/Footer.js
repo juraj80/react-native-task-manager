@@ -24,19 +24,13 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 45,
-
     justifyContent: "center",
     alignItems: "center",
   },
   plusBtn: {
-    // backgroundColor: "#4169E1",
     backgroundColor: "lightgrey",
-
-    // borderColor: "black",
-    // borderWidth: 1,
     width: 60,
     height: 60,
-
     borderRadius: 45,
     justifyContent: "center",
     alignItems: "center",

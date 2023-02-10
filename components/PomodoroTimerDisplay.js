@@ -31,14 +31,6 @@ const PomodoroTimerDisplay = (props) => {
           </Text>
         )}
       </AnimatedCircularProgress>
-
-      {/* <Text style={styles.textStyle}>
-				{Math.floor(props.time / 60)
-					.toString()
-					.padStart(2, '0') +
-					':' +
-					(props.time % 60).toString().padStart(2, '0')}
-			</Text> */}
     </View>
   );
 };

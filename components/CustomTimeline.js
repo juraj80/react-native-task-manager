@@ -202,8 +202,6 @@ HorizontalTimeline.defaultProps = {
 
 const styles = StyleSheet.create({
   day: {
-    // backgroundColor: "red",
-    // borderWidth: 2,
     borderColor: "white",
     paddingTop: 10,
     width: 72,
@@ -224,41 +222,13 @@ const styles = StyleSheet.create({
   },
 
   dayElevated: {
-    // backgroundColor: "lightblue",
     borderColor: "white",
-    // borderWidth: 1,
-    // borderRadius: 10,
-    // borderWidth: 2,
-
     elevation: 2,
     paddingTop: 10,
     width: 80,
     opacity: 1,
-
-    // marginVertical: 5,
     marginHorizontal: 2,
-    // shadowOffset: { width: 1, height: 2 },
-    // shadowColor: "#000000",
-    // shadowRadius: 3,
-    // shadowOpacity: 0.3,
   },
-  // dayUpper: {
-  //   flex: 1,
-  //   flexDirection: "row",
-  //   backgroundColor: "yellow",
-  // },
-  // dayBottom: {
-  //   flex: 1,
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   backgroundColor: "yellow",
-  // },
-  // lineContainer: {
-  //   height: 3,
-  //   // borderTopWidth: 3,
-  //   borderColor: "white",
-  //   marginTop: 10,
-  // },
   textContainer: {
     flexDirection: "row",
 
@@ -266,11 +236,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 7,
-    // borderWidth: 2,
   },
-
   textContainerBlue: {
-    // backgroundColor: "#6495ED",
     backgroundColor: "#efeff0",
   },
   textContainerElevated: {
@@ -282,29 +249,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     flex: 2,
-    // alignSelf: "center",
     textAlign: "center",
-    // marginTop: 0,
-    // color: "#6699CC",
     color: "black",
-    // fontWeight: "bold",
-    // backgroundColor: "black",
   },
   subTitle: {
     fontSize: 15,
     flex: 3,
     textAlign: "center",
-    // alignSelf: "flex-st",
-    // color: "#6699CC",
-    // fontWeight: "bold",
-
     color: "lightblack",
   },
-  // dayInfo: {
-  //   fontSize: 14,
-  //   alignSelf: "center",
-  //   backgroundColor: "red",
-  // },
   dotImage: {
     position: "absolute",
     width: 18,
