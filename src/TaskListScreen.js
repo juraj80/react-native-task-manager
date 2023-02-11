@@ -376,6 +376,9 @@ const TaskList = ({ route, navigation }) => {
     setSelectedTask({});
     setModalVisible(!modalVisible);
   };
+  const renderDayTasks = (params) => {
+    console.log("renderDayTasks pressed: ", params);
+  };
 
   return (
     <View style={styles.container}>
@@ -385,6 +388,7 @@ const TaskList = ({ route, navigation }) => {
           <HorizontalTimeline
             date={new Date().toISOString()}
             data={timelineData}
+            onPress={(item) => renderDayTasks(item)}
           />
           <View
             style={{

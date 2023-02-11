@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ScrollView, Text, View } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import PropTypes from "prop-types";
 
 const HorizontalTimeline = (props) => {
@@ -98,28 +104,36 @@ const HorizontalTimeline = (props) => {
     >
       {days &&
         days.map((d, index) => (
-          <View
-            key={`col${d.date}`}
-            style={[!d.marked ? styles.day : styles.dayElevated, styles.shadow]}
+          <TouchableOpacity
+            key={index}
+            disabled={!d.marked && !isToday(d)}
+            onPress={() => props.onPress(d.currentDate)}
           >
             <View
+              key={`col${d.date}`}
               style={[
-                d.marked
-                  ? styles.textContainerElevated
-                  : isToday(d)
-                  ? styles.textContainerGreen
-                  : styles.textContainerBlue,
-                styles.textContainer,
+                !d.marked ? styles.day : styles.dayElevated,
+                styles.shadow,
               ]}
             >
-              <Text style={[styles.title]}>{`${d.date}`}</Text>
-              <Text style={[styles.subTitle]}>
-                {`${getDayOfTheWeek(d.currentDate.getDay())}`}
-              </Text>
+              <View
+                style={[
+                  d.marked
+                    ? styles.textContainerElevated
+                    : isToday(d)
+                    ? styles.textContainerGreen
+                    : styles.textContainerBlue,
+                  styles.textContainer,
+                ]}
+              >
+                <Text style={[styles.title]}>{`${d.date}`}</Text>
+                <Text style={[styles.subTitle]}>
+                  {`${getDayOfTheWeek(d.currentDate.getDay())}`}
+                </Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
-      {console.log("Index:", index)}
     </ScrollView>
   );
 };
