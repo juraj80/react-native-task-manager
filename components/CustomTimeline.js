@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 const HorizontalTimeline = (props) => {
   const [index, setIndex] = useState(0);
+  const [ref, setRef] = useState(null);
   const [days, setDays] = useState([]);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const HorizontalTimeline = (props) => {
       }
     }
     setDays(days);
+    scrollToDay(getIndex(days));
   }, [props.data]);
 
   const getDayOfTheWeek = (day) => {
@@ -58,6 +60,9 @@ const HorizontalTimeline = (props) => {
         return "";
     }
   };
+  function scrollToDay(itemIndex) {
+    ref?.scrollTo({ x: itemIndex * 62 }); //TODO replace with the width of the day view
+  }
 
   const isToday = (day) => {
     if (day.currentDate.getDate() == new Date().getDate()) {
@@ -66,16 +71,30 @@ const HorizontalTimeline = (props) => {
     return false;
   };
 
-  const checkIndex = () => {
-    const newDays = days.map((d, i) => (isToday(d) ? setIndex(i) : null));
-    return true;
+  // const getIndex = (arr) => {
+  //   arr.map((d, i) => (isToday(d) ? setIndex(i) : null));
+  // };
+
+  // const getIndex = (arr) => {
+  //   let result = null;
+  //   arr.map((d, i) => {
+  //     if (isToday(d)) {
+  //       result = i;
+  //     }
+  //   });
+
+  //   return result;
+  // };
+
+  const getIndex = (arr) => {
+    return arr.findIndex((d) => isToday(d));
   };
 
   return (
     <ScrollView
       horizontal
       contentContainerStyle={{ height: 50 }}
-      // ref={(view) => (this._scrollView = view)}
+      ref={(ref) => setRef(ref)}
     >
       {days &&
         days.map((d, index) => (
@@ -100,6 +119,7 @@ const HorizontalTimeline = (props) => {
             </View>
           </View>
         ))}
+      {console.log("Index:", index)}
     </ScrollView>
   );
 };
