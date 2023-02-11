@@ -1,22 +1,16 @@
-/* eslint-disable global-require, react/forbid-prop-types */
-/* eslint class-methods-use-this: ["error", { "exceptMethods": ["getDayOfTheWeek"] }] */
-import React, { Component } from "react";
-import { StyleSheet, Image, ScrollView, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, ScrollView, Text, View } from "react-native";
 import PropTypes from "prop-types";
 
-class HorizontalTimeline extends Component {
-  constructor(props) {
-    super(props);
+const HorizontalTimeline = (props) => {
+  const [index, setIndex] = useState(0);
+  const [days, setDays] = useState([]);
 
+  useEffect(() => {
     const date = new Date(props.date);
     const timelineDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
     const keys = props.data ? Object.keys(props.data) : null;
-
-    // this.renderDays = this.renderDays.bind(this);
-    // this.renderDotImage = this.renderDotImage.bind(this);
-    const days = [];
-
+    let days = [];
     if (keys) {
       for (let i = 1; i <= Number(timelineDate.getDate()); i += 1) {
         if (props.data[i]) {
@@ -41,11 +35,10 @@ class HorizontalTimeline extends Component {
         });
       }
     }
-    // const days = parseActiveDays(props);
-    this.state = { days };
-  }
+    setDays(days);
+  }, [props.data]);
 
-  getDayOfTheWeek(day) {
+  const getDayOfTheWeek = (day) => {
     switch (day) {
       case 0:
         return "Sun";
@@ -64,123 +57,52 @@ class HorizontalTimeline extends Component {
       default:
         return "";
     }
-  }
+  };
 
-  renderDotImage(day) {
-    // if (day.marked) {
-    if (day.currentDate.getDate() == new Date().getDate()) {
-      const { width, height } = this.props;
-      return (
-        <Image
-          source={require("../assets/dot_blue.png")}
-          // style={[styles.dotImage, { left: width / 2, top: height / 2 }]}
-          style={[styles.dotImage]}
-        />
-      );
-    }
-    return null;
-  }
-
-  isToday(day) {
+  const isToday = (day) => {
     if (day.currentDate.getDate() == new Date().getDate()) {
       return true;
     }
     return false;
-  }
+  };
 
-  renderDays() {
-    const { width, backgroundColor, color } = this.props;
+  const checkIndex = () => {
+    const newDays = days.map((d, i) => (isToday(d) ? setIndex(i) : null));
+    return true;
+  };
 
-    const days = this.state.days.map((d) => (
-      <View
-        key={`col${d.date}`}
-        // style={[!d.marked ? styles.day : styles.dayElevated, { width }]}
-        style={[!d.marked ? styles.day : styles.dayElevated, styles.shadow]}
-      >
-        {/* <View style={[styles.dayUpper, { backgroundColor }]}> */}
-        {/* <View style={styles.textContainer}> */}
-        <View
-          style={[
-            d.marked
-              ? styles.textContainerElevated
-              : this.isToday(d)
-              ? styles.textContainerGreen
-              : styles.textContainerBlue,
-            styles.textContainer,
-          ]}
-        >
-          {/* <Text style={[styles.title, { color }]}>{`${d.date}`}</Text> */}
-          <Text style={[styles.title]}>{`${d.date}`}</Text>
-          {/* <Text style={[styles.subTitle, { color }]}> */}
-          <Text style={[styles.subTitle]}>
-            {`${this.getDayOfTheWeek(d.currentDate.getDay())}`}
-          </Text>
-        </View>
-        {/* </View> */}
-
-        {/* {this.renderDotImage(d)} */}
-        {/* <View style={styles.lineContainer} /> */}
-
-        {/* <View style={[styles.dayBottom, { backgroundColor }]}>
-          <Text style={[styles.dayInfo, { color }]}>
-            {d.info ? d.info.slice(0, 40) : ''}
-          </Text>
-        </View> */}
-      </View>
-    ));
-    return days;
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const date = new Date(props.date);
-
-    const timelineDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-    // console.log("PROPS", props.data);
-    const keys = props.data ? Object.keys(props.data) : null;
-
-    // this.renderDays = this.renderDays.bind(this);
-    // this.renderDotImage = this.renderDotImage.bind(this);
-    const days = [];
-
-    if (keys) {
-      for (let i = 1; i <= Number(timelineDate.getDate()); i += 1) {
-        if (props.data[i]) {
-          days.push({
-            date: i,
-            currentDate: new Date(date.getFullYear(), date.getMonth(), i),
-            marked: props.data[i].marked,
-            info: props.data[i].info ? props.data[i].info : null,
-          });
-        } else {
-          days.push({
-            date: i,
-            currentDate: new Date(date.getFullYear(), date.getMonth(), i),
-          });
-        }
-      }
-    } else {
-      for (let i = 1; i <= Number(timelineDate.getDate()); i += 1) {
-        days.push({
-          date: i,
-          currentDate: new Date(date.getFullYear(), date.getMonth(), i),
-        });
-      }
-    }
-    // this.state = { days };
-    return { days };
-  }
-
-  render() {
-    const { height } = this.props;
-
-    return (
-      <ScrollView horizontal contentContainerStyle={{ height }}>
-        {this.renderDays()}
-      </ScrollView>
-    );
-  }
-}
+  return (
+    <ScrollView
+      horizontal
+      contentContainerStyle={{ height: 50 }}
+      // ref={(view) => (this._scrollView = view)}
+    >
+      {days &&
+        days.map((d, index) => (
+          <View
+            key={`col${d.date}`}
+            style={[!d.marked ? styles.day : styles.dayElevated, styles.shadow]}
+          >
+            <View
+              style={[
+                d.marked
+                  ? styles.textContainerElevated
+                  : isToday(d)
+                  ? styles.textContainerGreen
+                  : styles.textContainerBlue,
+                styles.textContainer,
+              ]}
+            >
+              <Text style={[styles.title]}>{`${d.date}`}</Text>
+              <Text style={[styles.subTitle]}>
+                {`${getDayOfTheWeek(d.currentDate.getDay())}`}
+              </Text>
+            </View>
+          </View>
+        ))}
+    </ScrollView>
+  );
+};
 
 HorizontalTimeline.propTypes = {
   backgroundColor: PropTypes.string,

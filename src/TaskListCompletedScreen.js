@@ -24,7 +24,7 @@ const TaskListCompleted = ({ route, navigation }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
-    console.log("TaskList fetchData called");
+    // console.log("TaskList fetchData called");
 
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];

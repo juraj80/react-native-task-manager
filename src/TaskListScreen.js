@@ -55,7 +55,7 @@ const TaskList = ({ route, navigation }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
-    console.log("TaskList fetchData called");
+    // console.log("TaskList fetchData called");
 
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
@@ -305,7 +305,7 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const updateTaskDB = async (task) => {
-    console.log("updateInDB called with task", task);
+    // console.log("updateInDB called with task", task);
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
@@ -320,7 +320,7 @@ const TaskList = ({ route, navigation }) => {
         });
       })
       .then(() => {
-        console.log("Task: ", task, " was succesfully updated in the DB");
+        // console.log("Task: ", task, " was succesfully updated in the DB");
       })
       .catch((error) => {
         alert(error);
