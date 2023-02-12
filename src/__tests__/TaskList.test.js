@@ -18,6 +18,13 @@ jest.mock("../../firebaseConfig", () => ({
   },
 }));
 
+jest.mock("@react-navigation/native", () => {
+  return {
+    ...jest.requireActual("@react-navigation/native"),
+    useNavigation: jest.fn(() => ({})),
+  };
+});
+
 describe("TaskList component", () => {
   const route = { params: { heading: "Test Heading" } };
   const navigation = {};

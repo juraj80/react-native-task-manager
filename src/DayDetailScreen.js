@@ -147,7 +147,7 @@ const DayDetail = ({ route, navigation, props }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <HeaderComponent title={"My Day"} back={true} />
+        <HeaderComponent title={"Tasks"} back={true} />
         <View style={styles.subHeader}>
           <Text style={styles.subHeaderText}>{day}</Text>
         </View>

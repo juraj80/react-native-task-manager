@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DayDetail should render correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "rgba(10, 204, 3,1)",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+        "paddingHorizontal": 20,
+        "paddingTop": 60,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "left": "0%",
+            "position": "absolute",
+            "top": "8%",
+          }
+        }
+      >
+        <View>
+          <View
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "opacity": 1,
+              }
+            }
+          >
+            <Text />
+            <Text
+              style={
+                Object {
+                  "color": "#fff",
+                  "fontSize": 20,
+                }
+              }
+            >
+              Back
+            </Text>
+          </View>
+        </View>
+      </View>
+      <Text
+        style={
+          Object {
+            "color": "white",
+            "fontFamily": "IndieFlower-Regular",
+            "fontSize": 34,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Tasks
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 0.5,
+          "flexDirection": "row",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "white",
+            "fontSize": 20,
+          }
+        }
+      >
+        2022-01-01
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 15,
+          "padding": 0,
+        }
+      }
+    >
+      <RCTScrollView
+        data={Array []}
+        getItem={[Function]}
+        getItemCount={[Function]}
+        keyExtractor={[Function]}
+        onContentSizeChange={[Function]}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={Array []}
+        style={
+          Object {
+            "height": "100%",
+          }
+        }
+        viewabilityConfigCallbackPairs={Array []}
+      >
+        <View />
+      </RCTScrollView>
+    </View>
+  </View>
+</View>
+`;

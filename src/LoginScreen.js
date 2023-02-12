@@ -15,6 +15,7 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
+    // const unsubscribe = auth.onAuthStateChanged((user) => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.replace("Back", { screen: "My Scribbles" });

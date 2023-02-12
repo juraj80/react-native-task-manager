@@ -397,6 +397,8 @@ const TaskList = ({ route, navigation }) => {
     console.log("renderDayTasks pressed: ", dayObj);
     if (dayObj.dueDate) {
       navigation.navigate("Day Detail", dayObj.dueDate);
+    } else {
+      navigation.navigate("My Day");
     }
   };
 

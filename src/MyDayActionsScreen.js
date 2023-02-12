@@ -19,6 +19,7 @@ import HeaderComponent from "../components/HeaderComponent";
 
 const MyDayActions = ({ route, navigation, props }) => {
   const taskHeading = route.params.heading;
+  const today = new Date().toISOString().split("T")[0];
   const [currentDate, setCurrentDate] = useState(new Date());
   const [allTasks, setAllTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -145,7 +146,7 @@ const MyDayActions = ({ route, navigation, props }) => {
       <View style={styles.screenWrapper}>
         <HeaderComponent title={"My Day"} menu={true} />
         <View style={styles.subHeader}>
-          <Text style={styles.subHeaderText}>Date</Text>
+          <Text style={styles.subHeaderText}>{today}</Text>
         </View>
         <View style={styles.mainSection}>
           <FlatList
@@ -174,8 +175,8 @@ const styles = StyleSheet.create({
   },
   subHeader: {
     flex: 0.5,
-    backgroundColor: "red",
     flexDirection: "row",
+    justifyContent: "center",
   },
   subHeaderText: {
     color: "white",
