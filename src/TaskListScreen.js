@@ -36,6 +36,7 @@ import HeaderComponent from "../components/HeaderComponent";
 const TaskList = ({ route, navigation }) => {
   const taskHeading = route.params.heading;
   const [currentDate, setCurrentDate] = useState(new Date());
+  const today = new Date();
   const [noteTask, setNoteTask] = useState("");
   const [allTasks, setAllTasks] = useState([]);
   const [completeTasks, setCompleteTasks] = useState([]);
@@ -61,6 +62,7 @@ const TaskList = ({ route, navigation }) => {
       const tasks = [];
       const completeTasks = [];
       const data = {};
+
       querySnapshot.forEach((doc) => {
         const { id, heading, text, completed, subtasks } = doc.data();
         const dueDate = doc.data().dueDateAt.toDate();
@@ -82,14 +84,17 @@ const TaskList = ({ route, navigation }) => {
 
         completed ? completeTasks.push(task) : tasks.push(task);
 
-        Object.assign(data, {
-          [date]: { id: id, marked: true, info: heading }, //doc.id
-        });
+        if (isWithinCurrentMonth(dueDate)) {
+          Object.assign(data, {
+            [date]: { id: id, marked: true, info: heading, dueDate }, //doc.id
+          });
+        }
       });
 
       // console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setCompleteTasks(completeTasks);
+      console.log("setTimelineData ", data);
       setTimelineData(data);
     });
   }
@@ -97,6 +102,17 @@ const TaskList = ({ route, navigation }) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const isWithinCurrentMonth = (date) => {
+    if (
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // may cause issues with re-rendering of component
   useEffect(() => {
@@ -239,7 +255,7 @@ const TaskList = ({ route, navigation }) => {
     const date = completed[0].dueDateAt.getDate();
     let timelineDataTemp = { ...timelineData };
 
-    // console.log("timeTemp", timelineDataTemp);
+    console.log("timeTemp", timelineDataTemp);
     delete timelineDataTemp[date];
     setTimelineData(timelineDataTemp);
 
@@ -376,8 +392,12 @@ const TaskList = ({ route, navigation }) => {
     setSelectedTask({});
     setModalVisible(!modalVisible);
   };
-  const renderDayTasks = (params) => {
-    console.log("renderDayTasks pressed: ", params);
+  const renderDayTasks = (dayObj) => {
+    console.log(dayObj);
+    console.log("renderDayTasks pressed: ", dayObj);
+    if (dayObj.dueDate) {
+      navigation.navigate("Day Detail", dayObj.dueDate);
+    }
   };
 
   return (

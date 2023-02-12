@@ -26,6 +26,7 @@ const HorizontalTimeline = (props) => {
             currentDate: new Date(date.getFullYear(), date.getMonth(), i),
             marked: props.data[i].marked,
             info: props.data[i].info ? props.data[i].info : null,
+            dueDate: props.data[i].dueDate,
           });
         } else {
           days.push({
@@ -42,6 +43,7 @@ const HorizontalTimeline = (props) => {
         });
       }
     }
+
     setDays(days);
     scrollToDay(getIndex(days));
   }, [props.data]);
@@ -107,7 +109,7 @@ const HorizontalTimeline = (props) => {
           <TouchableOpacity
             key={index}
             disabled={!d.marked && !isToday(d)}
-            onPress={() => props.onPress(d.currentDate)}
+            onPress={() => props.onPress(d)}
           >
             <View
               key={`col${d.date}`}

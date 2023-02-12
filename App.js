@@ -10,6 +10,7 @@ import CreateTask from "./src/CreateTask";
 import TaskDetail from "./src/TaskDetailScreen";
 import NoteDetail from "./src/NoteDetailScreen";
 import LoginScreen from "./src/LoginScreen";
+import DayDetail from "./src/DayDetailScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import AppDrawerNavigator from "./components/DrawerNavigator";
@@ -46,6 +47,11 @@ export default function App() {
           options={{ headerMode: "none", headerShown: false }}
         />
         <Stack.Screen name="Note Detail" component={NoteDetail} />
+        <Stack.Screen
+          name="Day Detail"
+          component={DayDetail}
+          options={{ headerMode: "none", headerShown: false }}
+        />
       </Stack.Navigator>
 
       <StatusBar style="auto" />
