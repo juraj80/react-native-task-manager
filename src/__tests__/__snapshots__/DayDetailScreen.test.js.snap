@@ -35,7 +35,9 @@ exports[`DayDetail should render correctly 1`] = `
           }
         }
       >
-        <View>
+        <View
+          testID="back-navigation-view"
+        >
           <View
             accessible={true}
             collapsable={false}
@@ -54,6 +56,7 @@ exports[`DayDetail should render correctly 1`] = `
                 "opacity": 1,
               }
             }
+            testID="back-navigation-button"
           >
             <Text />
             <Text
@@ -63,6 +66,7 @@ exports[`DayDetail should render correctly 1`] = `
                   "fontSize": 20,
                 }
               }
+              testID="back-navigation-text"
             >
               Back
             </Text>

@@ -3,29 +3,35 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const MenuNavigationComponent = (props) => {
-  const navigation = useNavigation();
+  try {
+    const navigation = useNavigation();
 
-  const handleMenuButtonClick = () => {
-    console.log("handleBackbutton clicked");
-    navigation.toggleDrawer();
-    return true;
-  };
+    const handleMenuButtonClick = () => {
+      console.log("handleBackbutton clicked");
+      navigation.toggleDrawer();
+      return true;
+    };
 
-  return (
+    return (
+      <View>
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center" }}
+          onPress={handleMenuButtonClick}
+        >
+          <Feather
+            name="menu"
+            size={30}
+            color="#fff"
+            // style={{ marginLeft: "3%" }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  } catch (error) {
     <View>
-      <TouchableOpacity
-        style={{ flexDirection: "row", alignItems: "center" }}
-        onPress={handleMenuButtonClick}
-      >
-        <Feather
-          name="menu"
-          size={30}
-          color="#fff"
-          // style={{ marginLeft: "3%" }}
-        />
-      </TouchableOpacity>
-    </View>
-  );
+      <Text>An error occurred</Text>
+    </View>;
+  }
 };
 
 export default MenuNavigationComponent;

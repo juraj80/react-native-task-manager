@@ -4,9 +4,9 @@ import { render, fireEvent, act } from "@testing-library/react-native";
 
 import TaskList from "../TaskListScreen";
 
-jest.mock("@react-navigation/native", () => ({
-  useFocusEffect: jest.fn(),
-}));
+// jest.mock("@react-navigation/native", () => ({
+//   useFocusEffect: jest.fn(),
+// }));
 
 jest.mock("../../firebaseConfig", () => ({
   firebase: {
