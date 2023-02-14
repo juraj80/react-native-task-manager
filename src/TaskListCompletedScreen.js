@@ -142,7 +142,11 @@ const TaskListCompleted = ({ route, navigation }) => {
     return (
       <View style={styles.container}>
         <View style={styles.screenWrapper}>
-          <HeaderComponent title={"Finished To-Dos"} menu={true} />
+          <HeaderComponent
+            title={"Finished To-Dos"}
+            menu={true}
+            testID="headerId"
+          />
           <View style={styles.mainSection}>
             <FlatList
               style={{ height: "100%" }}
