@@ -49,6 +49,8 @@ const TaskList = ({ route, navigation }) => {
     const [taskReminderDate, setTaskReminderDate] = useState(
       new Date(1900, 1, 1)
     );
+
+    const [showAlert, setShowAlert] = useState(true);
     const [taskCompletionDate, setTaskCompletionDate] = useState(null);
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -88,7 +90,13 @@ const TaskList = ({ route, navigation }) => {
 
           if (isWithinCurrentMonth(dueDate)) {
             Object.assign(data, {
-              [date]: { id: id, marked: true, info: heading, dueDate }, //doc.id
+              [date]: {
+                id: id,
+                marked: !task.completed,
+                info: heading,
+                dueDate,
+                completed,
+              }, //doc.id
             });
           }
         });
@@ -96,7 +104,6 @@ const TaskList = ({ route, navigation }) => {
         // console.log("setAllTasks called ", tasks);
         setAllTasks(tasks);
         setCompleteTasks(completeTasks);
-        // console.log("setTimelineData ", data);
         setTimelineData(data);
       });
     }
@@ -124,7 +131,7 @@ const TaskList = ({ route, navigation }) => {
 
     useEffect(() => {
       isDueToday();
-    }, [route]);
+    }, []);
 
     // set timer to check each task reminder date every second
     useEffect(() => {
@@ -176,7 +183,7 @@ const TaskList = ({ route, navigation }) => {
             [
               {
                 text: "View",
-                onPress: () => console.log("View Task was pressed"),
+                onPress: () => showTaskDetail(obj),
               },
               {
                 text: "OK",
@@ -286,6 +293,7 @@ const TaskList = ({ route, navigation }) => {
 
     // handler for completed tasks
     const handleChange = (id) => {
+      console.log("HandleChange f called");
       let temp = allTasks.map((item) => {
         if (id === item.id) {
           return {
@@ -302,10 +310,15 @@ const TaskList = ({ route, navigation }) => {
 
       const completed = temp.filter((el) => el.completed);
       setCompleteTasks(completed);
+
+      // console.log("completed tasks array ", completed);
       const date = completed[0].dueDateAt.getDate();
+
+      // sets the data array of tasks for the timeline component
       let timelineDataTemp = { ...timelineData };
 
-      console.log("timeTemp", timelineDataTemp);
+      // need to take to account the tasks that has completed flag
+      // console.log("timeTemp", timelineDataTemp);
       delete timelineDataTemp[date];
       setTimelineData(timelineDataTemp);
 

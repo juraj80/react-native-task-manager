@@ -41,7 +41,7 @@ const NoteDetail = ({ route, navigation }) => {
         //   Keyboard.dismiss();
         // })
         .then(() => {
-          navigation.navigate("Notes");
+          navigation.navigate("My Scribbles");
         })
         .catch((error) => {
           alert(error);

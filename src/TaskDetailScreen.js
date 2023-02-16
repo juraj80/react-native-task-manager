@@ -49,6 +49,7 @@ const TaskDetail = ({ route, navigation }) => {
     TouchableOpacity.defaultProps = { activeOpacity: 0.8 };
 
     async function fetchData() {
+      console.log("TaskDetail fetchData called with taskId ", taskId);
       tasksRef
         .doc(taskId)
         .get()
@@ -66,7 +67,6 @@ const TaskDetail = ({ route, navigation }) => {
 
     // callback that saves the task detail in the DB when the SAVE button is pressed
     const updateTask = async () => {
-      console.log("updateTask called");
       if (taskHeader && taskHeader.length > 0) {
         // get the timestamp
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -78,15 +78,18 @@ const TaskDetail = ({ route, navigation }) => {
           updatedAt: timestamp,
           subtasks: allSubTasks,
         };
-        console.log("UPDATED DATA: ", data);
         tasksRef
-          .doc(taskId)
-          .update(data)
-          // .then(() => {
-          //   //setNoteHeader("");
-          //   // release Keyboard
-          //   Keyboard.dismiss();
-          // })
+          .where("id", "==", taskId)
+          .get()
+          .then((query) => {
+            query.docs.forEach((doc) => {
+              const docRef = firebase
+                .firestore()
+                .collection("tasks")
+                .doc(doc.id);
+              docRef.update(data);
+            });
+          })
           .then(() => {
             navigation.navigate("My Actions");
           })
