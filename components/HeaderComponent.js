@@ -6,14 +6,16 @@ import BackNavigationComponent from "./BackNavigationComponent";
 export default function HeaderComponent(props) {
   let content;
   if (props.menu) {
-    content = <MenuNavigationComponent />;
+    content = <MenuNavigationComponent color={props.color} />;
   } else if (props.back) {
-    content = <BackNavigationComponent />;
+    content = <BackNavigationComponent color={props.color} />;
   }
   return (
     <View style={styles.headerSection}>
       <View style={styles.backArrowComponent}>{content}</View>
-      <Text style={styles.screenTitle}>{props.title}</Text>
+      <Text style={[styles.screenTitle, { color: props.color }]}>
+        {props.title}
+      </Text>
     </View>
   );
 }
@@ -31,8 +33,6 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 34,
     fontWeight: "bold",
-    // color: "#4169E1",
-    color: "white",
     fontFamily: "IndieFlower-Regular",
   },
 });

@@ -12,7 +12,10 @@ import React, { useRef } from "react";
 const Footer = (props) => {
   return (
     <View style={[styles.btnBackground, { backgroundColor: props.bgColor }]}>
-      <TouchableOpacity style={styles.plusBtn} onPress={props.onPress}>
+      <TouchableOpacity
+        style={[styles.plusBtn, { backgroundColor: props.btnColor }]}
+        onPress={props.onPress}
+      >
         <Text style={styles.plusText}>+</Text>
       </TouchableOpacity>
     </View>
@@ -28,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   plusBtn: {
-    backgroundColor: "lightgrey",
+    // backgroundColor: "#4682B4",
     width: 60,
     height: 60,
     borderRadius: 45,

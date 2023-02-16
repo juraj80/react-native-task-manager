@@ -146,6 +146,7 @@ const TaskListCompleted = ({ route, navigation }) => {
             title={"Finished To-Dos"}
             menu={true}
             testID="headerId"
+            color={"#fff"}
           />
           <View style={styles.mainSection}>
             <FlatList
@@ -156,7 +157,7 @@ const TaskListCompleted = ({ route, navigation }) => {
           </View>
         </View>
 
-        <View style={styles.bottomRow}></View>
+        {/* <View style={styles.bottomRow}></View> */}
       </View>
     );
   } catch (error) {

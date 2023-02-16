@@ -22,7 +22,7 @@ const BackNavigationComponent = (props) => {
           <Ionicons
             name="ios-chevron-back"
             size={30}
-            color="#fff"
+            color={props.color}
             style={{ marginLeft: "3%" }}
             testID="back-navigation-icon"
           />

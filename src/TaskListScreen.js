@@ -468,7 +468,7 @@ const TaskList = ({ route, navigation }) => {
     return (
       <View style={styles.container}>
         <View style={styles.screenWrapper}>
-          <HeaderComponent menu={true} title={"My Actions"} />
+          <HeaderComponent menu={true} title={"My Actions"} color={"#fff"} />
           <View style={styles.timeline}>
             <HorizontalTimeline
               date={new Date().toISOString()}
@@ -496,9 +496,15 @@ const TaskList = ({ route, navigation }) => {
           </View>
 
           <View style={styles.bottomSection}>
-            <Footer onPress={createTask} bgColor={"#66CC99"} />
+            <Footer
+              onPress={createTask}
+              bgColor={"#66CC99"}
+              btnColor={"lightgrey"}
+            />
           </View>
         </View>
+        <View style={styles.bottomRow}></View>
+
         <TaskModal
           task={selectedTask}
           setTask={setSelectedTask}
@@ -523,7 +529,6 @@ const TaskList = ({ route, navigation }) => {
           onConfirm={handleReminderConfirm}
           onCancel={hideDateTimePicker}
         />
-        <View style={styles.bottomRow}></View>
       </View>
     );
   } catch (error) {

@@ -21,7 +21,7 @@ const MenuNavigationComponent = (props) => {
           <Feather
             name="menu"
             size={30}
-            color="#fff"
+            color={props.color}
             // style={{ marginLeft: "3%" }}
           />
         </TouchableOpacity>

@@ -49,7 +49,7 @@ const PomodoroScreen = () => {
         {/* <View style={styles.headerSection}>
         <Text style={styles.screenTitle}>My Timer</Text>
       </View> */}
-        <HeaderComponent title={"My Timer"} menu={true} />
+        <HeaderComponent title={"My Timer"} menu={true} color={"#fff"} />
         <View style={styles.row}>
           <View style={styles.inputField}>
             <Text style={styles.inputHeading}>Work</Text>

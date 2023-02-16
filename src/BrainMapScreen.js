@@ -25,11 +25,13 @@ import HeaderComponent from "../components/HeaderComponent";
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
 
+console.disableYellowBox = true;
+
 const BrainMapScreen = ({ navigation }) => {
-  const [selectedId, setSelectedId] = useState(null);
-  const [activeTasks, setActiveTasks] = useState([]);
+  // const [selectedId, setSelectedId] = useState(null);
+  // const [activeTasks, setActiveTasks] = useState([]);
   const [selectedNote, setSelectedNote] = useState({});
-  const [modalEntry, setModalEntry] = useState({});
+  // const [modalEntry, setModalEntry] = useState({});
   const [allNotes, setAllNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -161,7 +163,7 @@ const BrainMapScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <HeaderComponent title={"My Scribbles"} menu={true} />
+        <HeaderComponent title={"My Scribbles"} menu={true} color={"#000"} />
         {/* <View style={styles.headerSection}>
           <Text style={styles.screenTitle}>My Scribbles</Text>
         </View> */}
@@ -197,7 +199,11 @@ const BrainMapScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View> */}
-          <Footer onPress={createNote} bgColor={"#4682B4"} />
+          <Footer
+            onPress={createNote}
+            bgColor={"lightgrey"}
+            btnColor={"#4682B4"}
+          />
         </View>
       </View>
 
@@ -209,7 +215,8 @@ const BrainMapScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#4682B4",
+    // backgroundColor: "#4682B4",
+    backgroundColor: "lightgrey",
     opacity: 0.8,
   },
   headerSection: {
@@ -220,7 +227,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 34,
     fontWeight: "bold",
-    color: "white",
+    color: "black",
     fontFamily: "IndieFlower-Regular",
   },
   screenWrapper: {
@@ -251,7 +258,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 70,
     zIndex: -99,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#4682B4",
   },
   item: {
     width: 80,
@@ -276,7 +283,7 @@ const styles = StyleSheet.create({
   btnGreyBackground: {
     position: "absolute",
     right: -15,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#4682B4",
     width: 75,
     height: 75,
     borderRadius: 50,
@@ -284,7 +291,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   plusBtn: {
-    backgroundColor: "rgba(173, 173, 173, 0.9)",
+    // backgroundColor: "rgba(173, 173, 173, 0.9)",
+    backgroundColor: "#4682B4",
     width: 60,
     height: 60,
     borderRadius: 45,
@@ -302,8 +310,9 @@ const styles = StyleSheet.create({
   },
   itemText: {
     marginLeft: 5,
-    color: "white",
-    fontSize: 15,
+    color: "#000",
+    fontSize: 22,
+    fontFamily: "IndieFlower-Regular",
   },
   button: {
     borderRadius: 20,

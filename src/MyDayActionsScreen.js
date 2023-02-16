@@ -144,7 +144,7 @@ const MyDayActions = ({ route, navigation, props }) => {
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <HeaderComponent title={"My Day"} menu={true} />
+        <HeaderComponent title={"My Day"} menu={true} color={"#fff"} />
         <View style={styles.subHeader}>
           <Text style={styles.subHeaderText}>{today}</Text>
         </View>
