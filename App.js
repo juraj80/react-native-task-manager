@@ -12,16 +12,95 @@ import NoteDetail from "./src/NoteDetailScreen";
 import LoginScreen from "./src/LoginScreen";
 import DayDetail from "./src/DayDetailScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as Notifications from "expo-notifications";
 
 import AppDrawerNavigator from "./components/DrawerNavigator";
 import { useFonts } from "expo-font";
+import { useEffect } from "react";
 
 const Stack = createStackNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     "IndieFlower-Regular": require("./assets/fonts/IndieFlower-Regular.ttf"),
   });
+
+  // // request the token
+  // useEffect(() => {
+  //   (async () => {
+  //     let token; // check, is this a device or a simulator
+  //     if (Constants.isDevice) {
+  //       // see if we haven't already been granted access
+  //       const { status: existingStatus } =
+  //         await Notifications.getPermissionsAsync();
+  //       let finalStatus = existingStatus;
+  //       if (existingStatus !== "granted") {
+  //         const { status } = await Notifications.requestPermissionsAsync();
+  //         finalStatus = status;
+  //       }
+  //       if (finalStatus !== "granted") {
+  //         alert("Failed to get push token for push notification!");
+  //         return;
+  //       } // ask for the token
+  //       token = (await Notifications.getExpoPushTokenAsync()).data;
+  //     } else {
+  //       alert(
+  //         "You are running this app on a simulator, you must use a real device to use push notifications"
+  //       );
+  //     }
+
+  //     // make modifcations to android
+  //     if (Platform.OS === "android") {
+  //       Notifications.setNotificationChannelAsync("default", {
+  //         name: "default",
+  //         importance: Notifications.AndroidImportance.MAX,
+  //         vibrationPattern: [0, 250, 250, 250],
+  //         lightColor: "#FF231F7C",
+  //       });
+  //     }
+
+  //     if (token != undefined) {
+  //       console.log(`Our token is ${token}`);
+  //     } else {
+  //       console.log(`We are unable to get the token`);
+  //     }
+  //   })();
+  // }, []);
+  useEffect(() => {
+    // Permissions.getAsync(Permissions.NOTIFICATIONS)
+    Notifications.getPermissionsAsync()
+      .then((statusObj) => {
+        if (statusObj.status !== "granted") {
+          return Notifications.requestPermissionsAsync();
+          // return Permissions.askAsync(Permissions.NOTIFICATIONS);
+        }
+        return statusObj;
+      })
+      .then((statusObj) => {
+        if (statusObj.status !== "granted") {
+          return;
+        }
+      });
+  }, []);
+
+  const triggerNotifications = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You have got mail! 📬",
+        body: "Here is the notification body",
+        data: { data: "goes here" },
+      },
+      trigger: { seconds: 2 },
+    });
+  };
 
   return (
     <NavigationContainer>

@@ -28,6 +28,7 @@ import { Feather } from "@expo/vector-icons";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
+import * as Notifications from "expo-notifications";
 
 import { v4 as uuid } from "uuid";
 import MenuNavigationComponent from "../components/MenuNavigationComponent";
@@ -95,7 +96,7 @@ const TaskList = ({ route, navigation }) => {
         // console.log("setAllTasks called ", tasks);
         setAllTasks(tasks);
         setCompleteTasks(completeTasks);
-        console.log("setTimelineData ", data);
+        // console.log("setTimelineData ", data);
         setTimelineData(data);
       });
     }
@@ -123,7 +124,7 @@ const TaskList = ({ route, navigation }) => {
 
     useEffect(() => {
       isDueToday();
-    }, []);
+    }, [route]);
 
     // set timer to check each task reminder date every second
     useEffect(() => {
@@ -168,10 +169,54 @@ const TaskList = ({ route, navigation }) => {
           obj.dueDateAt instanceof Date &&
           obj.dueDateAt.toISOString().split("T")[0] === today
         ) {
-          // console.log("Alert For this day: ", today, "from object: ", obj);
-          Alert.alert("Reminder", "Task: " + obj.heading + "is due today");
+          console.log("Alert For this day: ", today, "from object: ", obj);
+          Alert.alert(
+            "Reminder",
+            "Task: " + obj.heading + " is due today",
+            [
+              {
+                text: "View",
+                onPress: () => console.log("View Task was pressed"),
+              },
+              {
+                text: "OK",
+                onPress: () => console.log("Ok was pressed"),
+              },
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel was pressed"),
+                style: "cancel",
+              },
+            ],
+            {
+              cancelable: true,
+              onDismiss: () => {
+                // Alert.alert(
+                //   "This alert was dismissed by tapping outside of the alert dialog."
+                // );
+              },
+            }
+          );
+
+          //notification message
+          const message = {
+            autoDismiss: false,
+            color: "#AEDE2D",
+            title: "Task Due! 📬",
+            body: `The task: ${obj.heading} is due today! `,
+            data: { data: "goes here" },
+          };
+
+          triggerNotifications(message);
           // TODO: Need to send notificiations to the user with the message
         }
+      });
+    };
+
+    const triggerNotifications = async (message) => {
+      await Notifications.scheduleNotificationAsync({
+        content: message,
+        trigger: { seconds: 1 },
       });
     };
 

@@ -16,6 +16,8 @@
     "@react-navigation/native": "^6.1.0",
     "@react-navigation/stack": "^6.3.9",
     "expo": "~47.0.8",
+    "expo-notifications": "~0.17.0",
+    "expo-permissions": "~14.0.0",
     "expo-status-bar": "~1.4.2",
     "firebase": "^9.14.0",
     "jest": "^26.6.3",
