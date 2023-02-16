@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import PropTypes from "prop-types";
+import MyAppText from "./MyAppText";
 
 const HorizontalTimeline = (props) => {
   const [index, setIndex] = useState(0);
@@ -128,8 +129,8 @@ const HorizontalTimeline = (props) => {
                   styles.textContainer,
                 ]}
               >
-                <Text style={[styles.title]}>{`${d.date}`}</Text>
-                <Text style={[styles.subTitle]}>
+                <Text style={styles.title}>{`${d.date}`}</Text>
+                <Text style={styles.subTitle}>
                   {`${getDayOfTheWeek(d.currentDate.getDay())}`}
                 </Text>
               </View>
@@ -205,16 +206,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#b2de27",
   },
   title: {
-    fontSize: 15,
+    fontSize: 17,
     flex: 2,
     textAlign: "center",
     color: "black",
+    fontFamily: "Lato-Light",
   },
   subTitle: {
     fontSize: 15,
     flex: 3,
     textAlign: "center",
     color: "lightblack",
+    fontFamily: "Lato-Light",
   },
   dotImage: {
     position: "absolute",

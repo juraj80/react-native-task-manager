@@ -12,5 +12,3 @@ const MyAppText = (props) => {
 };
 
 export default MyAppText;
-
-const styles = StyleSheet.create({});

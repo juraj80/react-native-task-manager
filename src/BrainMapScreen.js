@@ -311,8 +311,8 @@ const styles = StyleSheet.create({
   itemText: {
     marginLeft: 5,
     color: "#000",
-    fontSize: 22,
-    fontFamily: "IndieFlower-Regular",
+    fontSize: 17,
+    fontFamily: "Lato-Light",
   },
   button: {
     borderRadius: 20,

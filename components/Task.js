@@ -7,6 +7,8 @@ import {
 } from "react-native";
 import AnimatedCheckbox from "react-native-checkbox-reanimated";
 
+import MyAppText from "../components/MyAppText";
+
 import React, { useRef } from "react";
 
 const Task = (props) => {
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     opacity: 1,
   },
-  itemText: { color: "black" },
+  itemText: { color: "black", fontSize: 17, fontFamily: "Lato-Light" },
   itemStyle: {
     padding: 5,
     flex: 1,

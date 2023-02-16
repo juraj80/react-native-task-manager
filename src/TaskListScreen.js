@@ -25,6 +25,7 @@ import Task from "../components/Task";
 import Footer from "../components/Footer";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import MyAppText from "../components/MyAppText";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";

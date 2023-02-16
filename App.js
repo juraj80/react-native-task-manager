@@ -33,6 +33,7 @@ Notifications.setNotificationHandler({
 export default function App() {
   const [fontsLoaded] = useFonts({
     "IndieFlower-Regular": require("./assets/fonts/IndieFlower-Regular.ttf"),
+    "Lato-Light": require("./assets/fonts/Lato-Light.ttf"),
   });
 
   LogBox.ignoreAllLogs();
