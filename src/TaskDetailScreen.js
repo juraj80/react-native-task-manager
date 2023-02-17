@@ -21,6 +21,7 @@ import { firebase } from "../firebaseConfig";
 import SubTask from "../components/SubTask";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import HeaderComponent from "../components/HeaderComponent";
+import FullWidthButton from "../components/FullWidthButton";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -50,14 +51,25 @@ const TaskDetail = ({ route, navigation }) => {
 
     async function fetchData() {
       console.log("TaskDetail fetchData called with taskId ", taskId);
+
       tasksRef
-        .doc(taskId)
+        .where("id", "==", taskId)
         .get()
         .then((querySnapshot) => {
-          const subTasks = querySnapshot.data()?.subtasks;
-          if (subTasks) {
-            setAllSubTasks(subTasks);
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            const subTasks = doc.data()?.subtasks;
+            console.log("fetched subtasks ", subTasks);
+            if (subTasks) {
+              setAllSubTasks(subTasks);
+            }
           }
+        })
+        .then(() => {
+          console.log("Task: ", task, " was succesfully fetched from the DB");
+        })
+        .catch((error) => {
+          alert(error);
         });
     }
 
@@ -212,7 +224,7 @@ const TaskDetail = ({ route, navigation }) => {
               onChangeText={setTaskHeader}
               placeholder={taskHeader}
               placeholderTextColor="black"
-              style={{ color: "ccc", fontSize: 22 }}
+              style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
               spellCheck={false}
               autoFocus
               selectionColor="#000"
@@ -226,7 +238,7 @@ const TaskDetail = ({ route, navigation }) => {
               value={taskText}
               onChangeText={setTaskText}
               placeholder={taskText}
-              style={{ color: "ccc", fontSize: 22 }}
+              style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
               spellCheck={false}
               multiline={true}
               autoFocus
@@ -283,6 +295,7 @@ const TaskDetail = ({ route, navigation }) => {
             >
               <Text style={styles.plusText}>Save</Text>
             </TouchableOpacity>
+            {/* <FullWidthButton title={"Save"} onPress={() => updateTask()} /> */}
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
@@ -319,7 +332,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 
-  inputSection: { flex: 2 },
+  inputSection: {
+    flex: 2,
+    backgroundColor: "#eee",
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
   mainSection: {
     flex: 5,
   },
@@ -356,7 +375,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    paddingHorizontal: 72,
+    paddingHorizontal: 12,
     borderRadius: 4,
     elevation: 4,
     backgroundColor: "green",
@@ -389,13 +408,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     margin: 5,
     justifyContent: "center",
-    borderColor: "#95a5a6",
-    backgroundColor: "#95a5a6",
+    alignItems: "center",
+    borderColor: "#95a5f6",
+    backgroundColor: "#95a5f6",
 
     borderWidth: 1,
     borderRadius: 7,
   },
-  btnTextStyle: { color: "white", fontSize: 20, marginLeft: 5 },
+  btnTextStyle: {
+    color: "white",
+    fontSize: 20,
+    marginLeft: 5,
+    fontFamily: "Lato-Regular",
+  },
 });
 
 export default TaskDetail;

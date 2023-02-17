@@ -94,7 +94,12 @@ const SubTask = (props) => {
           onSubmitEditing={() => addSubTask()}
           placeholder={"Add Sub Task"}
           placeholderTextColor="lightgray"
-          style={{ color: "black", fontSize: 20, marginLeft: 5 }}
+          style={{
+            color: "black",
+            fontSize: 20,
+            marginLeft: 5,
+            fontFamily: "Lato-Light",
+          }}
           spellCheck={false}
           selectionColor="#000"
           autoFocus={true}

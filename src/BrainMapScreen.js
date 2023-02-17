@@ -92,9 +92,7 @@ const BrainMapScreen = ({ navigation }) => {
       >
         {/* <MaterialCommunityIcons name="note-outline" size={18} color="black" /> */}
 
-        <Text numberOfLines={1} style={styles.itemText}>
-          {item.heading}
-        </Text>
+        <Text style={styles.itemText}>{item.heading}</Text>
         {/* <Text>{item.text}</Text> */}
       </TouchableOpacity>
     );
@@ -305,8 +303,12 @@ const styles = StyleSheet.create({
   },
   itemStyle: {
     paddingHorizontal: 10,
-    paddingVertical: 15,
+    paddingVertical: 10,
+    marginVertical: 5,
     flexDirection: "row",
+    backgroundColor: "#fff",
+    borderColor: "black",
+    borderRadius: 10,
   },
   itemText: {
     marginLeft: 5,

@@ -182,8 +182,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   subHeaderText: {
-    color: "white",
+    color: "black",
     fontSize: 20,
+    fontFamily: "Lato-Regular",
   },
 
   dragItem: {
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
 
   mainSection: {
     flex: 15,
-    padding: 0,
+    paddingVertical: 20,
   },
 });
 

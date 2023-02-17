@@ -27,7 +27,11 @@ const BackNavigationComponent = (props) => {
             testID="back-navigation-icon"
           />
           <Text
-            style={{ fontSize: 20, color: "#fff" }}
+            style={{
+              fontSize: 20,
+              color: props.color,
+              fontFamily: "Lato-Bold",
+            }}
             testID="back-navigation-text"
           >
             Back

@@ -34,6 +34,8 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "IndieFlower-Regular": require("./assets/fonts/IndieFlower-Regular.ttf"),
     "Lato-Light": require("./assets/fonts/Lato-Light.ttf"),
+    "Lato-Bold": require("./assets/fonts/Lato-Bold.ttf"),
+    "Lato-Regular": require("./assets/fonts/Lato-Regular.ttf"),
   });
 
   LogBox.ignoreAllLogs();
