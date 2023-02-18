@@ -149,7 +149,7 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const showNoteDetail = (item) => {
-    navigation.navigate("Note Detail", item);
+    navigation.navigate("Scribble Detail", item);
   };
 
   // creates a new Note on the plus button press

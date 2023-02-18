@@ -13,6 +13,7 @@ import {
   Flatlist,
   LogBox,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { v4 as uuid } from "uuid";
 
@@ -22,12 +23,14 @@ import SubTask from "../components/SubTask";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import HeaderComponent from "../components/HeaderComponent";
 import FullWidthButton from "../components/FullWidthButton";
+import ReminderIntervalModal from "../components/ReminderIntervalModal";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
 ]);
 
 const TaskDetail = ({ route, navigation }) => {
+  console.log("Passed data about repeat Task:", route.params.repeatTask);
   try {
     const [task, setTask] = useState("");
     const [taskId, setTaskId] = useState(route.params.id);
@@ -40,9 +43,15 @@ const TaskDetail = ({ route, navigation }) => {
     const [isDateTimePickerVisible, setDateTimePickerVisibility] =
       useState(false);
 
+    const [isIntervalModalVisible, setIsIntervalModalVisible] = useState(false);
+
     const [taskDueDate, setTaskDueDate] = useState(new Date(1900, 1, 1));
     const [taskReminderDate, setTaskReminderDate] = useState(
       new Date(1900, 1, 1)
+    );
+
+    const [taskRepeatData, setTaskRepeatData] = useState(
+      route.params.repeatTask
     );
 
     const tasksRef = firebase.firestore().collection("tasks");
@@ -59,6 +68,7 @@ const TaskDetail = ({ route, navigation }) => {
           if (!querySnapshot.empty) {
             const doc = querySnapshot.docs[0];
             const subTasks = doc.data()?.subtasks;
+
             console.log("fetched subtasks ", subTasks);
             if (subTasks) {
               setAllSubTasks(subTasks);
@@ -89,6 +99,7 @@ const TaskDetail = ({ route, navigation }) => {
           reminderAt: taskReminderDate,
           updatedAt: timestamp,
           subtasks: allSubTasks,
+          repeatTask: taskRepeatData,
         };
         tasksRef
           .where("id", "==", taskId)
@@ -192,6 +203,10 @@ const TaskDetail = ({ route, navigation }) => {
       setDateTimePickerVisibility(true);
     };
 
+    const showIntervalPicker = () => {
+      setIsIntervalModalVisible(true);
+    };
+
     const hideDatePicker = () => {
       setDatePickerVisibility(false);
       // setTimeout(() => setModalVisible(!modalVisible), 1000);
@@ -215,39 +230,45 @@ const TaskDetail = ({ route, navigation }) => {
     };
 
     return (
-      <View style={styles.container}>
-        <View style={styles.screenWrapper}>
-          <HeaderComponent title={"My Task"} back={true} />
-          <View style={styles.inputSection}>
-            <TextInput
-              value={taskHeader}
-              onChangeText={setTaskHeader}
-              placeholder={taskHeader}
-              placeholderTextColor="black"
-              style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
-              spellCheck={false}
-              autoFocus
-              selectionColor="#000"
-            />
-            {console.log(
-              "Task detail Screen rendered with the  subtask : ",
-              allSubTasks
-            )}
+      <LinearGradient
+        colors={["#ff9478", "white"]}
+        style={styles.container}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.container}>
+          <View style={styles.screenWrapper}>
+            <HeaderComponent title={"My Task"} back={true} />
+            <View style={styles.inputSection}>
+              <TextInput
+                value={taskHeader}
+                onChangeText={setTaskHeader}
+                placeholder={taskHeader}
+                placeholderTextColor="black"
+                style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
+                spellCheck={false}
+                autoFocus
+                selectionColor="#000"
+              />
+              {/* {console.log(
+                "Task detail Screen rendered with the  subtask : ",
+                allSubTasks
+              )} */}
 
-            <TextInput
-              value={taskText}
-              onChangeText={setTaskText}
-              placeholder={taskText}
-              style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
-              spellCheck={false}
-              multiline={true}
-              autoFocus
-              selectionColor="#000"
-              style={styles.mainSection}
-            />
-          </View>
-          <View style={styles.subTasksSection}>
-            {/* <DraggableFlatList
+              <TextInput
+                value={taskText}
+                onChangeText={setTaskText}
+                placeholder={taskText}
+                style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
+                spellCheck={false}
+                multiline={true}
+                autoFocus
+                selectionColor="#000"
+                style={styles.mainSection}
+              />
+            </View>
+            <View style={styles.subTasksSection}>
+              {/* <DraggableFlatList
             // style={{ height: "90%", flexGrow: 0 }}
             data={allSubTasks}
             onDragEnd={({ data }) => setAllSubTasks(data)}
@@ -256,61 +277,78 @@ const TaskDetail = ({ route, navigation }) => {
             }}
             renderItem={renderSubTask}
           ></DraggableFlatList> */}
-            <FlatList
-              // style={{ height: "100%" }}
-              data={allSubTasks}
-              numColumns={1}
-              renderItem={renderSubTask}
-            ></FlatList>
-          </View>
-          <View style={styles.addBtnContainer}>
-            <TouchableOpacity onPress={createSubTask}>
-              <Text style={styles.btnTextStyle}>+ Add SubTask</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.calendarSection}>
-            <TouchableOpacity
-              onPress={showDatePicker}
-              style={styles.calendarBtnContainer}
-            >
-              <Text style={styles.btnTextStyle}>Set Due Date</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={showDateTimePicker}
-              style={styles.calendarBtnContainer}
-            >
-              <Text style={styles.btnTextStyle}>Reminder</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.calendarBtnContainer}>
-              <Text style={styles.btnTextStyle}>Repeat</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.attachmentsSection}>
-            {/* <Text>Attachments</Text> */}
-          </View>
-          <View style={styles.bottomSection}>
-            <TouchableOpacity
+              <FlatList
+                // style={{ height: "100%" }}
+                data={allSubTasks}
+                numColumns={1}
+                renderItem={renderSubTask}
+              ></FlatList>
+            </View>
+            <View style={styles.addBtnContainer}>
+              <TouchableOpacity onPress={createSubTask}>
+                <Text style={styles.btnTextStyle}>+ Add Subtask</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.calendarSection}>
+              <TouchableOpacity onPress={showDatePicker}>
+                <LinearGradient
+                  colors={["#4c669f", "#3b5998", "#192f6a"]}
+                  style={styles.calendarBtnContainer}
+                >
+                  <Text style={styles.btnTextStyle}>Set Due Date</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={showDateTimePicker}>
+                <LinearGradient
+                  colors={["#4c669f", "#3b5998", "#192f6a"]}
+                  style={styles.calendarBtnContainer}
+                >
+                  <Text style={styles.btnTextStyle}>Reminder</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={showIntervalPicker}>
+                <LinearGradient
+                  colors={["#4c669f", "#3b5998", "#192f6a"]}
+                  style={styles.calendarBtnContainer}
+                >
+                  <Text style={styles.btnTextStyle}>Repeat</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.attachmentsSection}>
+              {/* <Text>Attachments</Text> */}
+            </View>
+            <View style={styles.bottomSection}>
+              {/* <TouchableOpacity
               style={styles.plusBtn}
               onPress={() => updateTask()}
             >
               <Text style={styles.plusText}>Save</Text>
-            </TouchableOpacity>
-            {/* <FullWidthButton title={"Save"} onPress={() => updateTask()} /> */}
+            </TouchableOpacity> */}
+              <FullWidthButton title={"Save"} onPress={() => updateTask()} />
+            </View>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+            />
+            <DateTimePickerModal
+              isVisible={isDateTimePickerVisible}
+              mode="datetime"
+              onConfirm={handleReminderConfirm}
+              onCancel={hideDateTimePicker}
+            />
+            <ReminderIntervalModal
+              isVisible={isIntervalModalVisible}
+              setIsVisible={setIsIntervalModalVisible}
+              taskRepeatData={taskRepeatData}
+              setTaskRepeatData={setTaskRepeatData}
+            />
           </View>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-          <DateTimePickerModal
-            isVisible={isDateTimePickerVisible}
-            mode="datetime"
-            onConfirm={handleReminderConfirm}
-            onCancel={hideDateTimePicker}
-          />
         </View>
-      </View>
+      </LinearGradient>
     );
   } catch (error) {
     return (
@@ -324,7 +362,7 @@ const TaskDetail = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ff9478",
+    // backgroundColor: "#ff9478",
   },
   screenWrapper: {
     flex: 5,
@@ -334,7 +372,7 @@ const styles = StyleSheet.create({
 
   inputSection: {
     flex: 2,
-    backgroundColor: "#eee",
+    backgroundColor: "#f0f0f0",
     borderRadius: 10,
     padding: 10,
     marginBottom: 10,
@@ -357,7 +395,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "green",
+
+    marginBottom: 20,
   },
   item: {
     width: 80,
@@ -409,17 +448,15 @@ const styles = StyleSheet.create({
     margin: 5,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "#95a5f6",
-    backgroundColor: "#95a5f6",
+    backgroundColor: "#42a5f5",
 
-    borderWidth: 1,
     borderRadius: 7,
   },
   btnTextStyle: {
     color: "white",
-    fontSize: 20,
+    fontSize: 16,
     marginLeft: 5,
-    fontFamily: "Lato-Regular",
+    fontWeight: "bold",
   },
 });
 

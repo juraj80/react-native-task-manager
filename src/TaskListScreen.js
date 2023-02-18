@@ -15,6 +15,7 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 
+import { LinearGradient } from "react-native-svg";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -68,7 +69,8 @@ const TaskList = ({ route, navigation }) => {
         const data = {};
 
         querySnapshot.forEach((doc) => {
-          const { id, heading, text, completed, subtasks } = doc.data();
+          const { id, heading, text, completed, subtasks, repeatTask } =
+            doc.data();
           const dueDate = doc.data().dueDateAt.toDate();
           const reminderAt = doc.data().reminderAt.toDate();
           const completedAt = doc.data().completedAt;
@@ -82,6 +84,7 @@ const TaskList = ({ route, navigation }) => {
             completed,
             completedAt: completedAt,
             dueDateAt: dueDate,
+            repeatTask: repeatTask,
             reminderAt: reminderAt,
             subtasks,
           };
@@ -101,7 +104,7 @@ const TaskList = ({ route, navigation }) => {
           }
         });
 
-        // console.log("setAllTasks called ", tasks);
+        console.log("setAllTasks called ", tasks);
         setAllTasks(tasks);
         setCompleteTasks(completeTasks);
         setTimelineData(data);
@@ -406,11 +409,17 @@ const TaskList = ({ route, navigation }) => {
         });
     };
 
-    // save a new task to the firestore db
+    // save a new task to the firestore db from the modal
     const saveTask = async (text) => {
       console.log("saveTask f called");
       // get the timestamp
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+      const repeatTaskData = {
+        dayInterval: 9,
+        weekInterval: 9,
+        monthInterval: 9,
+      };
       const data = {
         heading: text,
         id: uuid(),
@@ -420,6 +429,7 @@ const TaskList = ({ route, navigation }) => {
         completed: false,
         completedAt: taskCompletionDate,
         subtasks: [],
+        repeatTask: repeatTaskData,
         text: "",
       };
       tasksRef

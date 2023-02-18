@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
+import FullWidthButton from "../components/FullWidthButton";
 
 const NoteDetail = ({ route, navigation }) => {
   const [noteId, setNoteId] = useState(route.params.id);
@@ -82,9 +83,11 @@ const NoteDetail = ({ route, navigation }) => {
           style={styles.mainSection}
         />
         <View style={styles.bottomSection}>
-          <TouchableOpacity style={styles.plusBtn} onPress={() => updateNote()}>
+          {/* <TouchableOpacity style={styles.plusBtn} onPress={() => updateNote()}>
             <Text style={styles.plusText}>Save</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+          <FullWidthButton title={"Save"} onPress={() => updateNote()} />
         </View>
       </View>
     </View>

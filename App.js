@@ -92,7 +92,7 @@ export default function App() {
           component={TaskDetail}
           options={{ headerMode: "none", headerShown: false }}
         />
-        <Stack.Screen name="Note Detail" component={NoteDetail} />
+        <Stack.Screen name="Scribble Detail" component={NoteDetail} />
         <Stack.Screen
           name="Day Detail"
           component={DayDetail}
