@@ -84,7 +84,7 @@ const TaskList = ({ route, navigation }) => {
             completed,
             completedAt: completedAt,
             dueDateAt: dueDate,
-            repeatTask: repeatTask,
+            repeatTask,
             reminderAt: reminderAt,
             subtasks,
           };
@@ -99,6 +99,7 @@ const TaskList = ({ route, navigation }) => {
                 info: heading,
                 dueDate,
                 completed,
+                repeatTask,
               }, //doc.id
             });
           }
@@ -352,6 +353,7 @@ const TaskList = ({ route, navigation }) => {
     );
 
     // updates existing task in firestore db when pressing Save in the Task modal
+    //TODO: do wee need update triggered from the modal?
     const updateTask = (text) => {
       console.log("Update task called");
       const new_obj = {
@@ -416,9 +418,9 @@ const TaskList = ({ route, navigation }) => {
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
       const repeatTaskData = {
-        dayInterval: 9,
-        weekInterval: 9,
-        monthInterval: 9,
+        dayInterval: 0,
+        weekInterval: 0,
+        monthInterval: 0,
       };
       const data = {
         heading: text,

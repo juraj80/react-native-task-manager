@@ -24,6 +24,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import HeaderComponent from "../components/HeaderComponent";
 import FullWidthButton from "../components/FullWidthButton";
 import ReminderIntervalModal from "../components/ReminderIntervalModal";
+import { formatUTCDate } from "./helpers/helpers.js";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -290,13 +292,26 @@ const TaskDetail = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.calendarSection}>
-              <TouchableOpacity onPress={showDatePicker}>
-                <LinearGradient
+              {console.log("XX", formatUTCDate(route.params.dueDateAt))}
+
+              <TouchableOpacity
+                onPress={showDatePicker}
+                style={styles.btnRowContainer}
+              >
+                <View style={styles.iconContainer}>
+                  <MaterialCommunityIcons
+                    name="calendar-cursor"
+                    size={34}
+                    color="black"
+                  />
+                </View>
+                <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text>
+                {/* <LinearGradient
                   colors={["#4c669f", "#3b5998", "#192f6a"]}
                   style={styles.calendarBtnContainer}
                 >
                   <Text style={styles.btnTextStyle}>Set Due Date</Text>
-                </LinearGradient>
+                </LinearGradient> */}
               </TouchableOpacity>
 
               <TouchableOpacity onPress={showDateTimePicker}>
@@ -457,6 +472,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 5,
     fontWeight: "bold",
+  },
+  btnRowContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 5,
+    flexDirection: "row",
+  },
+  iconContainer: {
+    paddingRight: 10,
   },
 });
 
