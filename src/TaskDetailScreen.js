@@ -32,7 +32,7 @@ LogBox.ignoreLogs([
 ]);
 
 const TaskDetail = ({ route, navigation }) => {
-  console.log("Passed data about repeat Task:", route.params.repeatTask);
+  console.log("Received props: ", route.params);
   try {
     const [task, setTask] = useState("");
     const [taskId, setTaskId] = useState(route.params.id);
@@ -47,14 +47,12 @@ const TaskDetail = ({ route, navigation }) => {
 
     const [isIntervalModalVisible, setIsIntervalModalVisible] = useState(false);
 
-    const [taskDueDate, setTaskDueDate] = useState(new Date(1900, 1, 1));
+    const [taskDueDate, setTaskDueDate] = useState(route.params.dueDateAt);
     const [taskReminderDate, setTaskReminderDate] = useState(
-      new Date(1900, 1, 1)
+      route.params.reminderAt
     );
 
-    const [taskRepeatData, setTaskRepeatData] = useState(
-      route.params.repeatTask
-    );
+    const [taskRepeatData, setTaskRepeatData] = useState(route.params.repeat);
 
     const tasksRef = firebase.firestore().collection("tasks");
 
@@ -101,7 +99,7 @@ const TaskDetail = ({ route, navigation }) => {
           reminderAt: taskReminderDate,
           updatedAt: timestamp,
           subtasks: allSubTasks,
-          repeatTask: taskRepeatData,
+          repeat: taskRepeatData,
         };
         tasksRef
           .where("id", "==", taskId)
@@ -231,6 +229,18 @@ const TaskDetail = ({ route, navigation }) => {
       // setTimeout(() => setModalVisible(!modalVisible), 1000);
     };
 
+    const getRepeatData = (num) => {
+      if (num == 1) {
+        return "Daily";
+      } else if (num == 2) {
+        return "Weekly";
+      } else if (num == 3) {
+        return "Monthly";
+      } else {
+        return "Yearly";
+      }
+    };
+
     return (
       <LinearGradient
         colors={["#ff9478", "white"]}
@@ -292,7 +302,8 @@ const TaskDetail = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.calendarSection}>
-              {console.log("XX", formatUTCDate(route.params.dueDateAt))}
+              {console.log("XX", route.params.dueDateAt)}
+              {console.log("XY", taskDueDate)}
 
               <TouchableOpacity
                 onPress={showDatePicker}
@@ -306,13 +317,13 @@ const TaskDetail = ({ route, navigation }) => {
                   />
                 </View>
                 {/* <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text> */}
-                <Text>Due: {formatUTCDate(taskDueDate)}</Text>
-                {/* <LinearGradient
-                  colors={["#4c669f", "#3b5998", "#192f6a"]}
-                  style={styles.calendarBtnContainer}
-                >
-                  <Text style={styles.btnTextStyle}>Set Due Date</Text>
-                </LinearGradient> */}
+                {/* <Text>Due: {formatUTCDate(taskDueDate)}</Text> */}
+
+                {taskDueDate ? (
+                  <Text>Due: {formatUTCDate(taskDueDate)}</Text>
+                ) : (
+                  <Text>Set Due Date</Text>
+                )}
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -332,7 +343,13 @@ const TaskDetail = ({ route, navigation }) => {
                     color="black"
                   />
                 </View>
-                <Text>Remind me at: {formatUTCDate(taskReminderDate)}</Text>
+                {taskReminderDate ? (
+                  <Text>Remind me at: {formatUTCDate(taskReminderDate)}</Text>
+                ) : (
+                  <Text>Set Reminder</Text>
+                )}
+
+                {/* <Text>Remind me at: {formatUTCDate(taskReminderDate)}</Text> */}
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={showIntervalPicker}
@@ -351,7 +368,11 @@ const TaskDetail = ({ route, navigation }) => {
                     color="black"
                   />
                 </View>
-                <Text>Repeat: {JSON.stringify(taskRepeatData)}</Text>
+                {taskRepeatData.repeat > 0 ? (
+                  <Text>Repeat: {getRepeatData(taskRepeatData.repeat)}</Text>
+                ) : (
+                  <Text>Repeat</Text>
+                )}
               </TouchableOpacity>
             </View>
             <View style={styles.attachmentsSection}>

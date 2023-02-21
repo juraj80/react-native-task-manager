@@ -10,12 +10,15 @@ const ReminderIntervalPicker = ({ chooseInterval, taskRepeatData }) => {
     taskRepeatData.monthInterval
   );
 
+  const [repeatInterval, setRepeatInterval] = useState();
+
   const onConfirm = () => {
     // You can use the selected day interval here to set the repeat functionality for the reminder.
-    console.log(`Day Interval: ${dayInterval}`);
-    console.log(`Week Interval: ${weekInterval}`);
-    console.log(`Month Interval: ${monthInterval}`);
-    chooseInterval({ dayInterval, weekInterval, monthInterval });
+    // console.log(`Day Interval: ${dayInterval}`);
+    // console.log(`Week Interval: ${weekInterval}`);
+    // console.log(`Month Interval: ${monthInterval}`);
+    // chooseInterval({ dayInterval, weekInterval, monthInterval });
+    chooseInterval({ repeat: repeatInterval });
   };
 
   return (
@@ -24,17 +27,22 @@ const ReminderIntervalPicker = ({ chooseInterval, taskRepeatData }) => {
       <View style={styles.pickerContainer}>
         <View style={styles.dayPickerContainer}>
           <Picker
-            selectedValue={monthInterval}
-            onValueChange={(value) => setMonthInterval(value)}
+            selectedValue={repeatInterval}
+            onValueChange={(value) => setRepeatInterval(value)}
             itemStyle={styles.itemStyle}
           >
-            {[...Array(12)].map((_, index) => {
-              const label = index === 1 ? "1 Month" : `${index} Months`;
-              return <Picker.Item key={index} label={label} value={index} />;
-            })}
+            {["None", "Daily", "Weekly", "Monthly", " Yearly"].map(
+              (item, index) => {
+                return <Picker.Item key={index} label={item} value={index} />;
+              }
+            )}
+            {/* <Picker.Item label="Daily" value="Daily" />;
+            <Picker.Item label="Weekly" value="Weekly" />;
+            <Picker.Item label="Monthly" value="Monthly" />;
+            <Picker.Item label="Yearly" value="Yearly" />; */}
           </Picker>
         </View>
-        <View style={styles.dayPickerContainer}>
+        {/* <View style={styles.dayPickerContainer}>
           <Picker
             selectedValue={weekInterval}
             onValueChange={(value) => setWeekInterval(value)}
@@ -57,7 +65,7 @@ const ReminderIntervalPicker = ({ chooseInterval, taskRepeatData }) => {
               return <Picker.Item key={index} label={label} value={index} />;
             })}
           </Picker>
-        </View>
+        </View> */}
       </View>
       <Button title="Confirm" onPress={onConfirm} />
     </View>

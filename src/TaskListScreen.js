@@ -46,10 +46,8 @@ const TaskList = ({ route, navigation }) => {
     const [timelineData, setTimelineData] = useState({});
     const [selectedTask, setSelectedTask] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
-    const [taskDueDate, setTaskDueDate] = useState(new Date(1900, 1, 1));
-    const [taskReminderDate, setTaskReminderDate] = useState(
-      new Date(1900, 1, 1)
-    );
+    const [taskDueDate, setTaskDueDate] = useState(null);
+    const [taskReminderDate, setTaskReminderDate] = useState(null);
 
     const [showAlert, setShowAlert] = useState(true);
     const [taskCompletionDate, setTaskCompletionDate] = useState(null);
@@ -69,13 +67,12 @@ const TaskList = ({ route, navigation }) => {
         const data = {};
 
         querySnapshot.forEach((doc) => {
-          const { id, heading, text, completed, subtasks, repeatTask } =
-            doc.data();
-          const dueDate = doc.data().dueDateAt.toDate();
-          const reminderAt = doc.data().reminderAt.toDate();
+          const { id, heading, text, completed, subtasks, repeat } = doc.data();
+          const dueDate = doc.data().dueDateAt?.toDate();
+          const reminderAt = doc.data().reminderAt?.toDate();
           const completedAt = doc.data().completedAt;
 
-          const date = dueDate.getDate();
+          const date = dueDate?.getDate();
 
           const task = {
             id: id, //doc.id
@@ -84,14 +81,14 @@ const TaskList = ({ route, navigation }) => {
             completed,
             completedAt: completedAt,
             dueDateAt: dueDate,
-            repeatTask,
+            repeat,
             reminderAt: reminderAt,
             subtasks,
           };
 
           completed ? completeTasks.push(task) : tasks.push(task);
 
-          if (isWithinCurrentMonth(dueDate)) {
+          if (dueDate && isWithinCurrentMonth(dueDate)) {
             Object.assign(data, {
               [date]: {
                 id: id,
@@ -99,7 +96,7 @@ const TaskList = ({ route, navigation }) => {
                 info: heading,
                 dueDate,
                 completed,
-                repeatTask,
+                repeat,
               }, //doc.id
             });
           }
@@ -417,11 +414,6 @@ const TaskList = ({ route, navigation }) => {
       // get the timestamp
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-      const repeatTaskData = {
-        dayInterval: 0,
-        weekInterval: 0,
-        monthInterval: 0,
-      };
       const data = {
         heading: text,
         id: uuid(),
@@ -431,7 +423,7 @@ const TaskList = ({ route, navigation }) => {
         completed: false,
         completedAt: taskCompletionDate,
         subtasks: [],
-        repeatTask: repeatTaskData,
+        repeat: 0,
         text: "",
       };
       tasksRef
