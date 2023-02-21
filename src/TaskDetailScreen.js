@@ -301,11 +301,12 @@ const TaskDetail = ({ route, navigation }) => {
                 <View style={styles.iconContainer}>
                   <MaterialCommunityIcons
                     name="calendar-cursor"
-                    size={34}
+                    size={30}
                     color="black"
                   />
                 </View>
-                <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text>
+                {/* <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text> */}
+                <Text>Due: {formatUTCDate(taskDueDate)}</Text>
                 {/* <LinearGradient
                   colors={["#4c669f", "#3b5998", "#192f6a"]}
                   style={styles.calendarBtnContainer}
@@ -314,21 +315,43 @@ const TaskDetail = ({ route, navigation }) => {
                 </LinearGradient> */}
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={showDateTimePicker}>
-                <LinearGradient
+              <TouchableOpacity
+                onPress={showDateTimePicker}
+                style={styles.btnRowContainer}
+              >
+                {/* <LinearGradient
                   colors={["#4c669f", "#3b5998", "#192f6a"]}
                   style={styles.calendarBtnContainer}
                 >
                   <Text style={styles.btnTextStyle}>Reminder</Text>
-                </LinearGradient>
+                </LinearGradient> */}
+                <View style={styles.iconContainer}>
+                  <MaterialCommunityIcons
+                    name="reminder"
+                    size={30}
+                    color="black"
+                  />
+                </View>
+                <Text>Remind me at: {formatUTCDate(taskReminderDate)}</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={showIntervalPicker}>
-                <LinearGradient
+              <TouchableOpacity
+                onPress={showIntervalPicker}
+                style={styles.btnRowContainer}
+              >
+                {/* <LinearGradient
                   colors={["#4c669f", "#3b5998", "#192f6a"]}
                   style={styles.calendarBtnContainer}
                 >
                   <Text style={styles.btnTextStyle}>Repeat</Text>
-                </LinearGradient>
+                </LinearGradient> */}
+                <View style={styles.iconContainer}>
+                  <MaterialCommunityIcons
+                    name="repeat"
+                    size={30}
+                    color="black"
+                  />
+                </View>
+                <Text>Repeat: {JSON.stringify(taskRepeatData)}</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.attachmentsSection}>
