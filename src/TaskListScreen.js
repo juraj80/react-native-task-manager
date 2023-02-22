@@ -84,6 +84,7 @@ const TaskList = ({ route, navigation }) => {
             repeat,
             reminderAt: reminderAt,
             subtasks,
+            marked: false,
           };
 
           completed ? completeTasks.push(task) : tasks.push(task);
@@ -340,9 +341,11 @@ const TaskList = ({ route, navigation }) => {
           <Task
             item={item}
             showTaskDetail={showTaskDetail}
-            setModalVisible={setModalVisible}
-            modalVisible={modalVisible}
-            setSelectedTask={setSelectedTask}
+            // setModalVisible={setModalVisible}
+            // modalVisible={modalVisible}
+            // setSelectedTask={setSelectedTask}
+            handleDelete={handleDelete}
+            deleteTask={deleteTask}
             handleChange={handleChange}
           />
         </TouchableOpacity>
@@ -440,6 +443,17 @@ const TaskList = ({ route, navigation }) => {
         .catch((error) => {
           alert(error);
         });
+    };
+
+    const handleDelete = (id) => {
+      console.log("handleDelete f called with id ", id);
+      let temp = allTasks.map((item) => {
+        if (id === item.id) {
+          return { ...item, marked: !item.marked };
+        }
+        return item;
+      });
+      setAllTasks(temp);
     };
 
     const deleteTask = (item) => {
@@ -581,7 +595,6 @@ const styles = StyleSheet.create({
 
     backgroundColor: "lightgrey",
   },
-
   bottomSection: {
     flex: 2,
     justifyContent: "center",

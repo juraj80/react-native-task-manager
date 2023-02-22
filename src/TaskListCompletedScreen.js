@@ -31,7 +31,7 @@ const TaskListCompleted = ({ route, navigation }) => {
         const tasks = [];
         const data = {};
         querySnapshot.forEach((doc) => {
-          const { heading, text, completed, subtasks } = doc.data();
+          const { heading, text, completed, subtasks, repeat } = doc.data();
           const dueDate = doc.data().dueDateAt.toDate();
           const reminderAt = doc.data().reminderAt.toDate();
 
@@ -44,6 +44,7 @@ const TaskListCompleted = ({ route, navigation }) => {
               dueDateAt: dueDate,
               reminderAt: reminderAt,
               subtasks,
+              repeat,
               marked: false,
             });
           }
@@ -125,7 +126,7 @@ const TaskListCompleted = ({ route, navigation }) => {
     };
 
     const showTaskDetail = (item) => {
-      console.log("item", item);
+      console.log("Navigating to Task Detail", item);
       navigation.navigate("Task Detail", item);
     };
 
@@ -162,8 +163,8 @@ const TaskListCompleted = ({ route, navigation }) => {
     );
   } catch (error) {
     return (
-      <View>
-        <Text>An error occurred</Text>
+      <View style={{ flex: 1, alignItems: "center", alignContent: "center" }}>
+        <Text>An error occurred: {error}</Text>
       </View>
     );
   }

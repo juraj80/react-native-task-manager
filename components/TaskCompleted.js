@@ -7,7 +7,7 @@ import {
   Text,
 } from "react-native";
 // import AnimatedCheckbox from "react-native-checkbox-reanimated";
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 
 const TaskCompleted = (props) => {
@@ -45,7 +45,13 @@ const TaskCompleted = (props) => {
               props.deleteTask(props.item);
             }}
             style={styles.cancel}
-          ></Pressable>
+          >
+            <MaterialCommunityIcons
+              name="trash-can-outline"
+              size={24}
+              color="black"
+            />
+          </Pressable>
         )}
       </View>
     </View>
@@ -79,9 +85,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   cancel: {
-    width: 20,
-    height: 20,
-    backgroundColor: "red",
+    padding: 5,
   },
 });
 
