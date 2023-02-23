@@ -94,6 +94,8 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: "#efeff0",
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#454545",
     opacity: 1,
   },
   itemText: { color: "black", fontSize: 17, fontFamily: "Lato-Light" },

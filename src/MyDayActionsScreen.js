@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  ImageBackground,
 } from "react-native";
 
 import { useFocusEffect } from "@react-navigation/native";
@@ -21,15 +22,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 import HeaderComponent from "../components/HeaderComponent";
 
+import { formatUTCDate } from "./helpers/helpers";
+
 // import AnimatedCheckbox from "react-native-checkbox-reanimated";
+
+// const image = { uri: "https://reactjs.org/logo-og.png" };
+
+const image = require("../assets/background.png");
 
 const MyDayActions = ({ route, navigation, props }) => {
   const taskHeading = route.params.heading;
-  const today = new Date().toISOString().split("T")[0];
   const [currentDate, setCurrentDate] = useState(new Date());
   const [allTasks, setAllTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [completeTasks, setCompleteTasks] = useState([]);
+
+  const today = formatUTCDate(new Date());
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -211,21 +219,23 @@ const MyDayActions = ({ route, navigation, props }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.screenWrapper}>
-        <HeaderComponent title={"My Day"} menu={true} color={"#fff"} />
-        <View style={styles.subHeader}>
-          <Text style={styles.subHeaderText}>{today}</Text>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <View style={styles.screenWrapper}>
+          <HeaderComponent title={"My Day"} menu={true} color={"#454545"} />
+          <View style={styles.subHeader}>
+            <Text style={styles.subHeaderText}>{today}</Text>
+          </View>
+          <View style={styles.mainSection}>
+            <FlatList
+              style={{ height: "100%" }}
+              data={allTasks}
+              renderItem={renderTask}
+            ></FlatList>
+          </View>
         </View>
-        <View style={styles.mainSection}>
-          <FlatList
-            style={{ height: "100%" }}
-            data={allTasks}
-            renderItem={renderTask}
-          ></FlatList>
-        </View>
-      </View>
-      {console.log("complete tasks", completeTasks)}
-      {/* <View style={styles.bottomRow}></View> */}
+        {console.log("complete tasks", completeTasks)}
+        {/* <View style={styles.bottomRow}></View> */}
+      </ImageBackground>
     </View>
   );
 };
@@ -234,6 +244,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgba(102, 104, 3,1)",
+  },
+  image: {
+    flex: 1,
+    // justifyContent: "center",
+    // position: "absolute",
+
+    width: "100%",
+    // height: "100%",
   },
 
   screenWrapper: {
@@ -247,7 +265,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   subHeaderText: {
-    color: "white",
+    color: "#454545",
     fontSize: 20,
   },
 
@@ -257,7 +275,7 @@ const styles = StyleSheet.create({
 
   mainSection: {
     flex: 15,
-    padding: 0,
+    paddingTop: 50,
   },
 
   // bottomRow: {

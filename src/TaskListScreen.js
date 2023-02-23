@@ -5,6 +5,7 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
+  ImageBackground,
   FlatList,
   Pressable,
   Animated,
@@ -530,7 +531,7 @@ const TaskList = ({ route, navigation }) => {
         <View style={styles.bottomSection}>
           <Footer
             onPress={createTask}
-            bgColor={"#66CC99"}
+            bgColor={"#454545"}
             btnColor={"lightgrey"}
           />
         </View>
@@ -583,9 +584,9 @@ const TaskList = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#66CC99",
-    backgroundColor: "rgba(102, 204, 153,1)",
+    backgroundColor: "#454545",
   },
+
   timeline: {
     // height: 70,
     flex: 1,

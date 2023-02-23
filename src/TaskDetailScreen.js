@@ -246,7 +246,7 @@ const TaskDetail = ({ route, navigation }) => {
 
   return (
     <LinearGradient
-      colors={["#ff9478", "white"]}
+      colors={["lightgrey", "white"]}
       style={styles.container}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -374,10 +374,31 @@ const TaskDetail = ({ route, navigation }) => {
               onPress={addToMyDay}
               style={styles.btnRowContainer}
             >
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons name="star" size={30} color="black" />
-              </View>
-              <Text>Add to My Day</Text>
+              {taskList == 0 ? (
+                <>
+                  <View style={styles.iconContainer}>
+                    <MaterialCommunityIcons
+                      name="star"
+                      size={30}
+                      color="black"
+                    />
+                  </View>
+
+                  <Text>Add to My Day</Text>
+                </>
+              ) : (
+                <>
+                  <View style={styles.iconContainer}>
+                    <MaterialCommunityIcons
+                      name="star"
+                      size={30}
+                      color="darkblue"
+                    />
+                  </View>
+
+                  <Text style={{ color: "darkblue" }}>Added to My Day</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.attachmentsSection}>
@@ -500,10 +521,10 @@ const styles = StyleSheet.create({
     margin: 5,
     justifyContent: "center",
     borderColor: "#95a5a6",
-    backgroundColor: "#95a5a6",
+    // backgroundColor: "#95a5a6",
 
-    borderWidth: 1,
-    borderRadius: 7,
+    borderWidth: 2,
+    borderRadius: 2,
   },
   calendarBtnContainer: {
     elevation: 8,
@@ -517,10 +538,10 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   btnTextStyle: {
-    color: "white",
-    fontSize: 16,
+    color: "black",
+    fontSize: 20,
     marginLeft: 5,
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   btnRowContainer: {
     flex: 1,
