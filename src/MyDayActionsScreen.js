@@ -11,6 +11,12 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import TaskCompleted from "../components/TaskCompleted";
 
+import Task from "../components/Task";
+
+import DraggableFlatList, {
+  ScaleDecorator,
+} from "react-native-draggable-flatlist";
+
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
 import HeaderComponent from "../components/HeaderComponent";
@@ -23,6 +29,7 @@ const MyDayActions = ({ route, navigation, props }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [allTasks, setAllTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [completeTasks, setCompleteTasks] = useState([]);
 
   const tasksRef = firebase.firestore().collection("tasks");
 
@@ -33,18 +40,20 @@ const MyDayActions = ({ route, navigation, props }) => {
       const tasks = [];
       const data = {};
       querySnapshot.forEach((doc) => {
-        const { heading, text, completed, subtasks, repeat } = doc.data();
+        const { id, heading, text, completed, subtasks, repeat, tasklist } =
+          doc.data();
         const dueDate = doc.data().dueDateAt.toDate();
         const reminderAt = doc.data().reminderAt.toDate();
-
-        if (completed) {
+        console.log("Tasklist: ", tasklist);
+        if (tasklist == 1 && !completed) {
           tasks.push({
-            id: doc.id,
+            id,
             heading,
             text,
             completed,
             dueDateAt: dueDate,
             repeat,
+            tasklist,
             reminderAt: reminderAt,
             subtasks,
             marked: false,
@@ -60,6 +69,12 @@ const MyDayActions = ({ route, navigation, props }) => {
   }, []);
 
   useEffect(() => {}, [allTasks]);
+
+  // may cause issues with re-rendering of component
+  useEffect(() => {
+    updateCompletedInDB(completeTasks);
+    console.log("useEffect -> completeTask has been updated to DB");
+  }, [completeTasks]);
 
   const deleteTaskFromDB = async (id) => {
     tasksRef
@@ -81,6 +96,37 @@ const MyDayActions = ({ route, navigation, props }) => {
       });
   };
 
+  const updateCompletedInDB = (tasks) => {
+    tasks.forEach((item) => {
+      if (item.completed) {
+        updateTaskDB(item);
+      }
+    });
+  };
+
+  const updateTaskDB = async (task) => {
+    console.log("updateInDB called with task", task);
+    // get the timestamp
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+    // update the task in DB based on the id field
+    tasksRef
+      .where("id", "==", task.id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // console.log(doc.id, " => ", doc.data());
+          doc.ref.update(task); //not doc.update({foo: "bar"})
+        });
+      })
+      .then(() => {
+        console.log("Task: ", task, " was succesfully updated in the DB");
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
   // handler for completed tasks
   const handleChange = (id) => {
     let temp = allTasks.map((item) => {
@@ -92,6 +138,8 @@ const MyDayActions = ({ route, navigation, props }) => {
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
+    setCompleteTasks(completed);
+
     const date = completed[0].dueDateAt.getDate();
 
     // console.log("timeTemp", timelineDataTemp);
@@ -100,24 +148,43 @@ const MyDayActions = ({ route, navigation, props }) => {
       temp = temp.filter((el) => !el.completed);
       setAllTasks(temp);
       // console.log("timelineData", timelineData);
-    }, 2000);
+    }, 1000);
   };
 
   // callback that is passed to the flatlist component that renders the task item
+  // const renderTask = ({ item, drag, isActive }) => (
+  //   <>
+  //     <TouchableOpacity
+  //       onLongPress={() => handleDelete(item.id)}
+  //       // disabled={isActive}
+  //       style={styles.dragItem}
+  //     >
+  //       <TaskCompleted
+  //         item={item}
+  //         showTaskDetail={showTaskDetail}
+  //         deleteTask={deleteTask}
+  //       />
+  //     </TouchableOpacity>
+  //   </>
+  // );
+
   const renderTask = ({ item, drag, isActive }) => (
-    <>
-      <TouchableOpacity
-        onLongPress={() => handleDelete(item.id)}
-        // disabled={isActive}
-        style={styles.dragItem}
-      >
-        <TaskCompleted
-          item={item}
-          showTaskDetail={showTaskDetail}
-          deleteTask={deleteTask}
-        />
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      onLongPress={drag}
+      disabled={isActive}
+      style={styles.dragItem}
+    >
+      <Task
+        item={item}
+        showTaskDetail={showTaskDetail}
+        // setModalVisible={setModalVisible}
+        // modalVisible={modalVisible}
+        // setSelectedTask={setSelectedTask}
+        handleDelete={handleDelete}
+        deleteTask={deleteTask}
+        handleChange={handleChange}
+      />
+    </TouchableOpacity>
   );
 
   const deleteTask = (item) => {
@@ -157,7 +224,7 @@ const MyDayActions = ({ route, navigation, props }) => {
           ></FlatList>
         </View>
       </View>
-
+      {console.log("complete tasks", completeTasks)}
       {/* <View style={styles.bottomRow}></View> */}
     </View>
   );

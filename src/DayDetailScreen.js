@@ -36,7 +36,8 @@ const DayDetail = ({ route, navigation, props }) => {
       const tasks = [];
       const data = {};
       querySnapshot.forEach((doc) => {
-        const { heading, text, completed, subtasks } = doc.data();
+        const { heading, text, completed, subtasks, repeat, tasklist } =
+          doc.data();
         const dueDate = doc.data().dueDateAt.toDate();
         const reminderAt = doc.data().reminderAt.toDate();
 
@@ -48,6 +49,8 @@ const DayDetail = ({ route, navigation, props }) => {
             completed,
             dueDateAt: dueDate,
             reminderAt: reminderAt,
+            repeat,
+            tasklist,
             subtasks,
             marked: false,
           });

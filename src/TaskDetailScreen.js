@@ -54,6 +54,8 @@ const TaskDetail = ({ route, navigation }) => {
 
   const [taskRepeatData, setTaskRepeatData] = useState(route.params.repeat);
 
+  const [taskList, setTaskList] = useState(route.params.tasklist);
+
   const tasksRef = firebase.firestore().collection("tasks");
 
   TouchableOpacity.defaultProps = { activeOpacity: 0.8 };
@@ -99,6 +101,7 @@ const TaskDetail = ({ route, navigation }) => {
         updatedAt: timestamp,
         subtasks: allSubTasks,
         repeat: taskRepeatData,
+        tasklist: taskList,
       };
       tasksRef
         .where("id", "==", taskId)
@@ -211,6 +214,10 @@ const TaskDetail = ({ route, navigation }) => {
   const hideDateTimePicker = () => {
     setDateTimePickerVisibility(false);
     // setTimeout(() => setModalVisible(!modalVisible), 1000);
+  };
+
+  const addToMyDay = () => {
+    taskList == 0 ? setTaskList(1) : setTaskList(0);
   };
 
   const handleConfirm = (date) => {
@@ -362,6 +369,15 @@ const TaskDetail = ({ route, navigation }) => {
               ) : (
                 <Text>Repeat</Text>
               )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={addToMyDay}
+              style={styles.btnRowContainer}
+            >
+              <View style={styles.iconContainer}>
+                <MaterialCommunityIcons name="star" size={30} color="black" />
+              </View>
+              <Text>Add to My Day</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.attachmentsSection}>
