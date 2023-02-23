@@ -30,6 +30,7 @@ const TaskModal = ({
   deleteTask,
   showDatePicker,
   showDateTimePicker,
+  showIntervalPicker,
 }) => {
   const [textValue, setTextValue] = useState("");
 
@@ -152,6 +153,17 @@ const TaskModal = ({
               </Pressable>
             )} */}
 
+            <Pressable
+              // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
+              style={styles.iconWrap}
+              onPress={() => {
+                showIntervalPicker();
+                setIsVisible(!isVisible);
+              }}
+            >
+              <MaterialCommunityIcons name="repeat" size={34} color="black" />
+              <Text style={styles.textStyle}>Repeat</Text>
+            </Pressable>
             <Pressable
               // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               style={styles.iconWrap}

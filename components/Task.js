@@ -15,8 +15,6 @@ import React, { useRef } from "react";
 const Task = (props) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  console.log("props.item.marked", props.item.marked);
-
   const fadeOut = () => {
     // Will change fadeAnim value to 0 in 3 seconds
     Animated.timing(fadeAnim, {

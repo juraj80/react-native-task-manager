@@ -44,10 +44,13 @@ const HorizontalTimeline = (props) => {
         });
       }
     }
-
     setDays(days);
     scrollToDay(getIndex(days));
   }, [props.data]);
+
+  useEffect(() => {
+    scrollToDay(getIndex(days));
+  });
 
   const getDayOfTheWeek = (day) => {
     switch (day) {
@@ -70,7 +73,8 @@ const HorizontalTimeline = (props) => {
     }
   };
   function scrollToDay(itemIndex) {
-    ref?.scrollTo({ x: itemIndex * 62 }); //TODO replace with the width of the day view
+    console.log("index ", itemIndex);
+    ref?.scrollTo({ x: itemIndex * 70 }); //TODO replace with the width of the day view
   }
 
   const isToday = (day) => {
