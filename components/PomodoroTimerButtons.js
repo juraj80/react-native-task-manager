@@ -7,26 +7,45 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
+
+import CustomWidthButton from "./CustomWidthButton";
+import FullWidthButton from "./FullWidthButton";
+
+const { width } = Dimensions.get("window");
 
 const PomodoroTimerButtons = (props) => {
   if (props.isRunning) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.buttonStyle} onPress={props.pause}>
+        <CustomWidthButton
+          title={"Pause"}
+          onPress={props.pause}
+          width={width / 3}
+        />
+        {/* <TouchableOpacity style={styles.buttonStyle} onPress={props.pause}>
           <Text style={styles.buttonText}>Pause</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonStyle} onPress={props.reset}>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity style={styles.buttonStyle} onPress={props.reset}>
           <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
+        <CustomWidthButton
+          title={"Reset"}
+          onPress={props.reset}
+          width={width / 3}
+        />
       </View>
     );
   } else {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.buttonStyle} onPress={props.play}>
+        <FullWidthButton title={"Start"} onPress={props.play} />
+
+        {/* <TouchableOpacity style={styles.buttonStyle} onPress={props.play}>
           <Text style={styles.buttonText}>Start</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   }

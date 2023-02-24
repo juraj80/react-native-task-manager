@@ -12,7 +12,16 @@ const Drawer = createDrawerNavigator();
 
 const AppDrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="My Scribbles">
+    <Drawer.Navigator
+      initialRouteName="My Scribbles"
+      screenOptions={{
+        drawerLabelStyle: {
+          fontFamily: "Lato-Regular",
+          fontSize: 16,
+          color: "black",
+        },
+      }}
+    >
       <Drawer.Screen
         name="My Scribbles"
         component={BrainMapScreen}

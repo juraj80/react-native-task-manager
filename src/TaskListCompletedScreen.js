@@ -149,7 +149,7 @@ const TaskListCompleted = ({ route, navigation }) => {
             title={"Finished To-Dos"}
             menu={true}
             testID="headerId"
-            color={"#fff"}
+            color={"black"}
           />
           <View style={styles.mainSection}>
             <FlatList
@@ -175,7 +175,8 @@ const TaskListCompleted = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(102, 204, 153,1)",
+    // backgroundColor: "rgba(102, 204, 153,0.3)",
+    backgroundColor: "rgba(102, 102, 153,0.3)",
   },
 
   screenWrapper: {

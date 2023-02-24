@@ -126,6 +126,8 @@ const styles = StyleSheet.create({
   leftAlign: {
     flexDirection: "row",
     flex: 7,
+
+    alignItems: "center",
   },
 });
 

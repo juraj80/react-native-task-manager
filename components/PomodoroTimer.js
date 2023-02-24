@@ -33,6 +33,7 @@ const PomodoroTimer = (props) => {
     if (isRunning && time == 0) {
       clearInterval(timerId);
       Vibration.vibrate([500, 500, 500]);
+
       props.onComplete();
     } else if (!isRunning) {
       clearInterval(timerId);
@@ -43,6 +44,11 @@ const PomodoroTimer = (props) => {
   const handlePlay = () => {
     console.log("handle play is called");
     setIsRunning(true);
+    if (props.intervalType == "Break") {
+      props.stopSound();
+    } else {
+      props.playSound();
+    }
 
     const timerID = setInterval(() => {
       setTime((time) => time - 1);
@@ -53,12 +59,14 @@ const PomodoroTimer = (props) => {
 
   const handlePause = () => {
     clearInterval(timerId);
+    props.stopSound();
     setIsRunning(false);
   };
 
   const handleReset = () => {
     clearInterval(timerId);
     setIsRunning(false);
+    props.stopSound();
     setTime(props.period * 60);
   };
 
@@ -66,14 +74,15 @@ const PomodoroTimer = (props) => {
     <View style={styles.container}>
       {/* <Text>This is Pomodoro Timer :{time}</Text>
 			{console.log('Time :', time)} */}
+
+      <View style={styles.displayStyle}>
+        <PomodoroTimerDisplay time={time}></PomodoroTimerDisplay>
+      </View>
       <View style={styles.headerStyle}>
         <PomodoroTimerHeader
           isRunning={isRunning}
           intervalType={props.intervalType}
         ></PomodoroTimerHeader>
-      </View>
-      <View style={styles.displayStyle}>
-        <PomodoroTimerDisplay time={time}></PomodoroTimerDisplay>
       </View>
       <View style={styles.buttonsStyle}>
         <PomodoroTimerButtons
@@ -97,7 +106,7 @@ const styles = StyleSheet.create({
   headerStyle: {
     flex: 1,
     width: "100%",
-    backgroundColor: "lightgreen",
+    // backgroundColor: "lightgreen",
     alignItems: "center",
   },
   displayStyle: {

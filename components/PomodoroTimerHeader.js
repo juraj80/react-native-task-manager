@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: 32,
+    fontFamily: "IndieFlower-Regular",
   },
 });
 

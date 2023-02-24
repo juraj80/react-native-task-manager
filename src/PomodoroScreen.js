@@ -1,20 +1,78 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  ImageBackground,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
 import PomodoroTimer from "../components/PomodoroTimer";
 import HeaderComponent from "../components/HeaderComponent";
+import { Audio } from "expo-av";
+
+const image = require("../assets/pomodoro.png");
 
 const PomodoroScreen = () => {
   const [intervalType, setIntervalType] = useState("Working");
   const [workTime, setWorkTime] = useState(5);
   const [breakTime, setBreakTime] = useState(1);
+  const [sound, setSound] = useState();
 
   const handleTimeCompleted = () => {
+    console.log("handleTimecompleted called");
     if (intervalType === "Working") {
       setIntervalType("Break");
     } else {
       setIntervalType("Working");
     }
   };
+
+  const enableAudio = async () => {
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      // interruptionModeAndroid: INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      shouldDuckAndroid: false,
+    });
+  };
+
+  async function playSound() {
+    // await Audio.requestPermissionsAsync();
+    // await Audio.setAudioModeAsync({
+    //   staysActiveInBackground: true,
+    //   shouldDuckAndroid: false,
+    //   playThroughEarpieceAndroid: false,
+    //   allowsRecordingIOS: false,
+    //   playsInSilentModeIOS: true,
+    // });
+    if (Platform.OS === "ios") {
+      await enableAudio();
+    }
+
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("../assets/audio/brownNoise.mp3")
+    );
+    setSound(sound);
+
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
+
+  function stopSound() {
+    console.log("Unloading Sound");
+    sound.unloadAsync();
+  }
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   const handleWorkTime = (text) => {
     if (text >= 0) {
@@ -36,8 +94,10 @@ const PomodoroScreen = () => {
 
   const handleTime = () => {
     if (intervalType === "Working") {
+      // playSound();
       return workTime;
     } else {
+      // stopSound();
       return breakTime;
     }
   };
@@ -45,44 +105,53 @@ const PomodoroScreen = () => {
   let time = handleTime();
   return (
     <View style={styles.container}>
-      <View style={styles.screenWrapper}>
-        {/* <View style={styles.headerSection}>
+      <ImageBackground
+        source={image}
+        resizeMode="contain"
+        style={styles.image}
+        imageStyle={{ opacity: 0.7 }}
+      >
+        <View style={styles.screenWrapper}>
+          {/* <View style={styles.headerSection}>
         <Text style={styles.screenTitle}>My Timer</Text>
       </View> */}
-        <HeaderComponent title={"My Timer"} menu={true} color={"#fff"} />
-        <View style={styles.row}>
-          <View style={styles.inputField}>
-            <Text style={styles.inputHeading}>Work</Text>
+          <HeaderComponent title={"My Timer"} menu={true} color={"black"} />
+          <View style={styles.row}>
+            <View style={styles.inputField}>
+              <Text style={styles.inputHeading}>Work</Text>
 
-            <TextInput
-              style={styles.inputStyle}
-              maxLength={3}
-              keyboardType={"numeric"}
-              defaultValue={"" + workTime}
-              placeholder="mins"
-              onChangeText={handleWorkTime}
-            ></TextInput>
+              <TextInput
+                style={styles.inputStyle}
+                maxLength={3}
+                keyboardType={"numeric"}
+                defaultValue={"" + workTime}
+                placeholder="mins"
+                onChangeText={handleWorkTime}
+              ></TextInput>
+            </View>
+            <View style={styles.inputField}>
+              <Text style={styles.inputHeading}>Break</Text>
+              <TextInput
+                style={styles.inputStyle}
+                maxLength={3}
+                keyboardType={"numeric"}
+                defaultValue={"" + breakTime}
+                placeholder="mins"
+                onChangeText={handleBreakTime}
+              ></TextInput>
+            </View>
           </View>
-          <View style={styles.inputField}>
-            <Text style={styles.inputHeading}>Break</Text>
-            <TextInput
-              style={styles.inputStyle}
-              maxLength={3}
-              keyboardType={"numeric"}
-              defaultValue={"" + breakTime}
-              placeholder="mins"
-              onChangeText={handleBreakTime}
-            ></TextInput>
+          <View style={styles.timerStyle}>
+            <PomodoroTimer
+              intervalType={intervalType}
+              onComplete={handleTimeCompleted}
+              period={time}
+              playSound={playSound}
+              stopSound={stopSound}
+            ></PomodoroTimer>
           </View>
         </View>
-        <View style={styles.timerStyle}>
-          <PomodoroTimer
-            intervalType={intervalType}
-            onComplete={handleTimeCompleted}
-            period={time}
-          ></PomodoroTimer>
-        </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -91,7 +160,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "green",
+    backgroundColor: "white",
+  },
+
+  image: {
+    flex: 1,
+    // position: "relative",
+    justifyContent: "flex-end",
+
+    // position: "absolute",
+
+    width: "100%",
+    // height: "100%",
   },
   screenWrapper: {
     flex: 1,
@@ -100,10 +180,10 @@ const styles = StyleSheet.create({
     // flexDirection: "column",
   },
   row: {
-    flex: 2,
+    flex: 1,
     flexDirection: "row",
-    padding: 15,
-    backgroundColor: "green",
+    padding: 10,
+    // backgroundColor: "green",
   },
 
   timerStyle: { flex: 10 },
@@ -116,12 +196,13 @@ const styles = StyleSheet.create({
   inputStyle: {
     height: 60,
     width: "40%",
-    borderRadius: 50,
-    color: "#fff",
+    // borderRadius: 50,
+    color: "black",
     fontSize: 20,
     textAlign: "center",
-    backgroundColor: "rgba(62,62, 62, 0.6)",
-
+    // backgroundColor: "rgba(62,62, 62, 0.6)",
+    // borderWidth: 2,
+    borderBottomWidth: 2,
     padding: 10,
   },
   inputHeading: {

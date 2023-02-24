@@ -1,4 +1,5 @@
 // import React in our code
+import { setAutoServerRegistrationEnabledAsync } from "expo-notifications";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
@@ -12,23 +13,25 @@ const PomodoroTimerDisplay = (props) => {
   return (
     <View style={styles.container}>
       <AnimatedCircularProgress
-        size={220}
-        width={25}
+        size={240}
+        width={20}
         fill={fill}
-        tintColor="#f00"
+        tintColor="#9acd32"
         lineCap="round"
         rotation={0}
         // onAnimationComplete={() => console.log('onAnimationComplete')}
-        backgroundColor="#3d5875"
+        backgroundColor="#454545"
       >
         {() => (
-          <Text style={styles.textStyle}>
-            {Math.floor(props.time / 60)
-              .toString()
-              .padStart(2, "0") +
-              ":" +
-              (props.time % 60).toString().padStart(2, "0")}
-          </Text>
+          <View style={styles.innerCircle}>
+            <Text style={styles.textStyle}>
+              {Math.floor(props.time / 60)
+                .toString()
+                .padStart(2, "0") +
+                ":" +
+                (props.time % 60).toString().padStart(2, "0")}
+            </Text>
+          </View>
         )}
       </AnimatedCircularProgress>
     </View>
@@ -44,6 +47,16 @@ const styles = StyleSheet.create({
   textStyle: {
     fontSize: 56,
     fontWeight: "600",
+    color: "#454545",
+    paddingHorizontal: 20,
+  },
+  innerCircle: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, .70)",
+
+    width: "100%",
+    alignItems: "center",
   },
 });
 
