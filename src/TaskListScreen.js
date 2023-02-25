@@ -72,8 +72,16 @@ const TaskList = ({ route, navigation }) => {
       const data = {};
 
       querySnapshot.forEach((doc) => {
-        const { id, heading, text, completed, subtasks, repeat, tasklist } =
-          doc.data();
+        const {
+          id,
+          heading,
+          text,
+          completed,
+          subtasks,
+          repeat,
+          tasklist,
+          attachments,
+        } = doc.data();
         const dueDate = doc.data().dueDateAt?.toDate();
         const reminderAt = doc.data().reminderAt?.toDate();
         const completedAt = doc.data().completedAt;
@@ -91,13 +99,13 @@ const TaskList = ({ route, navigation }) => {
           tasklist,
           reminderAt: reminderAt,
           subtasks,
+          attachments,
           marked: false,
         };
 
         completed ? completeTasks.push(task) : tasks.push(task);
 
         if (dueDate && isWithinCurrentMonth(dueDate)) {
-          console.log("is within current month");
           Object.assign(data, {
             [date]: {
               id: id,
@@ -114,7 +122,7 @@ const TaskList = ({ route, navigation }) => {
       //console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setCompleteTasks(completeTasks);
-      console.log("timeline data ", data);
+      // console.log("timeline data ", data);
       setTimelineData(data);
     });
   }
@@ -418,7 +426,7 @@ const TaskList = ({ route, navigation }) => {
         });
       })
       .then(() => {
-        console.log("Task: ", task, " was succesfully updated in the DB");
+        // console.log("Task: ", task, " was succesfully updated in the DB");
       })
       .catch((error) => {
         alert(error);
@@ -443,13 +451,14 @@ const TaskList = ({ route, navigation }) => {
       repeat: taskRepeatData.repeat,
       tasklist: 0,
       text: "",
+      attachments: [],
     };
     tasksRef
       .add(data)
       .then(() => {
         setSelectedTask({});
-        setTaskDueDate(new Date(1900, 1, 1));
-        setTaskReminderDate(new Date(1900, 1, 1));
+        setTaskDueDate(null);
+        setTaskReminderDate(null);
         setTaskCompletionDate(null);
       })
       .then(() => {
@@ -531,7 +540,7 @@ const TaskList = ({ route, navigation }) => {
         <View style={styles.bottomSection}>
           <Footer
             onPress={createTask}
-            bgColor={"#454545"}
+            bgColor={"#45454599"}
             btnColor={"lightgrey"}
           />
         </View>

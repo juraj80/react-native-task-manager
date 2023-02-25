@@ -73,7 +73,6 @@ const HorizontalTimeline = (props) => {
     }
   };
   function scrollToDay(itemIndex) {
-    console.log("index ", itemIndex);
     ref?.scrollTo({ x: itemIndex * 70 }); //TODO replace with the width of the day view
   }
 

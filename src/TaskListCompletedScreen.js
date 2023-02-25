@@ -33,8 +33,8 @@ const TaskListCompleted = ({ route, navigation }) => {
         querySnapshot.forEach((doc) => {
           const { heading, text, completed, subtasks, repeat, tasklist } =
             doc.data();
-          const dueDate = doc.data().dueDateAt.toDate();
-          const reminderAt = doc.data().reminderAt.toDate();
+          const dueDate = doc.data().dueDateAt?.toDate();
+          const reminderAt = doc.data().reminderAt?.toDate();
 
           if (completed) {
             tasks.push({

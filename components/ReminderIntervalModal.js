@@ -26,7 +26,6 @@ const ReminderIntervalModal = ({
   setTaskRepeatData,
   setParentModalVisible,
 }) => {
-  console.log("ReminderIntervalModal called ");
   const [interval, setInterval] = useState({});
 
   const chooseInterval = (intervalObj) => {

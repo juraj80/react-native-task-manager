@@ -12,27 +12,31 @@ import {
   Dimensions,
   Flatlist,
   LogBox,
+  Image,
+  ActivityIndicator,
 } from "react-native";
+
 import { LinearGradient } from "expo-linear-gradient";
 
 import { v4 as uuid } from "uuid";
 
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
+import * as ImagePicker from "expo-image-picker";
 import SubTask from "../components/SubTask";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import HeaderComponent from "../components/HeaderComponent";
 import FullWidthButton from "../components/FullWidthButton";
 import ReminderIntervalModal from "../components/ReminderIntervalModal";
 import { formatUTCDate } from "./helpers/helpers.js";
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
 ]);
 
 const TaskDetail = ({ route, navigation }) => {
-  console.log("Task Detail received props: ", route.params);
+  // console.log("Task Detail received props: ", route.params);
   // try {
   const [task, setTask] = useState("");
   const [taskId, setTaskId] = useState(route.params.id);
@@ -47,12 +51,21 @@ const TaskDetail = ({ route, navigation }) => {
 
   const [isIntervalModalVisible, setIsIntervalModalVisible] = useState(false);
 
-  const [taskDueDate, setTaskDueDate] = useState(route.params.dueDateAt);
+  const [taskDueDate, setTaskDueDate] = useState(
+    route.params.dueDateAt || null
+  );
   const [taskReminderDate, setTaskReminderDate] = useState(
-    route.params.reminderAt
+    route.params.reminderAt || null
   );
 
   const [taskRepeatData, setTaskRepeatData] = useState(route.params.repeat);
+
+  const [attachments, setAttachments] = useState(
+    route.params.attachments || []
+  );
+  const [fileName, setFileName] = useState(null);
+  const [fileObj, setFileObj] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const [taskList, setTaskList] = useState(route.params.tasklist);
 
@@ -61,7 +74,7 @@ const TaskDetail = ({ route, navigation }) => {
   TouchableOpacity.defaultProps = { activeOpacity: 0.8 };
 
   async function fetchData() {
-    console.log("TaskDetail fetchData called with taskId ", taskId);
+    // console.log("TaskDetail fetchData called with taskId ", taskId);
 
     tasksRef
       .where("id", "==", taskId)
@@ -77,7 +90,7 @@ const TaskDetail = ({ route, navigation }) => {
         }
       })
       .then(() => {
-        console.log("Task: ", task, " was succesfully fetched from the DB");
+        // console.log("Task: ", task, " was succesfully fetched from the DB");
       })
       .catch((error) => {
         alert(error);
@@ -87,6 +100,70 @@ const TaskDetail = ({ route, navigation }) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // provides access to the system's UI for selecting images rom the phone's library
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("RESULT", result);
+
+    if (!result.canceled) {
+      let filePath = result.assets[0].uri;
+      let fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+      console.log("imgName", fileName);
+
+      //   setAttachments(filePath);
+
+      //    setFileName(fileName);
+      // uploadImage(filePath);
+      setAttachments([...attachments, { fileName, filePath }]);
+      //setFileObj({ fileName, filePath });
+    }
+  };
+
+  const uploadImage = async () => {
+    console.log("Upload image called");
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", attachments, true);
+      xhr.send(null);
+    });
+    const ref = firebase.storage().ref().child(`Files/${fileName}`);
+    const snapshot = ref.put(blob);
+    snapshot.on(
+      firebase.storage.TaskEvent.STATE_CHANGED,
+      () => {
+        setUploading(true);
+      },
+      (error) => {
+        setUploading(false);
+        console.log(error);
+        blob.close();
+        return;
+      },
+      () => {
+        snapshot.snapshot.ref.getDownloadURL().then((url) => {
+          setUploading(false);
+          console.log("Download URL: ", url);
+          setAttachments(url);
+          blob.close();
+          return url;
+        });
+      }
+    );
+  };
 
   // callback that saves the task detail in the DB when the SAVE button is pressed
   const updateTask = async () => {
@@ -102,7 +179,12 @@ const TaskDetail = ({ route, navigation }) => {
         subtasks: allSubTasks,
         repeat: taskRepeatData,
         tasklist: taskList,
+        attachments: attachments,
       };
+
+      console.log("updateTask called with data : ", data);
+      // uploadImage();
+
       tasksRef
         .where("id", "==", taskId)
         .get()
@@ -115,6 +197,7 @@ const TaskDetail = ({ route, navigation }) => {
         .then(() => {
           navigation.navigate("My Actions");
         })
+
         .catch((error) => {
           alert(error);
         });
@@ -242,6 +325,19 @@ const TaskDetail = ({ route, navigation }) => {
     } else {
       return "Yearly";
     }
+  };
+  const showAttachment = (path) => {
+    console.log("showAttachment called with path", path) && (
+      <Image source={{ uri: path }} style={{ width: 70, height: 70 }} />
+    );
+  };
+
+  const deleteAttachment = (index) => {
+    console.log("deleteAtachment called with index: ", index, attachments);
+    const attachmentsCopy = [...attachments];
+    attachmentsCopy.splice(index, 1);
+    // setAttachments((attachments) => attachments.splice(index, 1));
+    setAttachments(attachmentsCopy);
   };
 
   return (
@@ -400,9 +496,62 @@ const TaskDetail = ({ route, navigation }) => {
                 </>
               )}
             </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={pickImage}
+              style={styles.btnRowContainer}
+            >
+              <View style={styles.iconContainer}>
+                <Entypo name="attachment" size={30} color="black" />
+              </View>
+              {/* <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text> */}
+              {/* <Text>Due: {formatUTCDate(taskDueDate)}</Text> */}
+
+              <Text>Add File</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.attachmentsSection}>
-            {/* <Text>Attachments</Text> */}
+            <TouchableOpacity>
+              <Text>Attachments</Text>
+              <View>
+                {/* {fileObj && (
+                  <View>
+                    <Image
+                      source={{ uri: fileObj.filePath }}
+                      style={{ width: 70, height: 70 }}
+                    />
+                    <Text onPress={showAttachment}>{fileObj.fileName}</Text>
+                  </View>
+                )}
+                 */}
+
+                {attachments &&
+                  attachments.map((obj, i) => (
+                    <View key={i} style={styles.attachmentRow}>
+                      {/* <Image
+                        source={{ uri: obj.filePath }}
+                        style={{ width: 70, height: 70 }}
+                      /> */}
+                      {/* <Text onPress={() => showAttachment(obj.filePath)}> */}
+                      <View style={styles.leftAlign}>
+                        <Text>{obj.fileName}</Text>
+                      </View>
+                      <View style={styles.rightAlign}>
+                        <Text onPress={() => deleteAttachment(i)}>X</Text>
+                      </View>
+                    </View>
+                  ))}
+
+                {/* <Button title="Select Image" onPress={pickImage} />
+                {!uploading ? (
+                  <Button title="Upload Image" onPress={uploadImage} />
+                ) : (
+                  <ActivityIndicator size={"small"} color="black" />
+                )} */}
+
+                {console.log("ATTACHMENTS..", attachments)}
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.bottomSection}>
             {/* <TouchableOpacity
@@ -551,6 +700,19 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     paddingRight: 10,
+  },
+  attachmentRow: {
+    marginVertical: 4,
+    padding: 2,
+    flexDirection: "row",
+  },
+  leftAlign: {
+    flex: 9,
+    backgroundColor: "red",
+  },
+  rightAlign: {
+    flex: 1,
+    alignItems: "center",
   },
 });
 

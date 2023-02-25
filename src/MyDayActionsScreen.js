@@ -50,8 +50,8 @@ const MyDayActions = ({ route, navigation, props }) => {
       querySnapshot.forEach((doc) => {
         const { id, heading, text, completed, subtasks, repeat, tasklist } =
           doc.data();
-        const dueDate = doc.data().dueDateAt.toDate();
-        const reminderAt = doc.data().reminderAt.toDate();
+        const dueDate = doc.data().dueDateAt?.toDate();
+        const reminderAt = doc.data().reminderAt?.toDate();
         console.log("Tasklist: ", tasklist);
         if (tasklist == 1 && !completed) {
           tasks.push({
@@ -128,7 +128,7 @@ const MyDayActions = ({ route, navigation, props }) => {
         });
       })
       .then(() => {
-        console.log("Task: ", task, " was succesfully updated in the DB");
+        // console.log("Task: ", task, " was succesfully updated in the DB");
       })
       .catch((error) => {
         alert(error);
