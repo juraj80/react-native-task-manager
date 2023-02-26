@@ -410,9 +410,16 @@ const TaskDetail = ({ route, navigation }) => {
               renderItem={renderSubTask}
             ></FlatList>
           </View>
-          <View style={styles.addBtnContainer}>
-            <TouchableOpacity onPress={createSubTask}>
-              <Text style={styles.btnTextStyle}>+ Add Subtask</Text>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              onPress={createSubTask}
+              style={styles.addBtnContainer}
+            >
+              <View style={styles.iconContainer}>
+                <MaterialIcons name="add-task" size={24} color="black" />
+                {/* <Text style={styles.btnTextStyle}>+ Add Subtask</Text> */}
+              </View>
+              <Text style={styles.btnTextStyle}>Add Subtask</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.calendarSection}>
@@ -717,10 +724,12 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   addBtnContainer: {
+    // flex: 1,
+    flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 12,
     margin: 5,
-    justifyContent: "center",
+    // justifyContent: "flex-start",
     borderColor: "#95a5a6",
     // backgroundColor: "#95a5a6",
 
