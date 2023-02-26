@@ -278,7 +278,6 @@ const TaskList = ({ route, navigation }) => {
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
       })
-
       .then(() => {})
       .catch((error) => {
         alert(error);
@@ -550,6 +549,7 @@ const TaskList = ({ route, navigation }) => {
               <CustomSearchBar
                 onChangeText={(text) => searchFunction(text)}
                 value={searchValue}
+                color={"#d9dbda"}
               ></CustomSearchBar>
             </View>
             <TouchableOpacity

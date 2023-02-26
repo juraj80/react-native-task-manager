@@ -18,9 +18,11 @@ import Footer from "../components/Footer";
 import { useFocusEffect } from "@react-navigation/core";
 import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
 import HeaderComponent from "../components/HeaderComponent";
+import CustomSearchBar from "../components/CustomSearchBar";
 
 var width = Dimensions.get("window").width; //full width
 var height = Dimensions.get("window").height; //full width
@@ -35,21 +37,26 @@ const BrainMapScreen = ({ navigation }) => {
   const [allNotes, setAllNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [searchBarVisibility, setSearchBarVisibility] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredNotes, setFilteredNotes] = useState([]);
+
   const notesRef = firebase.firestore().collection("notes");
 
   async function fetchData() {
     notesRef.onSnapshot((querySnapshot) => {
-      const users = [];
+      const notes = [];
       querySnapshot.forEach((doc) => {
         const { heading, text, createdAt } = doc.data();
-        users.push({
+        notes.push({
           id: doc.id,
           heading,
           text,
           createdAt,
         });
       });
-      setAllNotes(users);
+      setAllNotes(notes);
+      setFilteredNotes(notes);
     });
   }
 
@@ -96,6 +103,10 @@ const BrainMapScreen = ({ navigation }) => {
         {/* <Text>{item.text}</Text> */}
       </TouchableOpacity>
     );
+  };
+
+  const showSearchBar = () => {
+    setSearchBarVisibility(!searchBarVisibility);
   };
 
   const createTask = (item) => {
@@ -158,17 +169,63 @@ const BrainMapScreen = ({ navigation }) => {
     setModalVisible(!modalVisible);
   };
 
+  const searchFunction = (text) => {
+    if (text) {
+      const updatedData = allNotes.filter((item) => {
+        const itemData = item.heading.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredNotes(updatedData);
+      setSearchValue(text);
+    } else {
+      setFilteredNotes(allNotes);
+      setSearchValue(text);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <HeaderComponent title={"My Scribbles"} menu={true} color={"#000"} />
+        {!searchBarVisibility ? (
+          <>
+            <HeaderComponent
+              title={"My Scribbles"}
+              menu={true}
+              color={"#000"}
+            />
+            <TouchableOpacity
+              onPress={showSearchBar}
+              style={styles.searchBarStyle}
+            >
+              <Ionicons name="search-outline" size={32} color="black" />
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <View style={styles.searchBarSection}>
+              <CustomSearchBar
+                onChangeText={(text) => searchFunction(text)}
+                value={searchValue}
+                color={"white"}
+              ></CustomSearchBar>
+            </View>
+            <TouchableOpacity
+              onPress={showSearchBar}
+              style={styles.searchBarStyle}
+            >
+              <Ionicons name="arrow-back-outline" size={32} color="black" />
+            </TouchableOpacity>
+          </>
+        )}
+
         {/* <View style={styles.headerSection}>
           <Text style={styles.screenTitle}>My Scribbles</Text>
         </View> */}
         <View style={styles.mainSection}>
           <FlatList
             style={{ height: "100%" }}
-            data={allNotes}
+            data={filteredNotes}
             numColumns={1}
             renderItem={renderNote}
           ></FlatList>
@@ -320,6 +377,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+  },
+  searchBarSection: { marginTop: 70, marginBottom: 30 },
+  searchBarStyle: {
+    position: "absolute",
+    top: 70,
+    right: 20,
   },
 });
 export default BrainMapScreen;
