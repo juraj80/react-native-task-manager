@@ -41,7 +41,7 @@ const DayDetail = ({ route, navigation, props }) => {
         const dueDate = doc.data().dueDateAt?.toDate();
         const reminderAt = doc.data().reminderAt?.toDate();
 
-        if (dueDate.toISOString().split("T")[0] == day) {
+        if (dueDate && dueDate.toISOString().split("T")[0] == day) {
           tasks.push({
             id: doc.id,
             heading,

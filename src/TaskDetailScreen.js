@@ -14,6 +14,7 @@ import {
   LogBox,
   Image,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -23,13 +24,20 @@ import { v4 as uuid } from "uuid";
 import React, { useState, useEffect } from "react";
 import { firebase } from "../firebaseConfig";
 import * as ImagePicker from "expo-image-picker";
+
 import SubTask from "../components/SubTask";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import HeaderComponent from "../components/HeaderComponent";
 import FullWidthButton from "../components/FullWidthButton";
 import ReminderIntervalModal from "../components/ReminderIntervalModal";
 import { formatUTCDate } from "./helpers/helpers.js";
-import { Feather, MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
+import {
+  Feather,
+  MaterialCommunityIcons,
+  Entypo,
+  MaterialIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -39,6 +47,7 @@ const TaskDetail = ({ route, navigation }) => {
   // console.log("Task Detail received props: ", route.params);
   // try {
   const [task, setTask] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
   const [taskId, setTaskId] = useState(route.params.id);
   const [taskHeader, setTaskHeader] = useState(route.params.heading);
   const [taskText, setTaskText] = useState(route.params.text);
@@ -64,6 +73,7 @@ const TaskDetail = ({ route, navigation }) => {
     route.params.attachments || []
   );
   const [fileName, setFileName] = useState(null);
+  const [fileOpen, setFileOpen] = useState(null);
   const [fileObj, setFileObj] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -110,24 +120,14 @@ const TaskDetail = ({ route, navigation }) => {
       quality: 1,
     });
 
-    console.log("RESULT", result);
-
     if (!result.canceled) {
       let filePath = result.assets[0].uri;
       let fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-      console.log("imgName", fileName);
-
-      //   setAttachments(filePath);
-
-      //    setFileName(fileName);
-      // uploadImage(filePath);
       setAttachments([...attachments, { fileName, filePath }]);
-      //setFileObj({ fileName, filePath });
     }
   };
 
   const uploadImage = async () => {
-    console.log("Upload image called");
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -182,7 +182,7 @@ const TaskDetail = ({ route, navigation }) => {
         attachments: attachments,
       };
 
-      console.log("updateTask called with data : ", data);
+      // console.log("updateTask called with data : ", data);
       // uploadImage();
 
       tasksRef
@@ -228,7 +228,7 @@ const TaskDetail = ({ route, navigation }) => {
 
   // callback called when the +AddSubTask button is pressed
   const createSubTask = () => {
-    console.log("Create SubTask pressed! ", subTaskText);
+    // console.log("Create SubTask pressed! ", subTaskText);
     setAllSubTasks([
       ...allSubTasks,
       { id: getId(), completed: false, text: subTaskText, marked: false },
@@ -243,7 +243,7 @@ const TaskDetail = ({ route, navigation }) => {
   const deleteSubTask = (item) => {
     console.log("Delete SubTask func called", item);
     let filtered = allSubTasks.filter((task) => task.id != item.id);
-    console.log("filtered: ", filtered);
+    // console.log("filtered: ", filtered);
     setAllSubTasks(filtered);
     // deleteTaskFromDB(item.id);
   };
@@ -326,11 +326,26 @@ const TaskDetail = ({ route, navigation }) => {
       return "Yearly";
     }
   };
-  const showAttachment = (path) => {
-    console.log("showAttachment called with path", path) && (
-      <Image source={{ uri: path }} style={{ width: 70, height: 70 }} />
-    );
+  const showAttachment = (filePath) => {
+    // <Image source={{ uri: filePath }} style={{ width: 70, height: 70 }} />;
+
+    // const path = FileViewer.open(filePath, { showOpenWithDialog: true }) // absolute-path-to-my-local-file.
+    //   .then(() => {
+    //     // success
+    //     console.log("Success");
+    //   })
+    //   .catch((error) => {
+    //     // error
+    //     console.log("ERROR", error);
+    //   });
+    setFileOpen(filePath);
+    setModalVisible(true);
   };
+
+  function handleCancelPress() {
+    console.log("handle cancel pressed");
+    setModalVisible(false);
+  }
 
   const deleteAttachment = (index) => {
     console.log("deleteAtachment called with index: ", index, attachments);
@@ -527,17 +542,39 @@ const TaskDetail = ({ route, navigation }) => {
 
                 {attachments &&
                   attachments.map((obj, i) => (
+                    // <Image
+                    //   source={{ uri: obj.filePath }}
+                    //   style={{ width: 70, height: 70 }}
+                    // />
                     <View key={i} style={styles.attachmentRow}>
                       {/* <Image
                         source={{ uri: obj.filePath }}
                         style={{ width: 70, height: 70 }}
                       /> */}
+
                       {/* <Text onPress={() => showAttachment(obj.filePath)}> */}
                       <View style={styles.leftAlign}>
-                        <Text>{obj.fileName}</Text>
+                        <Text
+                          style={styles.attachmentText}
+                          onPress={() => showAttachment(obj.filePath)}
+                        >
+                          {obj.fileName}
+                        </Text>
                       </View>
                       <View style={styles.rightAlign}>
-                        <Text onPress={() => deleteAttachment(i)}>X</Text>
+                        <TouchableOpacity onPress={() => deleteAttachment(i)}>
+                          <MaterialIcons
+                            name="cancel"
+                            size={24}
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                        {/* <Text
+                          style={styles.rightText}
+                          onPress={() => deleteAttachment(i)}
+                        >
+                          X
+                        </Text> */}
                       </View>
                     </View>
                   ))}
@@ -554,12 +591,6 @@ const TaskDetail = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.bottomSection}>
-            {/* <TouchableOpacity
-              style={styles.plusBtn}
-              onPress={() => updateTask()}
-            >
-              <Text style={styles.plusText}>Save</Text>
-            </TouchableOpacity> */}
             <FullWidthButton title={"Save"} onPress={() => updateTask()} />
           </View>
           <DateTimePickerModal
@@ -581,6 +612,27 @@ const TaskDetail = ({ route, navigation }) => {
             setTaskRepeatData={setTaskRepeatData}
           />
         </View>
+
+        <Modal
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.cancelBtn}>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                {/* <Text style={styles.cancelText}>X</Text> */}
+                <Ionicons name="arrow-back" size={36} color="white" />
+              </TouchableOpacity>
+            </View>
+
+            <Image
+              style={styles.image}
+              source={{
+                uri: fileOpen,
+              }}
+            />
+          </View>
+        </Modal>
       </View>
     </LinearGradient>
   );
@@ -703,16 +755,43 @@ const styles = StyleSheet.create({
   },
   attachmentRow: {
     marginVertical: 4,
-    padding: 2,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     flexDirection: "row",
+    borderWidth: 1,
   },
   leftAlign: {
     flex: 9,
-    backgroundColor: "red",
+    justifyContent: "center",
   },
   rightAlign: {
     flex: 1,
     alignItems: "center",
+  },
+  attachmentText: { fontSize: 14 },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
+  },
+  cancelBtn: {
+    position: "absolute",
+
+    top: 70,
+    left: 20,
+    zIndex: 999,
+  },
+  cancelText: {
+    fontSize: 32,
+    // fontWeight: "bold",
+    color: "white",
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 });
 

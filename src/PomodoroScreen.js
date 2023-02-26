@@ -61,8 +61,8 @@ const PomodoroScreen = () => {
   }
 
   function stopSound() {
-    console.log("Unloading Sound");
-    sound.unloadAsync();
+    setSound(null);
+    //  sound.unloadAsync();
   }
 
   React.useEffect(() => {
