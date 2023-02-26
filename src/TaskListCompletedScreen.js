@@ -31,8 +31,15 @@ const TaskListCompleted = ({ route, navigation }) => {
         const tasks = [];
         const data = {};
         querySnapshot.forEach((doc) => {
-          const { heading, text, completed, subtasks, repeat, tasklist } =
-            doc.data();
+          const {
+            heading,
+            text,
+            completed,
+            subtasks,
+            repeat,
+            tasklist,
+            attachments,
+          } = doc.data();
           const dueDate = doc.data().dueDateAt?.toDate();
           const reminderAt = doc.data().reminderAt?.toDate();
 
@@ -47,6 +54,7 @@ const TaskListCompleted = ({ route, navigation }) => {
               subtasks,
               repeat,
               tasklist,
+              attachments,
               marked: false,
             });
           }

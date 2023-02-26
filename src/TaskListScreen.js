@@ -26,7 +26,6 @@ import TaskModal from "../components/TaskModal";
 import Task from "../components/Task";
 import Footer from "../components/Footer";
 import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 
 import React, { useState, useEffect, useRef } from "react";
 import { firebase } from "../firebaseConfig";
@@ -36,6 +35,7 @@ import { v4 as uuid } from "uuid";
 import MenuNavigationComponent from "../components/MenuNavigationComponent";
 import HeaderComponent from "../components/HeaderComponent";
 import ReminderIntervalModal from "../components/ReminderIntervalModal";
+import CustomSearchBar from "../components/CustomSearchBar";
 
 const TaskList = ({ route, navigation }) => {
   // try {
@@ -53,6 +53,10 @@ const TaskList = ({ route, navigation }) => {
 
   const [showAlert, setShowAlert] = useState(true);
   const [taskCompletionDate, setTaskCompletionDate] = useState(null);
+
+  const [searchBarVisibility, setSearchBarVisibility] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState([]);
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isDateTimePickerVisible, setDateTimePickerVisibility] =
@@ -121,6 +125,7 @@ const TaskList = ({ route, navigation }) => {
 
       //console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
+      setFilteredTasks(tasks);
       setCompleteTasks(completeTasks);
       // console.log("timeline data ", data);
       setTimelineData(data);
@@ -278,6 +283,10 @@ const TaskList = ({ route, navigation }) => {
       .catch((error) => {
         alert(error);
       });
+  };
+
+  const showSearchBar = () => {
+    setSearchBarVisibility(!searchBarVisibility);
   };
 
   const showDatePicker = () => {
@@ -507,29 +516,72 @@ const TaskList = ({ route, navigation }) => {
     }
   };
 
+  const searchFunction = (text) => {
+    if (text) {
+      const updatedData = allTasks.filter((item) => {
+        const itemData = item.heading.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredTasks(updatedData);
+      setSearchValue(text);
+    } else {
+      setFilteredTasks(allTasks);
+      setSearchValue(text);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.screenWrapper}>
-        <HeaderComponent menu={true} title={"My Actions"} color={"#fff"} />
-        <View style={styles.timeline}>
-          <HorizontalTimeline
-            date={new Date().toISOString()}
-            data={timelineData}
-            onPress={(item) => renderDayTasks(item)}
-          />
-          <View
-            style={{
-              borderBottomColor: "#abb7b7",
-              borderBottomWidth: 2,
-            }}
-          />
-        </View>
+        {!searchBarVisibility ? (
+          <>
+            <HeaderComponent menu={true} title={"My Actions"} color={"#fff"} />
+            <TouchableOpacity
+              onPress={showSearchBar}
+              style={styles.searchBarStyle}
+            >
+              <Ionicons name="search-outline" size={32} color="white" />
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <View style={styles.searchBarSection}>
+              <CustomSearchBar
+                onChangeText={(text) => searchFunction(text)}
+                value={searchValue}
+              ></CustomSearchBar>
+            </View>
+            <TouchableOpacity
+              onPress={showSearchBar}
+              style={styles.searchBarStyle}
+            >
+              <Ionicons name="arrow-back-outline" size={32} color="white" />
+            </TouchableOpacity>
+          </>
+        )}
+
+        {!searchBarVisibility ? (
+          <View style={styles.timeline}>
+            <HorizontalTimeline
+              date={new Date().toISOString()}
+              data={timelineData}
+              onPress={(item) => renderDayTasks(item)}
+            />
+            <View
+              style={{
+                borderBottomColor: "#abb7b7",
+                borderBottomWidth: 2,
+              }}
+            />
+          </View>
+        ) : null}
 
         <View style={styles.mainSection}>
           <DraggableFlatList
             style={{ height: "100%" }}
-            data={allTasks}
-            onDragEnd={({ data }) => setAllTasks(data)}
+            data={filteredTasks}
+            onDragEnd={({ data }) => setFilteredTasks(data)}
             keyExtractor={(task, index) => {
               return task.id, index.toString();
             }}
@@ -595,6 +647,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#454545",
   },
+  searchBarStyle: {
+    position: "absolute",
+    top: 70,
+    right: 20,
+  },
 
   timeline: {
     // height: 70,
@@ -633,6 +690,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: "red",
   },
+  searchBarSection: { marginTop: 70, marginBottom: 30 },
 });
 
 export default TaskList;
