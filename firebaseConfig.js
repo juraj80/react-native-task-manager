@@ -3,7 +3,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
-import { getAuth, signInWithPopup } from "firebase/auth";
+//import { getAuth, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBw0NeHk41_45kQpsJeY7dtCzh81Nbzb6Y",
@@ -25,7 +25,8 @@ if (!firebase.apps.length) {
   firebase.app();
 }
 
-const auth = firebase.auth();
+//const auth = firebase.auth();
 //const auth = getAuth();
 
-export { auth, firebase };
+//export { auth, firebase };
+export { firebase };
