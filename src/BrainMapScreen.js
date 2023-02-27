@@ -4,20 +4,11 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Pressable,
-  Modal,
   Dimensions,
-  TextInput,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import NoteModal from "../components/NoteModal";
 import Footer from "../components/Footer";
-// import MyModal from "../components/MyModal";
-import { useFocusEffect } from "@react-navigation/core";
-import { getOuterBindingIdentifiers, isTemplateElement } from "@babel/types";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
 import { firebase } from "../firebaseConfig";
@@ -30,10 +21,7 @@ var height = Dimensions.get("window").height; //full width
 console.disableYellowBox = true;
 
 const BrainMapScreen = ({ navigation }) => {
-  // const [selectedId, setSelectedId] = useState(null);
-  // const [activeTasks, setActiveTasks] = useState([]);
   const [selectedNote, setSelectedNote] = useState({});
-  // const [modalEntry, setModalEntry] = useState({});
   const [allNotes, setAllNotes] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -218,10 +206,6 @@ const BrainMapScreen = ({ navigation }) => {
             </TouchableOpacity>
           </>
         )}
-
-        {/* <View style={styles.headerSection}>
-          <Text style={styles.screenTitle}>My Scribbles</Text>
-        </View> */}
         <View style={styles.mainSection}>
           <FlatList
             style={{ height: "100%" }}
@@ -274,17 +258,6 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
     opacity: 0.8,
   },
-  headerSection: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  screenTitle: {
-    fontSize: 34,
-    fontWeight: "bold",
-    color: "black",
-    fontFamily: "IndieFlower-Regular",
-  },
   screenWrapper: {
     flex: 1,
     paddingTop: 60,
@@ -294,14 +267,7 @@ const styles = StyleSheet.create({
   mainSection: {
     flex: 5,
   },
-  // modalOverlay: {
-  //   position: "absolute",
-  //   top: 0,
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  //   backgroundColor: "rgba(0,0,0,0.5)",
-  // },
+
   bottomSection: {
     flex: 1,
     justifyContent: "center",
@@ -314,45 +280,6 @@ const styles = StyleSheet.create({
     height: 70,
     zIndex: -99,
     backgroundColor: "#4682B4",
-  },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 12,
-  },
-  btnWhiteBackground: {
-    backgroundColor: "white",
-    width: 63,
-    height: 63,
-    borderRadius: 45,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnGreyBackground: {
-    position: "absolute",
-    right: -15,
-    backgroundColor: "#4682B4",
-    width: 75,
-    height: 75,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusBtn: {
-    // backgroundColor: "rgba(173, 173, 173, 0.9)",
-    backgroundColor: "#4682B4",
-    width: 60,
-    height: 60,
-    borderRadius: 45,
-    justifyContent: "center",
-    alignItems: "center",
   },
   plusText: {
     fontSize: 30,

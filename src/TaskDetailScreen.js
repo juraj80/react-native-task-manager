@@ -385,12 +385,14 @@ const TaskDetail = ({ route, navigation }) => {
               value={taskText}
               onChangeText={setTaskText}
               placeholder={taskText}
-              style={{ color: "ccc", fontSize: 22, fontFamily: "Lato-Light" }}
+              style={[
+                styles.mainSection,
+                { color: "ccc", fontSize: 22, fontFamily: "Lato-Light" },
+              ]}
               spellCheck={false}
               multiline={true}
               autoFocus
               selectionColor="#000"
-              style={styles.mainSection}
             />
           </View>
           <View style={styles.subTasksSection}>
@@ -691,35 +693,6 @@ const styles = StyleSheet.create({
 
     marginBottom: 20,
   },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-  title: {
-    fontSize: 12,
-  },
-  plusBtn: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 4,
-    elevation: 4,
-    backgroundColor: "green",
-  },
-  plusText: {
-    fontSize: 30,
-    color: "white",
-  },
-  itemStyle: {
-    padding: 5,
-    backgroundColor: "yellow",
-  },
   dragItem: {
     padding: 5,
   },
@@ -735,17 +708,6 @@ const styles = StyleSheet.create({
 
     borderWidth: 2,
     borderRadius: 2,
-  },
-  calendarBtnContainer: {
-    elevation: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    margin: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#42a5f5",
-
-    borderRadius: 7,
   },
   btnTextStyle: {
     color: "black",
@@ -791,12 +753,6 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 999,
   },
-  cancelText: {
-    fontSize: 32,
-    // fontWeight: "bold",
-    color: "white",
-  },
-
   image: {
     width: "100%",
     height: "100%",

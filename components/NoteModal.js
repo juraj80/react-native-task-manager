@@ -175,27 +175,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingVertical: 10,
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
   textStyle: {
     color: "black",
     fontWeight: "bold",
     textAlign: "center",
-  },
-  buttonModal: {
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    elevation: 2,
-    marginHorizontal: 10,
-    marginTop: 10,
-    width: width / 4,
-    backgroundColor: "#4682B4",
-  },
-  buttonClose: {
-    borderColor: "black",
   },
   iconWrap: {
     flex: 1,

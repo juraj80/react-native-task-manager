@@ -83,12 +83,11 @@ const CreateTask = ({ route, navigation }) => {
         value={taskDetail}
         onChangeText={setTaskDetail}
         placeholder="Add Details"
-        style={{ color: "ccc", fontSize: 22 }}
+        style={[styles.mainSection, { color: "ccc", fontSize: 22 }]}
         spellCheck={false}
         multiline={true}
         autoFocus
         selectionColor="#aaa"
-        style={styles.mainSection}
       />
       {/* <Text>TaskHeader: {JSON.stringify(taskDetails)}</Text> */}
 

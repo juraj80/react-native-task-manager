@@ -146,25 +146,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
-  itemText: { color: "black" },
-  dragItem: {
-    padding: 5,
-  },
-  itemStyle: {
-    padding: 5,
-  },
   checkbox: {
     width: 24,
     height: 24,
-  },
-  cancel: {
-    width: 20,
-    height: 20,
-    backgroundColor: "red",
-  },
-  checkedItem: {
-    textDecorationLine: "line-through",
   },
 });
 

@@ -5,9 +5,9 @@ import {
   TouchableOpacity,
   View,
   Image,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import KeyboardAvoidingView from "react-native/Libraries/Components/Keyboard/KeyboardAvoidingView";
 import { auth, firebase } from "../firebaseConfig";
 
 export default function LoginScreen({ navigation }) {
@@ -47,11 +47,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.logoContainer}>
-        <Image
-          source={require("../assets/logo.png")}
-          //   style={{ left: width / 2, top: height / 2 }}
-          style={[styles.logoImg]}
-        />
+        <Image source={require("../assets/logo.png")} style={styles.logoImg} />
       </View>
       <View style={styles.inputContainer}>
         <TextInput

@@ -59,20 +59,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // backgroundColor: 'green',
   },
-  buttonStyle: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "blue",
-    padding: 5,
-    width: 80,
-    height: 40,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 15,
-    fontWeight: "300",
-  },
 });
 
 export default PomodoroTimerButtons;

@@ -201,15 +201,6 @@ const styles = StyleSheet.create({
     flex: 9,
     padding: 0,
   },
-
-  bottomRow: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
-    height: 70,
-    zIndex: -99,
-    backgroundColor: "lightgrey",
-  },
 });
 
 export default TaskListCompleted;

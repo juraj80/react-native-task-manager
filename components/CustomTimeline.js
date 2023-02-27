@@ -222,14 +222,6 @@ const styles = StyleSheet.create({
     color: "lightblack",
     fontFamily: "Lato-Light",
   },
-  dotImage: {
-    position: "absolute",
-    width: 18,
-    height: 18,
-    zIndex: 99,
-    left: 30,
-    bottom: 0,
-  },
 });
 
 export default HorizontalTimeline;

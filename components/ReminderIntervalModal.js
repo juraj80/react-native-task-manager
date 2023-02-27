@@ -117,48 +117,4 @@ const styles = StyleSheet.create({
   textInputSection: {
     flex: 3,
   },
-  modalBtnSection: {
-    flexDirection: "row",
-    paddingVertical: 10,
-    // justifyContent: "space-between",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  textStyle: {
-    color: "black",
-    // fontWeight: "bold",
-    textAlign: "center",
-  },
-  buttonModal: {
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    elevation: 2,
-    marginHorizontal: 20,
-    marginTop: 10,
-    width: width / 4.8,
-    // backgroundColor: "rgb(102, 204, 153)",
-    borderWidth: 1,
-    opacity: 0.7,
-  },
-  iconWrap: {
-    flex: 1,
-    backgroundColor: "lightgrey",
-    margin: 3,
-    alignItems: "center",
-  },
-
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
 });

@@ -75,12 +75,11 @@ const NoteDetail = ({ route, navigation }) => {
           value={noteDetail}
           onChangeText={setNoteDetail}
           placeholder={noteDetail}
-          style={{ color: "ccc", fontSize: 22 }}
+          style={[styles.mainSection, { color: "ccc", fontSize: 22 }]}
           spellCheck={false}
           multiline={true}
           autoFocus
           selectionColor="#000"
-          style={styles.mainSection}
         />
         <View style={styles.bottomSection}>
           {/* <TouchableOpacity style={styles.plusBtn} onPress={() => updateNote()}>
@@ -116,33 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  item: {
-    width: 80,
-    height: 80,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 8,
-    marginHorizontal: 6,
-    borderRadius: 15,
-  },
-
-  plusBtn: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 72,
-    borderRadius: 4,
-    elevation: 4,
-    backgroundColor: "green",
-  },
-  plusText: {
-    fontSize: 30,
-    color: "white",
-  },
-  itemStyle: {
-    padding: 5,
-    backgroundColor: "yellow",
   },
 });
 
