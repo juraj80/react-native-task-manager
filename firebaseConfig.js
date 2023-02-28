@@ -1,9 +1,11 @@
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
-import "firebase/compat/storage";
+// import firebase from "firebase/compat/app";
+// import "firebase/compat/auth";
+// import "firebase/compat/firestore";
+// import "firebase/compat/storage";
 
-import { getAuth, signInWithPopup } from "firebase/auth";
+import * as firebase from "firebase";
+
+//import { getAuth, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBw0NeHk41_45kQpsJeY7dtCzh81Nbzb6Y",
@@ -15,7 +17,7 @@ const firebaseConfig = {
   measurementId: "G-77GHN72RWN",
 };
 
-// Initialize Firebase
+//Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
   firebase
@@ -28,4 +30,5 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 //const auth = getAuth();
 
+//export { auth, firebase };
 export { auth, firebase };
