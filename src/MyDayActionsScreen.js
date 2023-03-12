@@ -42,8 +42,6 @@ const MyDayActions = ({ route, navigation, props }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
-    // console.log("TaskList fetchData called");
-
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
       const data = {};
@@ -60,7 +58,6 @@ const MyDayActions = ({ route, navigation, props }) => {
         } = doc.data();
         const dueDate = doc.data().dueDateAt?.toDate();
         const reminderAt = doc.data().reminderAt?.toDate();
-        console.log("Tasklist: ", tasklist);
         if (tasklist == 1 && !completed) {
           tasks.push({
             id,
@@ -90,7 +87,6 @@ const MyDayActions = ({ route, navigation, props }) => {
   // may cause issues with re-rendering of component
   useEffect(() => {
     updateCompletedInDB(completeTasks);
-    console.log("useEffect -> completeTask has been updated to DB");
   }, [completeTasks]);
 
   const deleteTaskFromDB = async (id) => {
@@ -122,7 +118,6 @@ const MyDayActions = ({ route, navigation, props }) => {
   };
 
   const updateTaskDB = async (task) => {
-    console.log("updateInDB called with task", task);
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
@@ -132,12 +127,8 @@ const MyDayActions = ({ route, navigation, props }) => {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          // console.log(doc.id, " => ", doc.data());
           doc.ref.update(task); //not doc.update({foo: "bar"})
         });
-      })
-      .then(() => {
-        // console.log("Task: ", task, " was succesfully updated in the DB");
       })
       .catch((error) => {
         alert(error);
@@ -157,33 +148,13 @@ const MyDayActions = ({ route, navigation, props }) => {
     const completed = temp.filter((el) => el.completed);
     setCompleteTasks(completed);
 
-    const date = completed[0].dueDateAt.getDate();
-
-    // console.log("timeTemp", timelineDataTemp);
+    const date = completed[0].dueDateAt?.getDate();
 
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
       setAllTasks(temp);
-      // console.log("timelineData", timelineData);
     }, 1000);
   };
-
-  // callback that is passed to the flatlist component that renders the task item
-  // const renderTask = ({ item, drag, isActive }) => (
-  //   <>
-  //     <TouchableOpacity
-  //       onLongPress={() => handleDelete(item.id)}
-  //       // disabled={isActive}
-  //       style={styles.dragItem}
-  //     >
-  //       <TaskCompleted
-  //         item={item}
-  //         showTaskDetail={showTaskDetail}
-  //         deleteTask={deleteTask}
-  //       />
-  //     </TouchableOpacity>
-  //   </>
-  // );
 
   const renderTask = ({ item, drag, isActive }) => (
     <TouchableOpacity
@@ -194,9 +165,6 @@ const MyDayActions = ({ route, navigation, props }) => {
       <Task
         item={item}
         showTaskDetail={showTaskDetail}
-        // setModalVisible={setModalVisible}
-        // modalVisible={modalVisible}
-        // setSelectedTask={setSelectedTask}
         handleDelete={handleDelete}
         deleteTask={deleteTask}
         handleChange={handleChange}
@@ -205,14 +173,12 @@ const MyDayActions = ({ route, navigation, props }) => {
   );
 
   const deleteTask = (item) => {
-    console.log("Delete Task func called", item.id);
     let filtered = allTasks.filter((task) => task.id != item.id);
     setAllTasks(filtered);
     deleteTaskFromDB(item.id);
   };
 
   const showTaskDetail = (item) => {
-    console.log("item", item);
     navigation.navigate("Task Detail", item);
   };
 
@@ -242,8 +208,6 @@ const MyDayActions = ({ route, navigation, props }) => {
             ></FlatList>
           </View>
         </View>
-        {console.log("complete tasks", completeTasks)}
-        {/* <View style={styles.bottomRow}></View> */}
       </ImageBackground>
     </View>
   );
@@ -256,11 +220,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    // justifyContent: "center",
-    // position: "absolute",
-
     width: "100%",
-    // height: "100%",
   },
 
   screenWrapper: {
@@ -286,15 +246,6 @@ const styles = StyleSheet.create({
     flex: 15,
     paddingTop: 50,
   },
-
-  // bottomRow: {
-  //   position: "absolute",
-  //   width: "100%",
-  //   bottom: 0,
-  //   height: 70,
-  //   zIndex: -99,
-  //   backgroundColor: "lightgrey",
-  // },
 });
 
 export default MyDayActions;

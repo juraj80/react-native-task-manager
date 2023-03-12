@@ -18,9 +18,11 @@ const firebaseConfig = {
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
-  firebase
-    .firestore()
-    .settings({ experimentalForceLongPolling: true, merge: true }); //add this..
+  firebase.firestore().settings({
+    experimentalForceLongPolling: true,
+    merge: true,
+    ignoreUndefinedProperties: true,
+  }); //add this..
 } else {
   firebase.app();
 }

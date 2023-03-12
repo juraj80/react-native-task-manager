@@ -25,8 +25,6 @@ const TaskListCompleted = ({ route, navigation }) => {
     const tasksRef = firebase.firestore().collection("tasks");
 
     async function fetchData() {
-      // console.log("TaskList fetchData called");
-
       tasksRef.onSnapshot((querySnapshot) => {
         const tasks = [];
         const data = {};
@@ -100,14 +98,11 @@ const TaskListCompleted = ({ route, navigation }) => {
       setAllTasks(temp);
 
       const completed = temp.filter((el) => el.completed);
-      const date = completed[0].dueDateAt.getDate();
-
-      // console.log("timeTemp", timelineDataTemp);
+      const date = completed[0].dueDateAt?.getDate();
 
       const timeout = setTimeout(() => {
         temp = temp.filter((el) => !el.completed);
         setAllTasks(temp);
-        // console.log("timelineData", timelineData);
       }, 2000);
     };
 
@@ -116,7 +111,6 @@ const TaskListCompleted = ({ route, navigation }) => {
       <>
         <TouchableOpacity
           onLongPress={() => handleDelete(item.id)}
-          // disabled={isActive}
           style={styles.dragItem}
         >
           <TaskCompleted
@@ -129,14 +123,12 @@ const TaskListCompleted = ({ route, navigation }) => {
     );
 
     const deleteTask = (item) => {
-      console.log("Delete Task func called", item.id);
       let filtered = allTasks.filter((task) => task.id != item.id);
       setAllTasks(filtered);
       deleteTaskFromDB(item.id);
     };
 
     const showTaskDetail = (item) => {
-      console.log("Navigating to Task Detail", item);
       navigation.navigate("Task Detail", item);
     };
 
@@ -167,8 +159,6 @@ const TaskListCompleted = ({ route, navigation }) => {
             ></FlatList>
           </View>
         </View>
-
-        {/* <View style={styles.bottomRow}></View> */}
       </View>
     );
   } catch (error) {
@@ -183,7 +173,6 @@ const TaskListCompleted = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "rgba(102, 204, 153,0.3)",
     backgroundColor: "rgba(102, 102, 153,0.3)",
   },
 

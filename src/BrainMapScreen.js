@@ -68,8 +68,6 @@ const BrainMapScreen = ({ navigation }) => {
   }, []);
 
   const inputHandler = (enteredText) => {
-    // console.log(enteredText);
-    // console.log(selectedNote);
     const new_obj = { ...selectedNote, heading: enteredText };
     setSelectedNote(new_obj);
   };
@@ -78,17 +76,12 @@ const BrainMapScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         style={styles.itemStyle}
-        onPress={() => showNoteDetail(item)}
-        // onLongPress={() => createTask(item)}
         onLongPress={() => {
           setModalVisible(!modalVisible);
           setSelectedNote(item);
         }}
       >
-        {/* <MaterialCommunityIcons name="note-outline" size={18} color="black" /> */}
-
         <Text style={styles.itemText}>{item.heading}</Text>
-        {/* <Text>{item.text}</Text> */}
       </TouchableOpacity>
     );
   };
@@ -104,7 +97,6 @@ const BrainMapScreen = ({ navigation }) => {
   const updateNote = (text) => {
     const new_obj = { ...selectedNote, heading: text };
     setSelectedNote(new_obj);
-    // console.log("befor update: ", allNotes);
 
     const updated_notes = allNotes.map((note) => {
       if (note.id == selectedNote.id) {
@@ -112,7 +104,6 @@ const BrainMapScreen = ({ navigation }) => {
       }
       return note;
     });
-    // console.log("updated notes: ", updated_notes);
     setAllNotes(updated_notes);
 
     setModalVisible(!modalVisible);
@@ -141,7 +132,6 @@ const BrainMapScreen = ({ navigation }) => {
   };
 
   const deleteNote = (item) => {
-    // console.log(item.id);
     let filtered = allNotes.filter((note) => note.id != item.id);
     setAllNotes(filtered);
     deleteNoteFromDB(item.id);

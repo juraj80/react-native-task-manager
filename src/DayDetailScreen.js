@@ -27,11 +27,8 @@ const DayDetail = ({ route, navigation, props }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   const day = route.params?.toISOString().split("T")[0];
-  console.log("DAY", day);
 
   async function fetchData() {
-    // console.log("TaskList fetchData called");
-
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
       const data = {};
@@ -97,14 +94,11 @@ const DayDetail = ({ route, navigation, props }) => {
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
-    const date = completed[0].dueDateAt.getDate();
-
-    // console.log("timeTemp", timelineDataTemp);
+    const date = completed[0].dueDateAt?.getDate();
 
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
       setAllTasks(temp);
-      // console.log("timelineData", timelineData);
     }, 2000);
   };
 
@@ -113,27 +107,25 @@ const DayDetail = ({ route, navigation, props }) => {
     <>
       <TouchableOpacity
         onLongPress={() => handleDelete(item.id)}
-        // disabled={isActive}
         style={styles.dragItem}
       >
         <Task
           item={item}
           showTaskDetail={showTaskDetail}
           deleteTask={deleteTask}
+          handleChange={handleChange}
         />
       </TouchableOpacity>
     </>
   );
 
   const deleteTask = (item) => {
-    console.log("Delete Task func called", item.id);
     let filtered = allTasks.filter((task) => task.id != item.id);
     setAllTasks(filtered);
     deleteTaskFromDB(item.id);
   };
 
   const showTaskDetail = (item) => {
-    console.log("item", item);
     navigation.navigate("Task Detail", item);
   };
 
@@ -171,7 +163,7 @@ const DayDetail = ({ route, navigation, props }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(10, 204, 3,1)",
+    backgroundColor: "rgba(50, 24, 3,0.3)",
   },
 
   screenWrapper: {

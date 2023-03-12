@@ -35,17 +35,11 @@ const TaskModal = ({
   const [textValue, setTextValue] = useState("");
 
   const onFormSubmitted = () => {
-    console.log("onFormSubmitted called", textValue);
     const new_obj = { ...task, heading: textValue };
     setTask(new_obj);
   };
 
-  //   useEffect(() => {
-  //     setTextValue(note.heading);
-  //   }, []);
-
   const inputHandler = (enteredText) => {
-    console.log(enteredText);
     const new_obj = { ...task, heading: enteredText };
     setTask(new_obj);
   };
@@ -165,14 +159,11 @@ const TaskModal = ({
               <Text style={styles.textStyle}>Repeat</Text>
             </Pressable>
             <Pressable
-              // style={[styles.buttonModal, styles.buttonClose, styles.shadow]}
               style={styles.iconWrap}
               onPress={() => {
-                console.log(task.heading);
                 if (task.id) {
                   updateTask(task.heading);
                 } else {
-                  console.log("Need to create new TASK");
                   saveTask(task.heading);
                 }
               }}

@@ -20,7 +20,6 @@ const PomodoroScreen = () => {
   const [sound, setSound] = useState();
 
   const handleTimeCompleted = () => {
-    console.log("handleTimecompleted called");
     if (intervalType === "Working") {
       setIntervalType("Break");
     } else {
@@ -32,7 +31,6 @@ const PomodoroScreen = () => {
     await Audio.setAudioModeAsync({
       playsInSilentModeIOS: true,
       staysActiveInBackground: false,
-      // interruptionModeAndroid: INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
       shouldDuckAndroid: false,
     });
   };
@@ -62,7 +60,6 @@ const PomodoroScreen = () => {
 
   function stopSound() {
     setSound(null);
-    //  sound.unloadAsync();
   }
 
   React.useEffect(() => {

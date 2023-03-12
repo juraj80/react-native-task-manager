@@ -53,25 +53,8 @@ describe("BrainMapScreen component", () => {
 
   it("renders correctly with allNotes", () => {
     const { getByText } = render(<BrainMapScreen />);
-
-    console.log(allNotes);
     allNotes.forEach((note) => {
       expect(note.heading).toBeTruthy();
     });
   });
-
-  // it("should open the modal when pressing the add button", () => {
-  //   const { getByTestId } = render(<BrainMapScreen />);
-  //   fireEvent.press(getByTestId("addButton"));
-  //   expect(getByTestId("noteModal")).toBeDefined();
-  // });
-
-  // it("should delete the selected note", async () => {
-  //   const { getByTestId } = render(<BrainMapScreen />);
-  //   fireEvent.press(getByTestId("addButton"));
-  //   fireEvent.press(getByTestId("deleteButton"));
-  //   expect(
-  //     firebase.firestore().collection("notes").doc().delete
-  //   ).toHaveBeenCalled();
-  // });
 });

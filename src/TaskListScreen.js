@@ -68,8 +68,6 @@ const TaskList = ({ route, navigation }) => {
   const tasksRef = firebase.firestore().collection("tasks");
 
   async function fetchData() {
-    // console.log("TaskList fetchData called");
-
     tasksRef.onSnapshot((querySnapshot) => {
       const tasks = [];
       const completeTasks = [];
@@ -86,11 +84,10 @@ const TaskList = ({ route, navigation }) => {
           tasklist,
           attachments,
         } = doc.data();
+
         const dueDate = doc.data().dueDateAt?.toDate();
         const reminderAt = doc.data().reminderAt?.toDate();
         const completedAt = doc.data().completedAt;
-
-        const date = dueDate?.getDate();
 
         const task = {
           id: id, //doc.id
@@ -110,6 +107,7 @@ const TaskList = ({ route, navigation }) => {
         completed ? completeTasks.push(task) : tasks.push(task);
 
         if (dueDate && isWithinCurrentMonth(dueDate)) {
+          const date = dueDate?.getDate();
           Object.assign(data, {
             [date]: {
               id: id,
@@ -123,11 +121,9 @@ const TaskList = ({ route, navigation }) => {
         }
       });
 
-      //console.log("setAllTasks called ", tasks);
       setAllTasks(tasks);
       setFilteredTasks(tasks);
       setCompleteTasks(completeTasks);
-      // console.log("timeline data ", data);
       setTimelineData(data);
     });
   }
@@ -150,7 +146,6 @@ const TaskList = ({ route, navigation }) => {
   // may cause issues with re-rendering of component
   useEffect(() => {
     updateCompletedInDB(completeTasks);
-    // console.log("useEffect -> allTask has been updated to: ", allTasks);
   }, [completeTasks]);
 
   useEffect(() => {
@@ -200,7 +195,6 @@ const TaskList = ({ route, navigation }) => {
         obj.dueDateAt instanceof Date &&
         obj.dueDateAt.toISOString().split("T")[0] === today
       ) {
-        console.log("Alert For this day: ", today, "from object: ", obj);
         Alert.alert(
           "Reminder",
           "Task: " + obj.heading + " is due today",
@@ -253,10 +247,8 @@ const TaskList = ({ route, navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // console.log("scrren is focused" + JSON.stringify(taskHeading));
       if (taskHeading) {
         setNoteTask(taskHeading);
-        // console.log("selectedTask: ", selectedTask);
         setSelectedTask({ heading: taskHeading });
         setModalVisible(true);
         navigation.setParams({ heading: null });
@@ -297,7 +289,6 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const showIntervalPicker = () => {
-    console.log("showIntervalPicker f pressed");
     setIsIntervalModalVisible(true);
   };
 
@@ -325,7 +316,6 @@ const TaskList = ({ route, navigation }) => {
 
   // handler for completed tasks
   const handleChange = (id) => {
-    console.log("HandleChange f called");
     let temp = allTasks.map((item) => {
       if (id === item.id) {
         return {
@@ -337,22 +327,21 @@ const TaskList = ({ route, navigation }) => {
       return item;
     });
 
-    // console.log("Updated completion date in array: ", temp);
     setAllTasks(temp);
 
     const completed = temp.filter((el) => el.completed);
     setCompleteTasks(completed);
 
-    // console.log("completed tasks array ", completed);
-    const date = completed[0].dueDateAt.getDate();
-
+    const date = completed[0].dueDateAt?.getDate();
     // sets the data array of tasks for the timeline component
     let timelineDataTemp = { ...timelineData };
 
     // need to take to account the tasks that has completed flag
-    // console.log("timeTemp", timelineDataTemp);
-    delete timelineDataTemp[date];
-    setTimelineData(timelineDataTemp);
+
+    if (date) {
+      delete timelineDataTemp[date];
+      setTimelineData(timelineDataTemp);
+    }
 
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
@@ -371,9 +360,6 @@ const TaskList = ({ route, navigation }) => {
         <Task
           item={item}
           showTaskDetail={showTaskDetail}
-          // setModalVisible={setModalVisible}
-          // modalVisible={modalVisible}
-          // setSelectedTask={setSelectedTask}
           handleDelete={handleDelete}
           deleteTask={deleteTask}
           handleChange={handleChange}
@@ -385,7 +371,6 @@ const TaskList = ({ route, navigation }) => {
   // updates existing task in firestore db when pressing Save in the Task modal
   //TODO: do wee need update triggered from the modal?
   const updateTask = (text) => {
-    console.log("Update task called");
     const new_obj = {
       ...selectedTask,
       heading: text,
@@ -394,7 +379,6 @@ const TaskList = ({ route, navigation }) => {
       completedAt: taskCompletionDate,
       text: "",
     };
-    // console.log("new_obj: ", new_obj);
     setSelectedTask(new_obj);
 
     updateTaskDB(new_obj);
@@ -419,7 +403,6 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const updateTaskDB = async (task) => {
-    // console.log("updateInDB called with task", task);
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
@@ -429,13 +412,10 @@ const TaskList = ({ route, navigation }) => {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          // console.log(doc.id, " => ", doc.data());
           doc.ref.update(task); //not doc.update({foo: "bar"})
         });
       })
-      .then(() => {
-        // console.log("Task: ", task, " was succesfully updated in the DB");
-      })
+
       .catch((error) => {
         alert(error);
       });
@@ -443,7 +423,6 @@ const TaskList = ({ route, navigation }) => {
 
   // save a new task to the firestore db from the modal
   const saveTask = async (text) => {
-    console.log("saveTask f called");
     // get the timestamp
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
@@ -478,7 +457,6 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const handleDelete = (id) => {
-    console.log("handleDelete f called with id ", id);
     let temp = allTasks.map((item) => {
       if (id === item.id) {
         return { ...item, marked: !item.marked };
@@ -489,25 +467,20 @@ const TaskList = ({ route, navigation }) => {
   };
 
   const deleteTask = (item) => {
-    console.log("Delete Task func called", item.id);
     let filtered = allTasks.filter((task) => task.id != item.id);
     setAllTasks(filtered);
     deleteTaskFromDB(item.id);
   };
 
   const showTaskDetail = (item) => {
-    console.log("item", item);
     navigation.navigate("Task Detail", item);
   };
 
   const createTask = () => {
-    console.log("Create Task pressed");
     setSelectedTask({});
     setModalVisible(!modalVisible);
   };
   const renderDayTasks = (dayObj) => {
-    console.log(dayObj);
-    console.log("renderDayTasks pressed: ", dayObj);
     if (dayObj.dueDate) {
       navigation.navigate("Day Detail", dayObj.dueDate);
     } else {
@@ -609,7 +582,6 @@ const TaskList = ({ route, navigation }) => {
         showDatePicker={showDatePicker}
         showDateTimePicker={showDateTimePicker}
         showIntervalPicker={showIntervalPicker}
-        // createTask={createTask}
         deleteTask={deleteTask}
       />
       <DateTimePickerModal
@@ -654,16 +626,13 @@ const styles = StyleSheet.create({
   },
 
   timeline: {
-    // height: 70,
     flex: 1,
     marginBottom: 10,
-    // backgroundColor: "lightgray",
   },
   screenWrapper: {
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 20,
-    // flexDirection: "column",
   },
 
   dragItem: {
@@ -675,20 +644,17 @@ const styles = StyleSheet.create({
   },
 
   bottomRow: {
-    // flex: 1,
     position: "absolute",
     width: "100%",
     bottom: 0,
     height: 70,
     zIndex: -99,
-
     backgroundColor: "lightgrey",
   },
   bottomSection: {
     flex: 2,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "red",
   },
   searchBarSection: { marginTop: 70, marginBottom: 30 },
 });

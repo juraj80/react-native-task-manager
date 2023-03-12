@@ -42,7 +42,6 @@ const PomodoroTimer = (props) => {
 
   // triggers when play button is pressed
   const handlePlay = () => {
-    console.log("handle play is called");
     setIsRunning(true);
     if (props.intervalType == "Break") {
       props.stopSound();
@@ -53,7 +52,6 @@ const PomodoroTimer = (props) => {
     const timerID = setInterval(() => {
       setTime((time) => time - 1);
     }, 1000);
-    console.log("timerID :", timerID);
     setTimerId(timerID);
   };
 
@@ -72,9 +70,6 @@ const PomodoroTimer = (props) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text>This is Pomodoro Timer :{time}</Text>
-			{console.log('Time :', time)} */}
-
       <View style={styles.displayStyle}>
         <PomodoroTimerDisplay time={time}></PomodoroTimerDisplay>
       </View>

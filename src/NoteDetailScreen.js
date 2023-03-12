@@ -23,7 +23,6 @@ const NoteDetail = ({ route, navigation }) => {
   const notesRef = firebase.firestore().collection("notes");
 
   const updateNote = async () => {
-    console.log("updateNote called");
     if (noteHeader && noteHeader.length > 0) {
       // get the timestamp
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
@@ -32,15 +31,9 @@ const NoteDetail = ({ route, navigation }) => {
         detail: noteDetail,
         createdAt: timestamp,
       };
-      console.log(data);
       notesRef
         .doc(noteId)
         .update(data)
-        // .then(() => {
-        //   //setNoteHeader("");
-        //   // release Keyboard
-        //   Keyboard.dismiss();
-        // })
         .then(() => {
           navigation.navigate("My Scribbles");
         })
@@ -49,13 +42,6 @@ const NoteDetail = ({ route, navigation }) => {
         });
     }
   };
-
-  // const renderTask = ({ item }) => (
-  //   <TouchableOpacity style={styles.itemStyle}>
-  //     <Text>{item.heading}</Text>
-  //     <Text>{item.text}</Text>
-  //   </TouchableOpacity>
-  // );
 
   return (
     <View style={styles.container}>
@@ -82,10 +68,6 @@ const NoteDetail = ({ route, navigation }) => {
           selectionColor="#000"
         />
         <View style={styles.bottomSection}>
-          {/* <TouchableOpacity style={styles.plusBtn} onPress={() => updateNote()}>
-            <Text style={styles.plusText}>Save</Text>
-          </TouchableOpacity> */}
-
           <FullWidthButton title={"Save"} onPress={() => updateNote()} />
         </View>
       </View>
@@ -102,7 +84,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 40,
     paddingHorizontal: 20,
-    // flexDirection: "column",
   },
   headerSection: {
     flex: 1,

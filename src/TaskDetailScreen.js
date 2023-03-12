@@ -44,7 +44,6 @@ LogBox.ignoreLogs([
 ]);
 
 const TaskDetail = ({ route, navigation }) => {
-  // console.log("Task Detail received props: ", route.params);
   // try {
   const [task, setTask] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
@@ -84,8 +83,6 @@ const TaskDetail = ({ route, navigation }) => {
   TouchableOpacity.defaultProps = { activeOpacity: 0.8 };
 
   async function fetchData() {
-    // console.log("TaskDetail fetchData called with taskId ", taskId);
-
     tasksRef
       .where("id", "==", taskId)
       .get()
@@ -98,9 +95,6 @@ const TaskDetail = ({ route, navigation }) => {
             setAllSubTasks(subTasks);
           }
         }
-      })
-      .then(() => {
-        // console.log("Task: ", task, " was succesfully fetched from the DB");
       })
       .catch((error) => {
         alert(error);
@@ -156,7 +150,6 @@ const TaskDetail = ({ route, navigation }) => {
       () => {
         snapshot.snapshot.ref.getDownloadURL().then((url) => {
           setUploading(false);
-          console.log("Download URL: ", url);
           setAttachments(url);
           blob.close();
           return url;
@@ -182,9 +175,6 @@ const TaskDetail = ({ route, navigation }) => {
         attachments: attachments,
       };
 
-      // console.log("updateTask called with data : ", data);
-      // uploadImage();
-
       tasksRef
         .where("id", "==", taskId)
         .get()
@@ -206,8 +196,6 @@ const TaskDetail = ({ route, navigation }) => {
 
   const renderSubTask = ({ item, drag, isActive }) => (
     <TouchableOpacity
-      // onLongPress={drag}
-      // onPress={() => deleteSubTask(item)}
       onLongPress={() => handleDelete(item.id)}
       disabled={isActive}
       style={styles.dragItem}
@@ -228,7 +216,6 @@ const TaskDetail = ({ route, navigation }) => {
 
   // callback called when the +AddSubTask button is pressed
   const createSubTask = () => {
-    // console.log("Create SubTask pressed! ", subTaskText);
     setAllSubTasks([
       ...allSubTasks,
       { id: getId(), completed: false, text: subTaskText, marked: false },
@@ -241,9 +228,7 @@ const TaskDetail = ({ route, navigation }) => {
   };
 
   const deleteSubTask = (item) => {
-    console.log("Delete SubTask func called", item);
     let filtered = allSubTasks.filter((task) => task.id != item.id);
-    // console.log("filtered: ", filtered);
     setAllSubTasks(filtered);
     // deleteTaskFromDB(item.id);
   };
@@ -273,7 +258,6 @@ const TaskDetail = ({ route, navigation }) => {
     const timeout = setTimeout(() => {
       temp = temp.filter((el) => !el.completed);
       setAllSubTasks(temp);
-      // console.log("timelineData", timelineData);
     }, 2000);
   };
 
@@ -291,12 +275,10 @@ const TaskDetail = ({ route, navigation }) => {
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
-    // setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   const hideDateTimePicker = () => {
     setDateTimePickerVisibility(false);
-    // setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   const addToMyDay = () => {
@@ -306,13 +288,11 @@ const TaskDetail = ({ route, navigation }) => {
   const handleConfirm = (date) => {
     setTaskDueDate(date);
     hideDatePicker();
-    // setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   const handleReminderConfirm = (datetime) => {
     setTaskReminderDate(datetime);
     hideDateTimePicker();
-    // setTimeout(() => setModalVisible(!modalVisible), 1000);
   };
 
   const getRepeatData = (num) => {
@@ -327,31 +307,17 @@ const TaskDetail = ({ route, navigation }) => {
     }
   };
   const showAttachment = (filePath) => {
-    // <Image source={{ uri: filePath }} style={{ width: 70, height: 70 }} />;
-
-    // const path = FileViewer.open(filePath, { showOpenWithDialog: true }) // absolute-path-to-my-local-file.
-    //   .then(() => {
-    //     // success
-    //     console.log("Success");
-    //   })
-    //   .catch((error) => {
-    //     // error
-    //     console.log("ERROR", error);
-    //   });
     setFileOpen(filePath);
     setModalVisible(true);
   };
 
   function handleCancelPress() {
-    console.log("handle cancel pressed");
     setModalVisible(false);
   }
 
   const deleteAttachment = (index) => {
-    console.log("deleteAtachment called with index: ", index, attachments);
     const attachmentsCopy = [...attachments];
     attachmentsCopy.splice(index, 1);
-    // setAttachments((attachments) => attachments.splice(index, 1));
     setAttachments(attachmentsCopy);
   };
 
@@ -376,10 +342,6 @@ const TaskDetail = ({ route, navigation }) => {
               autoFocus
               selectionColor="#000"
             />
-            {/* {console.log(
-                "Task detail Screen rendered with the  subtask : ",
-                allSubTasks
-              )} */}
 
             <TextInput
               value={taskText}
@@ -406,7 +368,6 @@ const TaskDetail = ({ route, navigation }) => {
             renderItem={renderSubTask}
           ></DraggableFlatList> */}
             <FlatList
-              // style={{ height: "100%" }}
               data={allSubTasks}
               numColumns={1}
               renderItem={renderSubTask}
@@ -419,7 +380,6 @@ const TaskDetail = ({ route, navigation }) => {
             >
               <View style={styles.iconContainer}>
                 <MaterialIcons name="add-task" size={24} color="black" />
-                {/* <Text style={styles.btnTextStyle}>+ Add Subtask</Text> */}
               </View>
               <Text style={styles.btnTextStyle}>Add Subtask</Text>
             </TouchableOpacity>
@@ -436,8 +396,6 @@ const TaskDetail = ({ route, navigation }) => {
                   color="black"
                 />
               </View>
-              {/* <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text> */}
-              {/* <Text>Due: {formatUTCDate(taskDueDate)}</Text> */}
 
               {taskDueDate ? (
                 <Text>Due: {formatUTCDate(taskDueDate)}</Text>
@@ -450,12 +408,6 @@ const TaskDetail = ({ route, navigation }) => {
               onPress={showDateTimePicker}
               style={styles.btnRowContainer}
             >
-              {/* <LinearGradient
-                  colors={["#4c669f", "#3b5998", "#192f6a"]}
-                  style={styles.calendarBtnContainer}
-                >
-                  <Text style={styles.btnTextStyle}>Reminder</Text>
-                </LinearGradient> */}
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons
                   name="reminder"
@@ -468,19 +420,11 @@ const TaskDetail = ({ route, navigation }) => {
               ) : (
                 <Text>Set Reminder</Text>
               )}
-
-              {/* <Text>Remind me at: {formatUTCDate(taskReminderDate)}</Text> */}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={showIntervalPicker}
               style={styles.btnRowContainer}
             >
-              {/* <LinearGradient
-                  colors={["#4c669f", "#3b5998", "#192f6a"]}
-                  style={styles.calendarBtnContainer}
-                >
-                  <Text style={styles.btnTextStyle}>Repeat</Text>
-                </LinearGradient> */}
               <View style={styles.iconContainer}>
                 <MaterialCommunityIcons name="repeat" size={30} color="black" />
               </View>
@@ -528,8 +472,6 @@ const TaskDetail = ({ route, navigation }) => {
               <View style={styles.iconContainer}>
                 <Entypo name="attachment" size={30} color="black" />
               </View>
-              {/* <Text>Due: {formatUTCDate(route.params.dueDateAt)}</Text> */}
-              {/* <Text>Due: {formatUTCDate(taskDueDate)}</Text> */}
 
               <Text>Add File</Text>
             </TouchableOpacity>
@@ -538,30 +480,9 @@ const TaskDetail = ({ route, navigation }) => {
             <TouchableOpacity>
               <Text>Attachments</Text>
               <View>
-                {/* {fileObj && (
-                  <View>
-                    <Image
-                      source={{ uri: fileObj.filePath }}
-                      style={{ width: 70, height: 70 }}
-                    />
-                    <Text onPress={showAttachment}>{fileObj.fileName}</Text>
-                  </View>
-                )}
-                 */}
-
                 {attachments &&
                   attachments.map((obj, i) => (
-                    // <Image
-                    //   source={{ uri: obj.filePath }}
-                    //   style={{ width: 70, height: 70 }}
-                    // />
                     <View key={i} style={styles.attachmentRow}>
-                      {/* <Image
-                        source={{ uri: obj.filePath }}
-                        style={{ width: 70, height: 70 }}
-                      /> */}
-
-                      {/* <Text onPress={() => showAttachment(obj.filePath)}> */}
                       <View style={styles.leftAlign}>
                         <Text
                           style={styles.attachmentText}
@@ -578,24 +499,9 @@ const TaskDetail = ({ route, navigation }) => {
                             color="black"
                           />
                         </TouchableOpacity>
-                        {/* <Text
-                          style={styles.rightText}
-                          onPress={() => deleteAttachment(i)}
-                        >
-                          X
-                        </Text> */}
                       </View>
                     </View>
                   ))}
-
-                {/* <Button title="Select Image" onPress={pickImage} />
-                {!uploading ? (
-                  <Button title="Upload Image" onPress={uploadImage} />
-                ) : (
-                  <ActivityIndicator size={"small"} color="black" />
-                )} */}
-
-                {console.log("ATTACHMENTS..", attachments)}
               </View>
             </TouchableOpacity>
           </View>
@@ -657,7 +563,6 @@ const TaskDetail = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#ff9478",
   },
   screenWrapper: {
     flex: 5,
@@ -678,12 +583,10 @@ const styles = StyleSheet.create({
 
   subTasksSection: {
     flex: 0,
-    // backgroundColor: "yellow",
   },
   calendarSection: {
     flex: 2,
     marginVertical: 20,
-    // backgroundColor: "blue",
   },
   attachmentsSection: { flex: 2 },
   bottomSection: {
@@ -697,15 +600,11 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   addBtnContainer: {
-    // flex: 1,
     flexDirection: "row",
     paddingVertical: 10,
     paddingHorizontal: 12,
     margin: 5,
-    // justifyContent: "flex-start",
     borderColor: "#95a5a6",
-    // backgroundColor: "#95a5a6",
-
     borderWidth: 2,
     borderRadius: 2,
   },
@@ -713,7 +612,6 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 20,
     marginLeft: 5,
-    // fontWeight: "bold",
   },
   btnRowContainer: {
     flex: 1,
