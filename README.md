@@ -57,8 +57,3 @@ TaskGenie is built using [Expo](https://expo.io/) and can be installed on any mo
 -   Set reminders for tasks to ensure they are completed on time
 -   Categorize tasks based on different filters to prioritize and manage them effectively
 
-
-License
--------
-
-TaskGenie is licensed under the MIT License. See the [LICENSE](https://chat.openai.com/LICENSE) file for details.
